@@ -12,7 +12,8 @@ import java.util.List;
 @Getter
 public class AbandonedAnimal {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "abandonedAnimal_id")
     private Long id;
 

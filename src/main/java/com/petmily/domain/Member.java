@@ -2,7 +2,6 @@ package com.petmily.domain;
 
 import com.petmily.domain.enum_type.MemberGrade;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +10,8 @@ import java.util.List;
 @Getter
 public class Member {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 

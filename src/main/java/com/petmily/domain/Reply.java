@@ -5,13 +5,14 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 public class Reply {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "reply_id")
     private Long id;
 

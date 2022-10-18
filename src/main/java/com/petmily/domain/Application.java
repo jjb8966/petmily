@@ -6,13 +6,14 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 public class Application {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "application_id")
     private Long id;
 

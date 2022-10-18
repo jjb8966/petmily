@@ -5,13 +5,15 @@ import com.petmily.domain.enum_type.BoardType;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 public class Board {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "board_id")
     private Long id;
 
@@ -31,4 +33,5 @@ public class Board {
     private String title;
     private String content;
     private boolean shownAll;
+    private LocalDateTime writeTime;
 }

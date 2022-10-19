@@ -1,10 +1,7 @@
 package com.petmily.repository;
 
 import com.petmily.domain.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository {
-
-    Long save(Member member);
-
-    Member find(Long id);
+public interface MemberRepository extends JpaRepository<Member, Long> {
 }

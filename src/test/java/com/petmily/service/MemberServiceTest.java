@@ -1,8 +1,10 @@
 package com.petmily.service;
 
+import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.dto.member.ChangeMemberDto;
+import com.petmily.domain.enum_type.MemberGrade;
 import com.petmily.exception.DuplicateLoginIdException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

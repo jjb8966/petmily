@@ -26,16 +26,16 @@ public class AbandonedAnimal {
     private Long id;
 
     @OneToMany(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)
-    private List<Application> applications = new ArrayList<>();
+    private List<Application> applications;
 
     @ElementCollection
-    private List<Picture> pictures = new ArrayList<>();
+    private List<Picture> pictures;
 
     @Enumerated(EnumType.STRING)
     private AnimalSpecies species;
 
     @Enumerated(EnumType.STRING)
-    private AnimalStatus status = AnimalStatus.PROTECTED;
+    private AnimalStatus status;
 
     private String name;
     private String kind;

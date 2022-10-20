@@ -16,7 +16,7 @@ public class MemberBuilder {
     private List<Board> boards = new ArrayList<>();
     private List<Reply> replies = new ArrayList<>();
     private List<Application> applications = new ArrayList<>();
-    private MemberGrade grade;
+    private MemberGrade grade = MemberGrade.NORMAL;
     private String loginId;
     private String password;
     private String name;

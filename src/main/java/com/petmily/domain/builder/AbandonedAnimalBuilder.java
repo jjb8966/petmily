@@ -16,7 +16,7 @@ public class AbandonedAnimalBuilder {
     private List<Application> applications = new ArrayList<>();
     private List<Picture> pictures = new ArrayList<>();
     private AnimalSpecies species;
-    private AnimalStatus status;
+    private AnimalStatus status = AnimalStatus.PROTECTED;
     private String name;
     private String kind;
     private Integer age;

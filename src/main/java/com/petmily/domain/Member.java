@@ -24,16 +24,16 @@ public class Member {
     private Long id;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
+    private List<Board> boards;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Reply> replies = new ArrayList<>();
+    private List<Reply> replies;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Application> applications = new ArrayList<>();
+    private List<Application> applications;
 
     @Enumerated(EnumType.STRING)
-    private MemberGrade grade = MemberGrade.NORMAL;
+    private MemberGrade grade;
 
     private String loginId;
     private String password;

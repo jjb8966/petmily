@@ -1,16 +1,13 @@
 package com.petmily.service;
 
-import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.dto.member.ChangeMemberDto;
-import com.petmily.domain.enum_type.MemberGrade;
 import com.petmily.exception.DuplicateLoginIdException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -79,7 +76,6 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("회원 정보를 변경할 수 있다.")
-    @Commit
     void changeInfo() {
         //given
         Member member = new MemberBuilder("memberA", "111")

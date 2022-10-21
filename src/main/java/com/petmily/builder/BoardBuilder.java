@@ -1,10 +1,10 @@
-package com.petmily.domain.builder;
+package com.petmily.builder;
 
 import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.Reply;
-import com.petmily.domain.embedded_type.Picture;
-import com.petmily.domain.enum_type.BoardType;
+import com.petmily.embedded_type.Picture;
+import com.petmily.enum_type.BoardType;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

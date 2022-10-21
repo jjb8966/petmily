@@ -1,4 +1,4 @@
-package com.petmily.domain.dto.member;
+package com.petmily.dto.member;
 
 import lombok.Getter;
 import lombok.Setter;

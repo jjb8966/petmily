@@ -1,6 +1,6 @@
-package com.petmily.domain.dto.abandoned_animal;
+package com.petmily.dto.abandoned_animal;
 
-import com.petmily.domain.enum_type.AnimalSpecies;
+import com.petmily.enum_type.AnimalSpecies;
 import lombok.Getter;
 import lombok.Setter;
 

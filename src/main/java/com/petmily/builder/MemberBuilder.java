@@ -1,10 +1,10 @@
-package com.petmily.domain.builder;
+package com.petmily.builder;
 
-import com.petmily.domain.Application;
+import com.petmily.domain.application.Application;
 import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.Reply;
-import com.petmily.domain.enum_type.MemberGrade;
+import com.petmily.enum_type.MemberGrade;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class MemberBuilder {
 
     private List<Board> boards = new ArrayList<>();
     private List<Reply> replies = new ArrayList<>();
-    private List<Application> applications = new ArrayList<>();
+    private List<Application> applies = new ArrayList<>();
     private MemberGrade grade = MemberGrade.NORMAL;
     private String loginId;
     private String password;
@@ -42,8 +42,8 @@ public class MemberBuilder {
         return this;
     }
 
-    public MemberBuilder setApplication(List<Application> applications) {
-        this.applications = applications;
+    public MemberBuilder setApplication(List<Application> applies) {
+        this.applies = applies;
         return this;
     }
 

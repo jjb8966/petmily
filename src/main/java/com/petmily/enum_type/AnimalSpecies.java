@@ -1,4 +1,4 @@
-package com.petmily.domain.enum_type;
+package com.petmily.enum_type;
 
 public enum AnimalSpecies {
     DOG, CAT, ETC

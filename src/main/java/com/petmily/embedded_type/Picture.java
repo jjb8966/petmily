@@ -1,4 +1,4 @@
-package com.petmily.domain.embedded_type;
+package com.petmily.embedded_type;
 
 import javax.persistence.Embeddable;
 

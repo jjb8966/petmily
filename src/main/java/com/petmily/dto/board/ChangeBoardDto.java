@@ -1,6 +1,6 @@
-package com.petmily.domain.dto.board;
+package com.petmily.dto.board;
 
-import com.petmily.domain.embedded_type.Picture;
+import com.petmily.embedded_type.Picture;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -59,6 +59,8 @@ class ApplicationServiceTest {
         assertThat(adopt.getAbandonedAnimal().getName()).isEqualTo("animalA");
         assertThat(adopt.getAddress()).isEqualTo("addressA");
         assertThat(adopt.getApplicationStatus()).isEqualTo(ApplicationStatus.WAIT);
+        assertThat(member.getApplications().contains(adopt)).isTrue();
+        assertThat(animal.getApplications().contains(adopt)).isTrue();
     }
 
     @Test
@@ -84,6 +86,8 @@ class ApplicationServiceTest {
         assertThat(temporaryProtection.getAbandonedAnimal().getName()).isEqualTo("animalA");
         assertThat(temporaryProtection.getPeriod()).isEqualTo(10);
         assertThat(temporaryProtection.getApplicationStatus()).isEqualTo(ApplicationStatus.WAIT);
+        assertThat(member.getApplications().contains(temporaryProtection)).isTrue();
+        assertThat(animal.getApplications().contains(temporaryProtection)).isTrue();
     }
 
     @Test
@@ -109,5 +113,7 @@ class ApplicationServiceTest {
         assertThat(donation.getAbandonedAnimal().getName()).isEqualTo("animalA");
         assertThat(donation.getAmount()).isEqualTo(100000);
         assertThat(donation.getApplicationStatus()).isEqualTo(ApplicationStatus.WAIT);
+        assertThat(member.getApplications().contains(donation)).isTrue();
+        assertThat(animal.getApplications().contains(donation)).isTrue();
     }
 }

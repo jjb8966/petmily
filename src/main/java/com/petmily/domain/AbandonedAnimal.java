@@ -1,22 +1,22 @@
 package com.petmily.domain;
 
-import com.petmily.domain.builder.AbandonedAnimalBuilder;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
-import com.petmily.domain.embedded_type.Picture;
-import com.petmily.domain.enum_type.AnimalSpecies;
-import com.petmily.domain.enum_type.AnimalStatus;
+import com.petmily.domain.application.Application;
+import com.petmily.builder.AbandonedAnimalBuilder;
+import com.petmily.dto.abandoned_animal.ChangeAnimalDto;
+import com.petmily.embedded_type.Picture;
+import com.petmily.enum_type.AnimalSpecies;
+import com.petmily.enum_type.AnimalStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@ToString
+@ToString(of = {"name","kind","age","weight","species","status"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AbandonedAnimal {
 
@@ -43,7 +43,7 @@ public class AbandonedAnimal {
     private Float weight;
 
     public AbandonedAnimal(AbandonedAnimalBuilder builder) {
-        this.applications = builder.getApplications();
+        this.applications = builder.getApplies();
         this.pictures = builder.getPictures();
         this.species = builder.getSpecies();
         this.status = builder.getStatus();

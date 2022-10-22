@@ -12,7 +12,6 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@ToString
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "app_type")
 public abstract class Application {

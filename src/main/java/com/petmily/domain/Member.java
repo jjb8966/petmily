@@ -1,20 +1,20 @@
 package com.petmily.domain;
 
-import com.petmily.domain.builder.MemberBuilder;
-import com.petmily.domain.dto.member.ChangeMemberDto;
-import com.petmily.domain.enum_type.MemberGrade;
+import com.petmily.domain.application.Application;
+import com.petmily.builder.MemberBuilder;
+import com.petmily.dto.member.ChangeMemberDto;
+import com.petmily.enum_type.MemberGrade;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@ToString
+@ToString(of = {"loginId", "password", "name", "email", "phone", "grade"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -30,7 +30,7 @@ public class Member {
     private List<Reply> replies;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Application> applications;
+    private List<Application> applies;
 
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;
@@ -44,7 +44,7 @@ public class Member {
     public Member(MemberBuilder builder) {
         this.boards = builder.getBoards();
         this.replies = builder.getReplies();
-        this.applications = builder.getApplications();
+        this.applies = builder.getApplies();
         this.grade = builder.getGrade();
         this.loginId = builder.getLoginId();
         this.password = builder.getPassword();

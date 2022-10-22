@@ -2,13 +2,14 @@ package com.petmily.domain.application;
 
 import com.petmily.builder.application.DonationBuilder;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Entity;
 
 @Entity
-@ToString
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Donation extends Application {
 
@@ -19,5 +20,15 @@ public class Donation extends Application {
         this.abandonedAnimal = builder.getAbandonedAnimal();
         this.applicationStatus = builder.getApplicationStatus();
         this.amount = builder.getAmount();
+    }
+
+    @Override
+    public String toString() {
+        return "Donation{" +
+                "amount=" + amount +
+                ", member=" + member +
+                ", abandonedAnimal=" + abandonedAnimal +
+                ", applicationStatus=" + applicationStatus +
+                '}';
     }
 }

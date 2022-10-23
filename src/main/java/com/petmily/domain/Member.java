@@ -30,7 +30,7 @@ public class Member {
     private List<Reply> replies;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Application> applies;
+    private List<Application> applications;
 
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;
@@ -44,7 +44,7 @@ public class Member {
     public Member(MemberBuilder builder) {
         this.boards = builder.getBoards();
         this.replies = builder.getReplies();
-        this.applies = builder.getApplies();
+        this.applications = builder.getApplies();
         this.grade = builder.getGrade();
         this.loginId = builder.getLoginId();
         this.password = builder.getPassword();

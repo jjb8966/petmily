@@ -25,7 +25,7 @@ public class AdoptBuilder {
         Adopt adopt = new Adopt(this);
 
         // 연관관계 최신화
-        member.getApplies().add(adopt);
+        member.getApplications().add(adopt);
         abandonedAnimal.getApplications().add(adopt);
 
         return adopt;

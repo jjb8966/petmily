@@ -23,7 +23,7 @@ public class TemporaryProtectionBuilder {
         TemporaryProtection temporaryProtection = new TemporaryProtection(this);
 
         // 연관관계 최신화
-        member.getApplies().add(temporaryProtection);
+        member.getApplications().add(temporaryProtection);
         abandonedAnimal.getApplications().add(temporaryProtection);
 
         return temporaryProtection;

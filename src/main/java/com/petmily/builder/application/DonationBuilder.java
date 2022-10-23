@@ -23,7 +23,7 @@ public class DonationBuilder {
         Donation donation = new Donation(this);
 
         // 연관관계 최신화
-        member.getApplies().add(donation);
+        member.getApplications().add(donation);
         abandonedAnimal.getApplications().add(donation);
 
         return donation;

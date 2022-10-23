@@ -1,7 +1,7 @@
 package com.petmily.service;
 
 import com.petmily.domain.Member;
-import com.petmily.domain.dto.member.ChangeMemberDto;
+import com.petmily.dto.member.ChangeMemberDto;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberRepository repository;
+    private final MemberRepository memberRepository;
 
     // 회원 가입
     public Long join(Member member) {
         duplicateCheck(member);
-        repository.save(member);
+        memberRepository.save(member);
 
         return member.getId();
     }
@@ -40,17 +40,17 @@ public class MemberService {
 
     // 회원 조회
     public Optional<Member> findOne(Long id) {
-        return repository.findById(id);
+        return memberRepository.findById(id);
     }
 
     // 전체 회원 조회
     public List<Member> findAll() {
-        return repository.findAll();
+        return memberRepository.findAll();
     }
 
     // 회원 정보 변경
     public Long changeMemberInfo(Long id, ChangeMemberDto memberDto) {
-        Member member = repository.findById(id)
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         member.changeInfo(memberDto);
@@ -60,6 +60,6 @@ public class MemberService {
 
     // 회원 탈퇴
     public void withdrawMember(Long id) {
-        repository.deleteById(id);
+        memberRepository.deleteById(id);
     }
 }

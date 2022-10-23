@@ -1,7 +1,7 @@
 package com.petmily.service;
 
 import com.petmily.domain.AbandonedAnimal;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
+import com.petmily.dto.abandoned_animal.ChangeAnimalDto;
 import com.petmily.repository.AbandonedAnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,28 +15,28 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AbandonedAnimalService {
 
-    private final AbandonedAnimalRepository repository;
+    private final AbandonedAnimalRepository animalRepository;
 
     // 유기동물 등록
     public Long register(AbandonedAnimal abandonedAnimal) {
-        repository.save(abandonedAnimal);
+        animalRepository.save(abandonedAnimal);
 
         return abandonedAnimal.getId();
     }
 
     // 유기동물 조회
     public Optional<AbandonedAnimal> findOne(Long id) {
-        return repository.findById(id);
+        return animalRepository.findById(id);
     }
 
     // 전체 유기동물 조회
     public List<AbandonedAnimal> findAll() {
-        return repository.findAll();
+        return animalRepository.findAll();
     }
 
     // 유기동물 정보 변경
     public Long changeAnimalInfo(Long id, ChangeAnimalDto animalDto) {
-        AbandonedAnimal abandonedAnimal = repository.findById(id)
+        AbandonedAnimal abandonedAnimal = animalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
 
         abandonedAnimal.changeInfo(animalDto);
@@ -46,6 +46,6 @@ public class AbandonedAnimalService {
 
     // 유기동물 삭제
     public void deleteAnimal(Long id) {
-        repository.deleteById(id);
+        animalRepository.deleteById(id);
     }
 }

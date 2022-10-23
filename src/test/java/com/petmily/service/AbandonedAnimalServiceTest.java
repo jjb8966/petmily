@@ -1,12 +1,12 @@
 package com.petmily.service;
 
 import com.petmily.domain.AbandonedAnimal;
-import com.petmily.domain.Application;
-import com.petmily.domain.builder.AbandonedAnimalBuilder;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
-import com.petmily.domain.embedded_type.Picture;
-import com.petmily.domain.enum_type.AnimalSpecies;
-import com.petmily.domain.enum_type.AnimalStatus;
+import com.petmily.domain.application.Application;
+import com.petmily.builder.AbandonedAnimalBuilder;
+import com.petmily.dto.abandoned_animal.ChangeAnimalDto;
+import com.petmily.embedded_type.Picture;
+import com.petmily.enum_type.AnimalSpecies;
+import com.petmily.enum_type.AnimalStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class AbandonedAnimalServiceTest {
     void register_findOne() {
         //given
         AbandonedAnimal abandonedAnimal = new AbandonedAnimalBuilder()
-                .setApplications(new ArrayList<Application>())
+                .setApplies(new ArrayList<Application>())
                 .setPictures(new ArrayList<Picture>())
                 .setSpecies(AnimalSpecies.CAT)
                 .setStatus(AnimalStatus.ADOPTED)

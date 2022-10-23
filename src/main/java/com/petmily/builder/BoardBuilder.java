@@ -29,7 +29,12 @@ public class BoardBuilder {
     }
 
     public Board build() {
-        return new Board(this);
+        Board board = new Board(this);
+
+        // 연관관계 최신화
+        member.getBoards().add(board);
+
+        return board;
     }
 
     public BoardBuilder setReplies(List<Reply> replies) {

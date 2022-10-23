@@ -3,11 +3,11 @@ package com.petmily.service;
 import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.Reply;
-import com.petmily.domain.builder.BoardBuilder;
-import com.petmily.domain.builder.MemberBuilder;
-import com.petmily.domain.dto.board.ChangeBoardDto;
-import com.petmily.domain.embedded_type.Picture;
-import com.petmily.domain.enum_type.BoardType;
+import com.petmily.builder.BoardBuilder;
+import com.petmily.builder.MemberBuilder;
+import com.petmily.dto.board.ChangeBoardDto;
+import com.petmily.embedded_type.Picture;
+import com.petmily.enum_type.BoardType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class BoardServiceTest {
     EntityManager em;
 
     @Autowired
-    BoardService service;
+    BoardService boardService;
 
     private Member member;
 
@@ -55,12 +55,13 @@ class BoardServiceTest {
                 .build();
 
         //when
-        service.write(board);
-        Board findBoard = service.findOne(board.getId()).orElseThrow();
+        boardService.write(board);
+        Board findBoard = boardService.findOne(board.getId()).orElseThrow();
 
         //then
         assertThat(findBoard.getTitle()).isEqualTo("title");
         assertThat(findBoard).isEqualTo(board);
+        assertThat(findBoard.getMember()).isEqualTo(member);
     }
 
     @Test
@@ -71,13 +72,13 @@ class BoardServiceTest {
         Board boardB = new BoardBuilder(member, BoardType.FREE).setTitle("B").build();
         Board boardC = new BoardBuilder(member, BoardType.FREE).setTitle("C").build();
         Board boardD = new BoardBuilder(member, BoardType.FREE).setTitle("D").build();
-        service.write(boardA);
-        service.write(boardB);
-        service.write(boardC);
-        service.write(boardD);
+        boardService.write(boardA);
+        boardService.write(boardB);
+        boardService.write(boardC);
+        boardService.write(boardD);
 
         //when
-        List<Board> allBoards = service.findAll();
+        List<Board> allBoards = boardService.findAll();
 
         //then
         assertThat(allBoards.size()).isEqualTo(4);
@@ -89,13 +90,13 @@ class BoardServiceTest {
     void changeAnimalInfo() {
         //given
         Board board = new BoardBuilder(member, BoardType.FREE).setTitle("A").build();
-        service.write(board);
+        boardService.write(board);
 
         ChangeBoardDto boardDto = new ChangeBoardDto();
         boardDto.setTitle("B");
 
         //when
-        service.changeBoardInfo(board.getId(), boardDto);
+        boardService.changeBoardInfo(board.getId(), boardDto);
 
         //then
         assertThat(board.getTitle()).isEqualTo("B");
@@ -106,13 +107,13 @@ class BoardServiceTest {
     void deleteAnimal() {
         //given
         Board board = new BoardBuilder(member, BoardType.FREE).setTitle("A").build();
-        service.write(board);
+        boardService.write(board);
 
         //when
-        service.deleteBoard(board.getId());
+        boardService.deleteBoard(board.getId());
 
         //then
-        boolean isPresent = service.findOne(board.getId()).isPresent();
+        boolean isPresent = boardService.findOne(board.getId()).isPresent();
         assertThat(isPresent).isFalse();
     }
 }

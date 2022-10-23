@@ -1,9 +1,9 @@
 package com.petmily.domain;
 
-import com.petmily.domain.builder.BoardBuilder;
-import com.petmily.domain.dto.board.ChangeBoardDto;
-import com.petmily.domain.embedded_type.Picture;
-import com.petmily.domain.enum_type.BoardType;
+import com.petmily.builder.BoardBuilder;
+import com.petmily.dto.board.ChangeBoardDto;
+import com.petmily.embedded_type.Picture;
+import com.petmily.enum_type.BoardType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

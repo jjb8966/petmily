@@ -94,10 +94,10 @@ public class ApplicationService {
 
     // 지원서 조회
     public <T extends Application> Optional<T> findOne(Long id, Class<T> type) {
-        return applicationRepository.findById(id)
-                .map(application -> (T) application)
-                .stream()
-                .findAny();
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
+        return Optional.ofNullable((T) application);
     }
 
     // 전체 지원서 조회

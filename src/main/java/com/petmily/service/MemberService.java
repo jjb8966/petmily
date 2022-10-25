@@ -17,6 +17,10 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ApplicationService applicationService;
+    private final ReplyService replyService;
+    private final BoardService boardService;
+
 
     // 회원 가입
     public Long join(Member member) {
@@ -60,6 +64,31 @@ public class MemberService {
 
     // 회원 탈퇴
     public void withdrawMember(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        deleteApplicationsAboutMember(id);
+        deleteRepliesAboutMember(id);
+        deleteBoardsAboutMember(id);
+
         memberRepository.deleteById(id);
+    }
+
+    private void deleteApplicationsAboutMember(Long memberId) {
+        applicationService.findAll().stream()
+                .filter(application -> application.getMember().getId().equals(memberId))
+                .forEach(application -> applicationService.deleteApplication(application.getId()));
+    }
+
+    private void deleteRepliesAboutMember(Long memberId) {
+        replyService.findAll().stream()
+                .filter(reply -> reply.getMember().getId().equals(memberId))
+                .forEach(reply -> replyService.deleteReply(reply.getId()));
+    }
+
+    private void deleteBoardsAboutMember(Long memberId) {
+        boardService.findAll().stream()
+                .filter(board -> board.getMember().getId().equals(memberId))
+                .forEach(board -> boardService.deleteBoard(board.getId()));
     }
 }

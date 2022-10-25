@@ -94,10 +94,10 @@ public class ApplicationService {
 
     // 지원서 조회
     public <T extends Application> Optional<T> findOne(Long id, Class<T> type) {
-        Application application = applicationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
-
-        return Optional.ofNullable((T) application);
+        return applicationRepository.findById(id)
+                .map(application -> (T) application)
+                .stream()
+                .findAny();
     }
 
     // 전체 지원서 조회
@@ -111,6 +111,17 @@ public class ApplicationService {
 
     // 지원서 삭제
     public void deleteApplication(Long id) {
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
+        application.getAbandonedAnimal()
+                .getApplications()
+                .removeIf(app -> app.getId().equals(id));
+
+        application.getMember()
+                .getApplications()
+                .removeIf(app -> app.getId().equals(id));
+
         applicationRepository.deleteById(id);
     }
 }

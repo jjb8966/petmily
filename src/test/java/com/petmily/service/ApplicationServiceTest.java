@@ -5,6 +5,7 @@ import com.petmily.builder.MemberBuilder;
 import com.petmily.domain.AbandonedAnimal;
 import com.petmily.domain.Member;
 import com.petmily.domain.application.Adopt;
+import com.petmily.domain.application.Application;
 import com.petmily.domain.application.Donation;
 import com.petmily.domain.application.TemporaryProtection;
 import com.petmily.dto.application.ApplyAdoptDto;
@@ -16,7 +17,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -115,5 +119,28 @@ class ApplicationServiceTest {
         assertThat(donation.getApplicationStatus()).isEqualTo(ApplicationStatus.WAIT);
         assertThat(member.getApplications().contains(donation)).isTrue();
         assertThat(animal.getApplications().contains(donation)).isTrue();
+    }
+
+    @Test
+    void delete() {
+        //given
+        Member member = new MemberBuilder("memberA", "123").build();
+        AbandonedAnimal animal = new AbandonedAnimalBuilder().setName("animalA").build();
+        memberService.join(member);
+        animalService.register(animal);
+
+        ApplyDonationDto donationDto = new ApplyDonationDto();
+        donationDto.setAmount(100_000);
+        Long donateId = applicationService.donate(member.getId(), animal.getId(), donationDto);
+
+        //when
+        applicationService.deleteApplication(donateId);
+
+        boolean isPresent = applicationService.findOne(donateId, Adopt.class).isPresent();
+        List<Application> all = applicationService.findAll();
+
+        //then
+        assertThat(isPresent).isFalse();
+        assertThat(all.size()).isEqualTo(0);
     }
 }

@@ -1,13 +1,22 @@
 package com.petmily.service;
 
-import com.petmily.domain.Member;
+import com.petmily.builder.AbandonedAnimalBuilder;
+import com.petmily.builder.BoardBuilder;
 import com.petmily.builder.MemberBuilder;
+import com.petmily.domain.AbandonedAnimal;
+import com.petmily.domain.Board;
+import com.petmily.domain.Member;
+import com.petmily.domain.application.Adopt;
+import com.petmily.dto.application.ApplyAdoptDto;
 import com.petmily.dto.member.ChangeMemberDto;
+import com.petmily.dto.reply.ReplyDto;
+import com.petmily.enum_type.BoardType;
 import com.petmily.exception.DuplicateLoginIdException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,6 +30,18 @@ class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    AbandonedAnimalService animalService;
+
+    @Autowired
+    BoardService boardService;
+
+    @Autowired
+    ReplyService replyService;
+
+    @Autowired
+    ApplicationService applicationService;
 
     @Test
     @DisplayName("회원 가입 및 id를 통한 조회를 할 수 있다.")
@@ -111,5 +132,31 @@ class MemberServiceTest {
         //then
         boolean isPresent = memberService.findOne(member.getId()).isPresent();
         assertThat(isPresent).isFalse();
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 시 작성한 지원서, 게시글, 댓글은 모두 삭제된다.")
+    void withdraw2() {
+        //given
+        Member member = new MemberBuilder("memberA", "111").build();
+        AbandonedAnimal animal = new AbandonedAnimalBuilder().setName("animalA").build();
+        memberService.join(member);
+        animalService.register(animal);
+
+        Board board = new BoardBuilder(member, BoardType.FREE).build();
+
+        Long boardID = boardService.write(board);
+        Long replyId = replyService.reply(member.getId(), board.getId(), new ReplyDto());
+        Long adoptId = applicationService.adopt(member.getId(), animal.getId(), new ApplyAdoptDto());
+
+        //when
+        memberService.withdrawMember(member.getId());
+
+        //then
+        assertThat(memberService.findOne(member.getId()).isEmpty()).isTrue();
+        assertThat(boardService.findOne(boardID).isEmpty()).isTrue();
+        assertThat(replyService.findOne(replyId).isEmpty()).isTrue();
+        assertThat(applicationService.findOne(adoptId, Adopt.class).isEmpty()).isTrue();
+        assertThat(animalService.findOne(animal.getId()).get().getApplications().isEmpty()).isTrue();
     }
 }

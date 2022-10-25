@@ -1,14 +1,18 @@
 package com.petmily.service;
 
 import com.petmily.domain.AbandonedAnimal;
+import com.petmily.domain.application.Application;
 import com.petmily.dto.abandoned_animal.ChangeAnimalDto;
 import com.petmily.repository.AbandonedAnimalRepository;
+import com.petmily.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -16,6 +20,7 @@ import java.util.Optional;
 public class AbandonedAnimalService {
 
     private final AbandonedAnimalRepository animalRepository;
+    private final ApplicationService applicationService;
 
     // 유기동물 등록
     public Long register(AbandonedAnimal abandonedAnimal) {
@@ -46,6 +51,17 @@ public class AbandonedAnimalService {
 
     // 유기동물 삭제
     public void deleteAnimal(Long id) {
+        AbandonedAnimal animal = animalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+
+        deleteApplicationsAboutAnimal(id);
+
         animalRepository.deleteById(id);
+    }
+
+    private void deleteApplicationsAboutAnimal(Long animalId) {
+        applicationService.findAll().stream()
+                .filter(application -> application.getAbandonedAnimal().getId().equals(animalId))
+                .forEach(application -> applicationService.deleteApplication(application.getId()));
     }
 }

@@ -6,6 +6,7 @@ import com.petmily.domain.Reply;
 import com.petmily.builder.BoardBuilder;
 import com.petmily.builder.MemberBuilder;
 import com.petmily.dto.board.ChangeBoardDto;
+import com.petmily.dto.reply.ReplyDto;
 import com.petmily.embedded_type.Picture;
 import com.petmily.enum_type.BoardType;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,13 @@ class BoardServiceTest {
     EntityManager em;
 
     @Autowired
+    MemberService memberService;
+
+    @Autowired
     BoardService boardService;
+
+    @Autowired
+    ReplyService replyService;
 
     private Member member;
 
@@ -43,7 +50,7 @@ class BoardServiceTest {
 
     @Test
     @DisplayName("게시글을 등록하고 id를 통한 조회를 할 수 있다.")
-    void register_findOne() {
+    void write_findOne() {
         //given
         Board board = new BoardBuilder(member, BoardType.FREE)
                 .setReplies(new ArrayList<Reply>())
@@ -87,7 +94,7 @@ class BoardServiceTest {
 
     @Test
     @DisplayName("게시글의 정보를 변경할 수 있다.")
-    void changeAnimalInfo() {
+    void changeBoardInfo() {
         //given
         Board board = new BoardBuilder(member, BoardType.FREE).setTitle("A").build();
         boardService.write(board);
@@ -104,7 +111,7 @@ class BoardServiceTest {
 
     @Test
     @DisplayName("게시글을 삭제할 수 있다.")
-    void deleteAnimal() {
+    void deleteBoard() {
         //given
         Board board = new BoardBuilder(member, BoardType.FREE).setTitle("A").build();
         boardService.write(board);
@@ -115,5 +122,35 @@ class BoardServiceTest {
         //then
         boolean isPresent = boardService.findOne(board.getId()).isPresent();
         assertThat(isPresent).isFalse();
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제하면 게시글에 달린 모든 댓글은 삭제된다.")
+    void deleteBoard2() {
+        //given
+        Member member1 = new MemberBuilder("aaa", "aaa").build();
+        Member member2 = new MemberBuilder("bbb", "bbb").build();
+        memberService.join(member1);
+        memberService.join(member2);
+
+        Board board = new BoardBuilder(member1, BoardType.FREE).build();
+        boardService.write(board);
+
+        replyService.reply(member1.getId(), board.getId(), new ReplyDto("1"));
+        replyService.reply(member2.getId(), board.getId(), new ReplyDto("2"));
+        replyService.reply(member1.getId(), board.getId(), new ReplyDto("3"));
+
+        assertThat(replyService.findAll().size()).isEqualTo(3);
+        assertThat(member1.getReplies().size()).isEqualTo(2);
+        assertThat(member2.getReplies().get(0).getContent()).isEqualTo("2");
+
+        //when
+        boardService.deleteBoard(board.getId());
+
+        //then
+        assertThat(replyService.findAll().size()).isEqualTo(0);
+        assertThat(replyService.findAll().isEmpty()).isTrue();
+        assertThat(member1.getReplies().isEmpty()).isTrue();
+        assertThat(member2.getReplies().isEmpty()).isTrue();
     }
 }

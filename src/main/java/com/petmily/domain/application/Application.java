@@ -32,4 +32,13 @@ public abstract class Application {
     @Enumerated(EnumType.STRING)
     protected ApplicationStatus applicationStatus;
 
+    @Override
+    public String toString() {
+        return "Application{" +
+                "id=" + id +
+                ", member=" + member.getId() +
+                ", abandonedAnimal=" + abandonedAnimal.getId() +
+                ", applicationStatus=" + applicationStatus +
+                '}';
+    }
 }

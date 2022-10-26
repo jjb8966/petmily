@@ -16,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@ToString(of = {"name","kind","age","weight","species","status"})
+@ToString(of = {"name", "kind", "age", "weight", "species", "status"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AbandonedAnimal {
 

@@ -1,19 +1,17 @@
 package com.petmily.service;
 
-import com.petmily.builder.BoardBuilder;
 import com.petmily.builder.MemberBuilder;
 import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.Reply;
+import com.petmily.dto.board.WriteBoardDto;
 import com.petmily.dto.reply.ChangeReplyDto;
 import com.petmily.dto.reply.ReplyDto;
-import com.petmily.enum_type.BoardType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -40,16 +38,21 @@ class ReplyServiceTest {
     void register_findOne() {
         //given
         Member member = new MemberBuilder("memberA", "123").build();
-        Board board = new BoardBuilder(member, BoardType.FREE).setTitle("BoardA").build();
         memberService.join(member);
-        boardService.write(board);
+
+        WriteBoardDto writeBoardDto = new WriteBoardDto();
+        writeBoardDto.setTitle("hello");
+
+        Long boardId = boardService.write(member.getId(), writeBoardDto);
 
         ReplyDto replyDto = new ReplyDto();
         replyDto.setContent("hi");
 
         //when
-        Long replyId = replyService.reply(member.getId(), board.getId(), replyDto);
+        Long replyId = replyService.reply(member.getId(), boardId, replyDto);
+
         Reply reply = replyService.findOne(replyId).orElseThrow();
+        Board board = boardService.findOne(boardId).orElseThrow();
 
         //then
         assertThat(reply.getMember().getLoginId()).isEqualTo(member.getLoginId());
@@ -64,31 +67,32 @@ class ReplyServiceTest {
         //given
         Member memberA = new MemberBuilder("memberA", "123").build();
         Member memberB = new MemberBuilder("memberB", "123").build();
-        Board board = new BoardBuilder(memberA, BoardType.FREE).setTitle("BoardA").build();
         memberService.join(memberA);
         memberService.join(memberB);
-        boardService.write(board);
 
-        ReplyDto firstReply = new ReplyDto();
-        ReplyDto secondReply = new ReplyDto();
-        ReplyDto thirdReply = new ReplyDto();
-        firstReply.setContent("first memberB");
-        secondReply.setContent("second memberA");
-        thirdReply.setContent("third memberB");
+        Long boardAId = boardService.write(memberA.getId(), new WriteBoardDto());
+        Long boardBId = boardService.write(memberB.getId(), new WriteBoardDto());
 
         //when
-        replyService.reply(memberB.getId(), board.getId(), firstReply);
-        replyService.reply(memberA.getId(), board.getId(), secondReply);
-        replyService.reply(memberB.getId(), board.getId(), thirdReply);
+        replyService.reply(memberB.getId(), boardAId, new ReplyDto());
+        replyService.reply(memberA.getId(), boardAId, new ReplyDto());
+        replyService.reply(memberB.getId(), boardAId, new ReplyDto());
+
+        replyService.reply(memberA.getId(), boardBId, new ReplyDto());
+        replyService.reply(memberB.getId(), boardBId, new ReplyDto());
+        replyService.reply(memberA.getId(), boardBId, new ReplyDto());
+        replyService.reply(memberB.getId(), boardBId, new ReplyDto());
+
+        Board boardA = boardService.findOne(boardAId).orElseThrow();
+        Board boardB = boardService.findOne(boardBId).orElseThrow();
 
         List<Reply> allReplies = replyService.findAll();
 
-        for (Reply reply : allReplies) {
-            log.info("reply = {}", reply);
-        }
-
         //then
-        assertThat(allReplies.size()).isEqualTo(3);
+        assertThat(boardA.getReplies().size()).isEqualTo(3);
+        assertThat(boardB.getReplies().size()).isEqualTo(4);
+        assertThat(allReplies.size()).isEqualTo(7);
+
     }
 
     @Test
@@ -96,14 +100,14 @@ class ReplyServiceTest {
     void changeReplyInfo() {
         //given
         Member member = new MemberBuilder("memberA", "123").build();
-        Board board = new BoardBuilder(member, BoardType.FREE).setTitle("BoardA").build();
         memberService.join(member);
-        boardService.write(board);
+
+        Long boardId = boardService.write(member.getId(), new WriteBoardDto());
 
         ReplyDto replyDto = new ReplyDto();
         replyDto.setContent("old reply");
 
-        Long replyId = replyService.reply(member.getId(), board.getId(), replyDto);
+        Long replyId = replyService.reply(member.getId(), boardId, replyDto);
         LocalDateTime firstWriteTime = replyService.findOne(replyId).orElseThrow().getWriteTime();
 
         //when
@@ -123,22 +127,24 @@ class ReplyServiceTest {
     void deleteAnimal() {
         //given
         Member member = new MemberBuilder("memberA", "123").build();
-        Board board = new BoardBuilder(member, BoardType.FREE).setTitle("BoardA").build();
         memberService.join(member);
-        boardService.write(board);
+
+        Long boardId = boardService.write(member.getId(), new WriteBoardDto());
 
         ReplyDto replyDto = new ReplyDto();
         replyDto.setContent("hi");
-        Long replyId = replyService.reply(member.getId(), board.getId(), replyDto);
+
+        Long replyId = replyService.reply(member.getId(), boardId, replyDto);
 
         //when
         replyService.deleteReply(replyId);
 
-        boolean isPresent = replyService.findOne(replyId).isPresent();
-        List<Reply> all = replyService.findAll();
+        Board board = boardService.findOne(boardId).orElseThrow();
 
         //then
-        assertThat(isPresent).isFalse();
-        assertThat(all.size()).isEqualTo(0);
+        assertThat(replyService.findOne(replyId).isPresent()).isFalse();
+        assertThat(replyService.findAll().size()).isEqualTo(0);
+        assertThat(member.getReplies().isEmpty()).isTrue();
+        assertThat(board.getReplies().isEmpty()).isTrue();
     }
 }

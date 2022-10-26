@@ -1,15 +1,22 @@
 package com.petmily.service;
 
+import com.petmily.builder.BoardBuilder;
+import com.petmily.builder.ReplyBuilder;
 import com.petmily.domain.AbandonedAnimal;
 import com.petmily.domain.Board;
+import com.petmily.domain.Member;
 import com.petmily.domain.Reply;
 import com.petmily.domain.application.Application;
 import com.petmily.dto.board.ChangeBoardDto;
+import com.petmily.dto.board.WriteBoardDto;
+import com.petmily.enum_type.BoardType;
 import com.petmily.repository.BoardRepository;
+import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +28,22 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
     private final ReplyService replyService;
 
     // 게시글 등록
-    public Long write(Board board) {
+    public Long write(Long memberId, WriteBoardDto boardDto) {
+        Member member = getMember(memberId);
+
+        Board board = new BoardBuilder(member, BoardType.FREE)
+                .setTitle(boardDto.getTitle())
+                .setContent(boardDto.getContent())
+                .setPictures(boardDto.getPictures())
+                .setReplies(boardDto.getReplies())
+                .setShownAll(boardDto.isShownAll())
+                .setWriteTime(LocalDateTime.now())
+                .build();
+
         boardRepository.save(board);
 
         return board.getId();
@@ -68,5 +87,10 @@ public class BoardService {
         replyService.findAll().stream()
                 .filter(reply -> reply.getBoard().getId().equals(boardId))
                 .forEach(reply -> replyService.deleteReply(reply.getId()));
+    }
+
+    private Member getMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 }

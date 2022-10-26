@@ -1,15 +1,11 @@
 package com.petmily.service;
 
+import com.petmily.builder.MemberBuilder;
 import com.petmily.domain.Board;
 import com.petmily.domain.Member;
-import com.petmily.domain.Reply;
-import com.petmily.builder.BoardBuilder;
-import com.petmily.builder.MemberBuilder;
 import com.petmily.dto.board.ChangeBoardDto;
+import com.petmily.dto.board.WriteBoardDto;
 import com.petmily.dto.reply.ReplyDto;
-import com.petmily.embedded_type.Picture;
-import com.petmily.enum_type.BoardType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,34 +34,22 @@ class BoardServiceTest {
     @Autowired
     ReplyService replyService;
 
-    private Member member;
-
-    @BeforeEach
-    void before() {
-        member = new MemberBuilder("memberA", "123").build();
-        em.persist(member);
-    }
-
     @Test
     @DisplayName("게시글을 등록하고 id를 통한 조회를 할 수 있다.")
     void write_findOne() {
         //given
-        Board board = new BoardBuilder(member, BoardType.FREE)
-                .setReplies(new ArrayList<Reply>())
-                .setPictures(new ArrayList<Picture>())
-                .setTitle("title")
-                .setContent("content")
-                .setShownAll(true)
-                .setWriteTime(LocalDateTime.now())
-                .build();
+        Member member = new MemberBuilder("memberA", "aaa").build();
+        memberService.join(member);
+
+        WriteBoardDto boardDto = new WriteBoardDto();
+        boardDto.setTitle("title A");
 
         //when
-        boardService.write(board);
-        Board findBoard = boardService.findOne(board.getId()).orElseThrow();
+        Long boardId = boardService.write(member.getId(), boardDto);
+        Board findBoard = boardService.findOne(boardId).orElseThrow();
 
         //then
-        assertThat(findBoard.getTitle()).isEqualTo("title");
-        assertThat(findBoard).isEqualTo(board);
+        assertThat(findBoard.getTitle()).isEqualTo("title A");
         assertThat(findBoard.getMember()).isEqualTo(member);
     }
 
@@ -75,17 +57,20 @@ class BoardServiceTest {
     @DisplayName("모든 게시글을 조회할 수 있다.")
     void findAll() {
         //given
-        Board boardA = new BoardBuilder(member, BoardType.FREE).setTitle("A").build();
-        Board boardB = new BoardBuilder(member, BoardType.FREE).setTitle("B").build();
-        Board boardC = new BoardBuilder(member, BoardType.FREE).setTitle("C").build();
-        Board boardD = new BoardBuilder(member, BoardType.FREE).setTitle("D").build();
-        boardService.write(boardA);
-        boardService.write(boardB);
-        boardService.write(boardC);
-        boardService.write(boardD);
+        Member member = new MemberBuilder("memberA", "aaa").build();
+        memberService.join(member);
+
+        Long a = boardService.write(member.getId(), new WriteBoardDto());
+        Long b = boardService.write(member.getId(), new WriteBoardDto());
+        Long c = boardService.write(member.getId(), new WriteBoardDto());
+        Long d = boardService.write(member.getId(), new WriteBoardDto());
 
         //when
         List<Board> allBoards = boardService.findAll();
+        Board boardA = boardService.findOne(a).orElseThrow();
+        Board boardB = boardService.findOne(b).orElseThrow();
+        Board boardC = boardService.findOne(c).orElseThrow();
+        Board boardD = boardService.findOne(d).orElseThrow();
 
         //then
         assertThat(allBoards.size()).isEqualTo(4);
@@ -96,14 +81,20 @@ class BoardServiceTest {
     @DisplayName("게시글의 정보를 변경할 수 있다.")
     void changeBoardInfo() {
         //given
-        Board board = new BoardBuilder(member, BoardType.FREE).setTitle("A").build();
-        boardService.write(board);
+        Member member = new MemberBuilder("memberA", "aaa").build();
+        memberService.join(member);
 
-        ChangeBoardDto boardDto = new ChangeBoardDto();
-        boardDto.setTitle("B");
+        WriteBoardDto writeBoardDto = new WriteBoardDto();
+        writeBoardDto.setTitle("A");
+
+        Long boardId = boardService.write(member.getId(), writeBoardDto);
+
+        ChangeBoardDto changeBoardDto = new ChangeBoardDto();
+        changeBoardDto.setTitle("B");
 
         //when
-        boardService.changeBoardInfo(board.getId(), boardDto);
+        boardService.changeBoardInfo(boardId, changeBoardDto);
+        Board board = boardService.findOne(boardId).orElseThrow();
 
         //then
         assertThat(board.getTitle()).isEqualTo("B");
@@ -113,15 +104,16 @@ class BoardServiceTest {
     @DisplayName("게시글을 삭제할 수 있다.")
     void deleteBoard() {
         //given
-        Board board = new BoardBuilder(member, BoardType.FREE).setTitle("A").build();
-        boardService.write(board);
+        Member member = new MemberBuilder("memberA", "aaa").build();
+        memberService.join(member);
+
+        Long boardId = boardService.write(member.getId(), new WriteBoardDto());
 
         //when
-        boardService.deleteBoard(board.getId());
+        boardService.deleteBoard(boardId);
 
         //then
-        boolean isPresent = boardService.findOne(board.getId()).isPresent();
-        assertThat(isPresent).isFalse();
+        assertThat(boardService.findOne(boardId).isEmpty()).isTrue();
     }
 
     @Test
@@ -133,19 +125,18 @@ class BoardServiceTest {
         memberService.join(member1);
         memberService.join(member2);
 
-        Board board = new BoardBuilder(member1, BoardType.FREE).build();
-        boardService.write(board);
+        Long boardId = boardService.write(member1.getId(), new WriteBoardDto());
 
-        replyService.reply(member1.getId(), board.getId(), new ReplyDto("1"));
-        replyService.reply(member2.getId(), board.getId(), new ReplyDto("2"));
-        replyService.reply(member1.getId(), board.getId(), new ReplyDto("3"));
+        replyService.reply(member1.getId(), boardId, new ReplyDto("1"));
+        replyService.reply(member2.getId(), boardId, new ReplyDto("2"));
+        replyService.reply(member1.getId(), boardId, new ReplyDto("3"));
 
         assertThat(replyService.findAll().size()).isEqualTo(3);
         assertThat(member1.getReplies().size()).isEqualTo(2);
         assertThat(member2.getReplies().get(0).getContent()).isEqualTo("2");
 
         //when
-        boardService.deleteBoard(board.getId());
+        boardService.deleteBoard(boardId);
 
         //then
         assertThat(replyService.findAll().size()).isEqualTo(0);

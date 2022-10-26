@@ -4,7 +4,6 @@ import com.petmily.domain.AbandonedAnimal;
 import com.petmily.domain.Member;
 import com.petmily.enum_type.ApplicationStatus;
 import lombok.Getter;
-import lombok.ToString;
 
 import javax.persistence.*;
 

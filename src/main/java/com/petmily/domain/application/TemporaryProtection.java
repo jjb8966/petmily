@@ -1,10 +1,10 @@
 package com.petmily.domain.application;
 
 import com.petmily.builder.application.TemporaryProtectionBuilder;
+import com.petmily.dto.application.ChangeTempProtectionDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -32,5 +32,9 @@ public class TemporaryProtection extends Application {
                 ", abandonedAnimal=" + abandonedAnimal +
                 ", applicationStatus=" + applicationStatus +
                 '}';
+    }
+
+    public void changeInfo(ChangeTempProtectionDto tempProtectionDto) {
+        this.period = tempProtectionDto.getPeriod();
     }
 }

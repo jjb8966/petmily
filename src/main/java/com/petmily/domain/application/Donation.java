@@ -1,6 +1,7 @@
 package com.petmily.domain.application;
 
 import com.petmily.builder.application.DonationBuilder;
+import com.petmily.dto.application.ChangeDonationDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,9 @@ public class Donation extends Application {
                 ", abandonedAnimal=" + abandonedAnimal +
                 ", applicationStatus=" + applicationStatus +
                 '}';
+    }
+
+    public void changeInfo(ChangeDonationDto donationDto) {
+        this.amount = donationDto.getAmount();
     }
 }

@@ -9,9 +9,7 @@ import com.petmily.domain.application.Adopt;
 import com.petmily.domain.application.Application;
 import com.petmily.domain.application.Donation;
 import com.petmily.domain.application.TemporaryProtection;
-import com.petmily.dto.application.ApplyAdoptDto;
-import com.petmily.dto.application.ApplyDonationDto;
-import com.petmily.dto.application.ApplyTempProtectionDto;
+import com.petmily.dto.application.*;
 import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.repository.ApplicationRepository;
 import com.petmily.repository.MemberRepository;
@@ -106,8 +104,34 @@ public class ApplicationService {
     }
 
     // 입양 정보 수정
+    public Long changeAdoptInfo(Long id, ChangeAdoptDto adoptDto) {
+        Adopt adopt = findOne(id, Adopt.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
+        adopt.changeInfo(adoptDto);
+
+        return adopt.getId();
+    }
+
     // 임시보호 정보 수정
+    public Long changeTempProtectionInfo(Long id, ChangeTempProtectionDto tempProtectionDto) {
+        TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
+        temporaryProtection.changeInfo(tempProtectionDto);
+
+        return temporaryProtection.getId();
+    }
+
     // 후원 정보 수정
+    public Long changeDonationInfo(Long id, ChangeDonationDto donationDto) {
+        Donation donation = findOne(id, Donation.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
+        donation.changeInfo(donationDto);
+
+        return donation.getId();
+    }
 
     // 지원서 삭제
     public void deleteApplication(Long id) {

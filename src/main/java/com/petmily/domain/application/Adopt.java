@@ -1,6 +1,7 @@
 package com.petmily.domain.application;
 
 import com.petmily.builder.application.AdoptBuilder;
+import com.petmily.dto.application.ChangeAdoptDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,5 +37,11 @@ public class Adopt extends Application {
                 ", abandonedAnimal=" + abandonedAnimal +
                 ", applicationStatus=" + applicationStatus +
                 '}';
+    }
+
+    public void changeInfo(ChangeAdoptDto adoptDto) {
+        this.address = adoptDto.getAddress();
+        this.job = adoptDto.getJob();
+        this.married = adoptDto.getMarried();
     }
 }

@@ -10,7 +10,6 @@ import com.petmily.domain.application.Donation;
 import com.petmily.dto.abandoned_animal.ChangeAnimalDto;
 import com.petmily.dto.application.ApplyAdoptDto;
 import com.petmily.dto.application.ApplyDonationDto;
-import com.petmily.embedded_type.Picture;
 import com.petmily.enum_type.AnimalSpecies;
 import com.petmily.enum_type.AnimalStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +44,6 @@ class AbandonedAnimalServiceTest {
         //given
         AbandonedAnimal abandonedAnimal = new AbandonedAnimalBuilder()
                 .setApplies(new ArrayList<Application>())
-                .setPictures(new ArrayList<Picture>())
                 .setSpecies(AnimalSpecies.CAT)
                 .setStatus(AnimalStatus.ADOPTED)
                 .setName("name")

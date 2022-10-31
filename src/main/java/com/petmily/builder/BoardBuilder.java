@@ -3,7 +3,6 @@ package com.petmily.builder;
 import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.Reply;
-import com.petmily.embedded_type.Picture;
 import com.petmily.enum_type.BoardType;
 import lombok.Getter;
 
@@ -16,7 +15,6 @@ public class BoardBuilder {
 
     private Member member;
     private List<Reply> replies = new ArrayList<>();
-    private List<Picture> pictures = new ArrayList<>();
     private BoardType boardType;
     private String title;
     private String content;
@@ -39,11 +37,6 @@ public class BoardBuilder {
 
     public BoardBuilder setReplies(List<Reply> replies) {
         this.replies = replies;
-        return this;
-    }
-
-    public BoardBuilder setPictures(List<Picture> pictures) {
-        this.pictures = pictures;
         return this;
     }
 

@@ -2,7 +2,6 @@ package com.petmily.builder;
 
 import com.petmily.domain.AbandonedAnimal;
 import com.petmily.domain.application.Application;
-import com.petmily.embedded_type.Picture;
 import com.petmily.enum_type.AnimalSpecies;
 import com.petmily.enum_type.AnimalStatus;
 import lombok.Getter;
@@ -14,7 +13,6 @@ import java.util.List;
 public class AbandonedAnimalBuilder {
 
     private List<Application> applies = new ArrayList<>();
-    private List<Picture> pictures = new ArrayList<>();
     private AnimalSpecies species;
     private AnimalStatus status = AnimalStatus.PROTECTED;
     private String name;
@@ -28,11 +26,6 @@ public class AbandonedAnimalBuilder {
 
     public AbandonedAnimalBuilder setApplies(List<Application> applies) {
         this.applies = applies;
-        return this;
-    }
-
-    public AbandonedAnimalBuilder setPictures(List<Picture> pictures) {
-        this.pictures = pictures;
         return this;
     }
 

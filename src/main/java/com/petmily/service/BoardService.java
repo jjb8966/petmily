@@ -1,12 +1,8 @@
 package com.petmily.service;
 
 import com.petmily.builder.BoardBuilder;
-import com.petmily.builder.ReplyBuilder;
-import com.petmily.domain.AbandonedAnimal;
 import com.petmily.domain.Board;
 import com.petmily.domain.Member;
-import com.petmily.domain.Reply;
-import com.petmily.domain.application.Application;
 import com.petmily.dto.board.ChangeBoardDto;
 import com.petmily.dto.board.WriteBoardDto;
 import com.petmily.enum_type.BoardType;
@@ -17,10 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,7 +32,6 @@ public class BoardService {
         Board board = new BoardBuilder(member, BoardType.FREE)
                 .setTitle(boardDto.getTitle())
                 .setContent(boardDto.getContent())
-                .setPictures(boardDto.getPictures())
                 .setReplies(boardDto.getReplies())
                 .setShownAll(boardDto.isShownAll())
                 .setWriteTime(LocalDateTime.now())
@@ -62,7 +55,7 @@ public class BoardService {
     // 게시글 수정
     public Long changeBoardInfo(Long id, ChangeBoardDto boardDto) {
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
         board.changeInfo(boardDto);
 
@@ -72,7 +65,7 @@ public class BoardService {
     // 게시글 삭제
     public void deleteBoard(Long id) {
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
         board.getMember()
                 .getBoards()

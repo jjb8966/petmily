@@ -2,7 +2,6 @@ package com.petmily.domain;
 
 import com.petmily.builder.BoardBuilder;
 import com.petmily.dto.board.ChangeBoardDto;
-import com.petmily.embedded_type.Picture;
 import com.petmily.enum_type.BoardType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,9 +30,6 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Reply> replies;
 
-    @ElementCollection
-    private List<Picture> pictures;
-
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
 
@@ -45,7 +41,6 @@ public class Board {
     public Board(BoardBuilder builder) {
         this.member = builder.getMember();
         this.replies = builder.getReplies();
-        this.pictures = builder.getPictures();
         this.boardType = builder.getBoardType();
         this.title = builder.getTitle();
         this.content = builder.getContent();
@@ -54,7 +49,6 @@ public class Board {
     }
 
     public void changeInfo(ChangeBoardDto boardDto) {
-        this.pictures = boardDto.getPictures();
         this.title = boardDto.getTitle();
         this.content = boardDto.getContent();
         this.shownAll = boardDto.isShownAll();

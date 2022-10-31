@@ -3,7 +3,6 @@ package com.petmily.domain;
 import com.petmily.domain.application.Application;
 import com.petmily.builder.AbandonedAnimalBuilder;
 import com.petmily.dto.abandoned_animal.ChangeAnimalDto;
-import com.petmily.embedded_type.Picture;
 import com.petmily.enum_type.AnimalSpecies;
 import com.petmily.enum_type.AnimalStatus;
 import lombok.AccessLevel;
@@ -28,9 +27,6 @@ public class AbandonedAnimal {
     @OneToMany(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)
     private List<Application> applications;
 
-    @ElementCollection
-    private List<Picture> pictures;
-
     @Enumerated(EnumType.STRING)
     private AnimalSpecies species;
 
@@ -44,29 +40,12 @@ public class AbandonedAnimal {
 
     public AbandonedAnimal(AbandonedAnimalBuilder builder) {
         this.applications = builder.getApplies();
-        this.pictures = builder.getPictures();
         this.species = builder.getSpecies();
         this.status = builder.getStatus();
         this.name = builder.getName();
         this.kind = builder.getKind();
         this.age = builder.getAge();
         this.weight = builder.getWeight();
-    }
-
-    public Long addApplication(Application application) {
-        applications.add(application);
-
-        return application.getId();
-    }
-
-    public Long removeApplication(Application application) {
-        applications.remove(application);
-
-        return application.getId();
-    }
-
-    public void changeAnimalStatus(AnimalStatus status) {
-        this.status = status;
     }
 
     public void changeInfo(ChangeAnimalDto animalDto) {

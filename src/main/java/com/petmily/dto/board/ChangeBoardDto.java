@@ -1,6 +1,5 @@
 package com.petmily.dto.board;
 
-import com.petmily.embedded_type.Picture;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,6 @@ import java.util.List;
 @Setter
 public class ChangeBoardDto {
 
-    private List<Picture> pictures = new ArrayList<>();
     private String title;
     private String content;
     private boolean shownAll;

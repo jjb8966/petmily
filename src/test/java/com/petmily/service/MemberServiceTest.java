@@ -1,15 +1,19 @@
 package com.petmily.service;
 
 import com.petmily.builder.AbandonedAnimalBuilder;
+import com.petmily.builder.BoardBuilder;
 import com.petmily.builder.MemberBuilder;
 import com.petmily.domain.AbandonedAnimal;
+import com.petmily.domain.Board;
 import com.petmily.domain.Member;
 import com.petmily.domain.application.Adopt;
 import com.petmily.dto.application.ApplyAdoptDto;
 import com.petmily.dto.board.WriteBoardDto;
 import com.petmily.dto.member.ChangeMemberDto;
 import com.petmily.dto.reply.ReplyDto;
+import com.petmily.enum_type.BoardType;
 import com.petmily.exception.DuplicateLoginIdException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
+@Slf4j
 class MemberServiceTest {
 
     @Autowired
@@ -153,5 +158,27 @@ class MemberServiceTest {
         assertThat(replyService.findOne(replyId).isEmpty()).isTrue();
         assertThat(applicationService.findOne(adoptId, Adopt.class).isEmpty()).isTrue();
         assertThat(animalService.findOne(animal.getId()).get().getApplications().isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName("영속성 전이를 통해 member를 영속 상태로 만들면 board도 영속 상태가 된다.")
+    void test() {
+        Member member = new MemberBuilder("memberA", "a")
+                .setName("hi")
+                .setPhone("010")
+                .setEmail("a@a")
+                .build();
+
+        Board board = new BoardBuilder(member, BoardType.FREE)
+                .setTitle("board title")
+                .setContent("board content")
+                .build();
+
+        memberService.join(member);
+
+        Board findBoard = boardService.findOne(board.getId()).orElseThrow();
+        log.info("findBoard = {}", findBoard);
+
+        assertThat(boardService.findOne(board.getId()).isPresent()).isTrue();
     }
 }

@@ -1,7 +1,7 @@
 package com.petmily.service;
 
-import com.petmily.domain.Member;
-import com.petmily.dto.member.ChangeMemberDto;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.dto.member.ChangeMemberDto;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

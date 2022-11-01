@@ -1,11 +1,11 @@
 package com.petmily.service;
 
-import com.petmily.builder.MemberBuilder;
-import com.petmily.domain.Board;
-import com.petmily.domain.Member;
-import com.petmily.dto.board.ChangeBoardDto;
-import com.petmily.dto.board.WriteBoardDto;
-import com.petmily.dto.reply.ReplyDto;
+import com.petmily.domain.builder.MemberBuilder;
+import com.petmily.domain.core.Board;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.dto.board.ChangeBoardDto;
+import com.petmily.domain.dto.board.WriteBoardDto;
+import com.petmily.domain.dto.reply.ReplyDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

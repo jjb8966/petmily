@@ -1,18 +1,14 @@
 package com.petmily.service;
 
-import com.petmily.domain.AbandonedAnimal;
-import com.petmily.domain.application.Application;
-import com.petmily.dto.abandoned_animal.ChangeAnimalDto;
+import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
 import com.petmily.repository.AbandonedAnimalRepository;
-import com.petmily.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

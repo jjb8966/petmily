@@ -1,15 +1,15 @@
 package com.petmily.service;
 
-import com.petmily.builder.application.AdoptBuilder;
-import com.petmily.builder.application.DonationBuilder;
-import com.petmily.builder.application.TemporaryProtectionBuilder;
-import com.petmily.domain.AbandonedAnimal;
-import com.petmily.domain.Member;
-import com.petmily.domain.application.Adopt;
-import com.petmily.domain.application.Application;
-import com.petmily.domain.application.Donation;
-import com.petmily.domain.application.TemporaryProtection;
-import com.petmily.dto.application.*;
+import com.petmily.domain.builder.application.AdoptBuilder;
+import com.petmily.domain.builder.application.DonationBuilder;
+import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
+import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.core.application.Adopt;
+import com.petmily.domain.core.application.Application;
+import com.petmily.domain.core.application.Donation;
+import com.petmily.domain.core.application.TemporaryProtection;
+import com.petmily.domain.dto.application.*;
 import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.repository.ApplicationRepository;
 import com.petmily.repository.MemberRepository;

@@ -1,15 +1,15 @@
 package com.petmily.service;
 
-import com.petmily.builder.AbandonedAnimalBuilder;
-import com.petmily.builder.MemberBuilder;
-import com.petmily.domain.AbandonedAnimal;
-import com.petmily.domain.Member;
-import com.petmily.domain.application.Adopt;
-import com.petmily.domain.application.Application;
-import com.petmily.domain.application.Donation;
-import com.petmily.domain.application.TemporaryProtection;
-import com.petmily.dto.application.*;
-import com.petmily.enum_type.ApplicationStatus;
+import com.petmily.domain.builder.AbandonedAnimalBuilder;
+import com.petmily.domain.builder.MemberBuilder;
+import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.core.application.Adopt;
+import com.petmily.domain.core.application.Application;
+import com.petmily.domain.core.application.Donation;
+import com.petmily.domain.core.application.TemporaryProtection;
+import com.petmily.domain.dto.application.*;
+import com.petmily.domain.core.enum_type.ApplicationStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

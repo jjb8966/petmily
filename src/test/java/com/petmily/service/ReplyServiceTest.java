@@ -1,12 +1,12 @@
 package com.petmily.service;
 
-import com.petmily.builder.MemberBuilder;
-import com.petmily.domain.Board;
-import com.petmily.domain.Member;
-import com.petmily.domain.Reply;
-import com.petmily.dto.board.WriteBoardDto;
-import com.petmily.dto.reply.ChangeReplyDto;
-import com.petmily.dto.reply.ReplyDto;
+import com.petmily.domain.builder.MemberBuilder;
+import com.petmily.domain.core.Board;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.core.Reply;
+import com.petmily.domain.dto.board.WriteBoardDto;
+import com.petmily.domain.dto.reply.ChangeReplyDto;
+import com.petmily.domain.dto.reply.ReplyDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

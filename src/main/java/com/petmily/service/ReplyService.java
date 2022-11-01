@@ -1,11 +1,11 @@
 package com.petmily.service;
 
-import com.petmily.builder.ReplyBuilder;
-import com.petmily.domain.Board;
-import com.petmily.domain.Member;
-import com.petmily.domain.Reply;
-import com.petmily.dto.reply.ChangeReplyDto;
-import com.petmily.dto.reply.ReplyDto;
+import com.petmily.domain.builder.ReplyBuilder;
+import com.petmily.domain.core.Board;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.core.Reply;
+import com.petmily.domain.dto.reply.ChangeReplyDto;
+import com.petmily.domain.dto.reply.ReplyDto;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import com.petmily.repository.ReplyRepository;

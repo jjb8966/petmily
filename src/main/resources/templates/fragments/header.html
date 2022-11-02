@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<th:block th:fragment="headerFragment">
+    <!--로그인 & 회원가입-->
+    <header class="wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 d-flex align-items-center">
+                    <p class="mb-0 phone pl-md-2">
+                    </p>
+                </div>
+                <div class="nav-link col-md-12 d-flex justify-content-md-end">
+                    <div th:if="${loginMember == null}">
+                        <span>
+                        <a class="text-white" href="/login">로그인</a>
+                        </span>
+                        &emsp;
+                        <span>
+                        <a class="text-white" href="/join">회원가입</a>
+                        </span>
+                    </div>
+
+                    <div th:if="${loginMember != null}">
+                        <p class="md-12 d-flex">
+                            <span class="text-white">
+                             <b th:text="${loginMember.name}"></b><small> 님 환영합니다!</small>
+                            </span>
+                        &emsp;
+                            <span>
+                             <a class="text-white" href="/member/auth/mypage">마이페이지</a>
+                            </span>
+                        &emsp;
+                            <span>
+                             <a class="text-white" href="/logout">로그아웃</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!--메뉴 탭-->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <span class="flaticon-pawprint-1 mr-2"></span>Petmily</a>
+            <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                    data-target="#navbarNavDropdown" data-toggle="collapse" type="button">
+                <span class="fa fa-bars"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/abandoned_animal/list">유기동물 조회</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/findBoard/list">반려동물 찾아요</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/lookBoard/list">유기동물 봤어요</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                           id="navbarDropdownMenuLink" role="button">
+                            게시판
+                        </a>
+                        <ul aria-labelledby="navbarDropdownMenuLink" class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/board/list?kindOfBoard=자유&sort=bno">자유 게시판</a></li>
+                            <li><a class="dropdown-item" href="/board/list?kindOfBoard=문의&sort=bno">문의 게시판</a></li>
+                            <li><a class="dropdown-item" href="/adopt_review/list?kindOfBoard=입양후기">입양 후기 게시판</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</th:block>
+</html>

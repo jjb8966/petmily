@@ -1,13 +1,16 @@
 package com.petmily.service;
 
+import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.ChangeMemberDto;
+import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +24,19 @@ public class MemberService {
     private final ReplyService replyService;
     private final BoardService boardService;
 
-
     // 회원 가입
     public Long join(Member member) {
         duplicateCheck(member);
         memberRepository.save(member);
 
         return member.getId();
+    }
+
+    // 로그인
+    public Optional<Member> login(LoginForm loginForm) {
+        return memberRepository.findByLoginId(loginForm.getLoginId())
+                .filter(member -> member.getPassword().equals(loginForm.getPassword()))
+                .stream().findAny();
     }
 
     private void duplicateCheck(Member member) {

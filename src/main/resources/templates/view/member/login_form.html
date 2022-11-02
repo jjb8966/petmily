@@ -1,0 +1,67 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/login.css">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Loding font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
+
+    <style>
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="section">
+    <div class="container">
+        <div class="form">
+            <div class="left-side">
+                <div>
+                    <form th:action th:object="${loginForm}" method="post">
+                        <div class="login" id="login">
+                            <b><a href="/" style="text-decoration: none; color: black"><h2>Petmily</h2></a></b>
+                        </div>
+
+                        <div class="form-inputs">
+                            <input type="text" placeholder="아이디" th:field="*{loginId}" th:errorclass="field-error">
+                            <div class="field-error" th:errors="*{loginId}">
+                                로그인 아이디 에러 메시지
+                            </div>
+
+                            <input type="password" class="password" placeholder="비밀번호" th:field="*{password}" th:errorclass="field-error">
+                            <div class="field-error" th:errors="*{password}">
+                                비밀번호 에러 메시지
+                            </div>
+
+                            <div th:if="${#fields.hasGlobalErrors()}">
+                                <p class="field-error" th:each="error : ${#fields.globalErrors()}" th:text="${error}">
+                                    로그인 에러 메시지
+                                </p>
+                            </div>
+
+                            <br>
+                            <div class="login">
+                                <div>
+                                    <button type="submit" class="btn btn-lg btn-block btn-success">로그인</button>
+                                    <br>
+                                    <div class="join"><a style="text-decoration:none" href="/join">회원가입</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

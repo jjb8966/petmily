@@ -1,12 +1,14 @@
 package com.petmily.domain.builder;
 
-import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
+import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.enum_type.MemberGrade;
 import lombok.Getter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class MemberBuilder {
     private String loginId;
     private String password;
     private String name;
+    private LocalDate birth;
     private String email;
     private String phone;
 
@@ -54,6 +57,11 @@ public class MemberBuilder {
 
     public MemberBuilder setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public MemberBuilder setBirth(LocalDate birth) {
+        this.birth = birth;
         return this;
     }
 

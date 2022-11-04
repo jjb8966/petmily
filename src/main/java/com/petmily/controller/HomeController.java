@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 public class HomeController {
 
     @GetMapping("/")
-    public String home(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+    public String home(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Member loginMember,
                        Model model) {
 
         if (loginMember != null) {
-            model.addAttribute("loginMember", loginMember);
+            model.addAttribute(SessionConstant.LOGIN_MEMBER, loginMember);
         }
 
         return "index";

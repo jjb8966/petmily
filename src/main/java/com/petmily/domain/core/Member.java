@@ -10,11 +10,13 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
-@ToString(of = {"loginId", "password", "name", "email", "phone", "grade"})
+@ToString(of = {"loginId", "password", "name", "birth", "email", "phone", "grade"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -38,6 +40,7 @@ public class Member {
     private String loginId;
     private String password;
     private String name;
+    private LocalDate birth;
     private String email;
     private String phone;
 
@@ -49,6 +52,7 @@ public class Member {
         this.loginId = builder.getLoginId();
         this.password = builder.getPassword();
         this.name = builder.getName();
+        this.birth = builder.getBirth();
         this.email = builder.getEmail();
         this.phone = builder.getPhone();
     }

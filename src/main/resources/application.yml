@@ -22,3 +22,8 @@ logging:
     org.hibernate.SQL: debug
 #    org.hibernate.trace: trace
 #    -> 콘솔
+
+server:
+  servlet:
+    session:
+      timeout: 1800

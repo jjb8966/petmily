@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url(/petsitting-master/images/bg_2.jpg);"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <p class="breadcrumbs mb-2">
+                        <span class="mr-2"><span>Abandoned Animal<i class="ion-ios-arrow-forward"></i></span></span>
+                    </p>
+                    <h1 class="mb-0 bread">유기동물 조회</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12" th:each="animal : ${animalPage.realPage.content}">
+                    <div class="card shadow-sm"  th:onclick="|location.href='/abandoned_animal/detail/${animal.id}';|">
+                        <img class="bd-placeholder-img card-img-top" height="300" th:src="|/abandoned_animal/image/${animal.picture.fileStoreName}|">
+
+                        <div class="card-body">
+                            <p class="card-text" th:text="${animal.name}">x</p>
+                            <div class="d-flex justify-content-between align-items-center">
+<!--                                <div class="btn-group">-->
+<!--                                    <button type="button" class="btn btn-sm btn-outline-secondary"></button>-->
+<!--                                    <button type="button" class="btn btn-sm btn-outline-secondary"></button>-->
+<!--                                </div>-->
+                                <small class="text-muted" th:text="${animal.species}">9 mins</small>
+                            </div>
+                        </div>
+                    </div>
+                    &emsp;
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <div class="block-27">
+                        <ul>
+                            <!--6 페이지 이상인 경우 '<' 표시-->
+                            <li>
+                                <p th:if="${(animalPage.realPage.number + 1) gt 5}">
+                                    <a th:href="|/abandoned_animal/list?page=${(animalPage.realPage.number + 1) - 5}|">&lt;</a>
+                                </p>
+                            </li>
+
+                            <!--5의 배수로 페이지 보여줄 페이지-->
+                            <th:block th:each="pageNumber : ${#numbers.sequence(animalPage.startPage, animalPage.endPage)}">
+                                <li th:if="${pageNumberStat.current le animalPage.realPage.totalPages}"
+                                    th:classappend="${pageNumberStat.current == (animalPage.realPage.number + 1)} ? 'active' : ''">
+                                    <a th:href="|/abandoned_animal/list?page=${pageNumberStat.current}|" th:text="${pageNumberStat.current}">페이지</a>
+                                </li>
+                            </th:block>
+
+                            <!--이전 5개의 보여줄 페이지가 있을 시 '>'-->
+                            <li>
+                                <p th:if="${animalPage.realPage.totalPages - (animalPage.realPage.number + 1) gt 0}">
+                                    <a th:href="|/abandoned_animal/list?page=${animalPage.startPage + 5}|">&gt;</a>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

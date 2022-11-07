@@ -1,6 +1,7 @@
 package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.AdoptBuilder;
+import com.petmily.domain.core.enum_type.LocationType;
 import com.petmily.domain.dto.application.ChangeAdoptDto;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,15 +14,15 @@ import javax.persistence.Entity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Adopt extends Application {
 
-    private String address;
+    private LocationType location;
     private String job;
-    private Character married;
+    private Boolean married;
 
     public Adopt(AdoptBuilder builder) {
         this.member = builder.getMember();
         this.abandonedAnimal = builder.getAbandonedAnimal();
         this.applicationStatus = builder.getApplicationStatus();
-        this.address = builder.getAddress();
+        this.location = builder.getLocation();
         this.job = builder.getJob();
         this.married = builder.getMarried();
     }
@@ -29,7 +30,7 @@ public class Adopt extends Application {
     @Override
     public String toString() {
         return "Adopt{" +
-                "address='" + address + '\'' +
+                "address='" + location + '\'' +
                 ", job='" + job + '\'' +
                 ", married=" + married +
                 ", member=" + member +
@@ -39,7 +40,6 @@ public class Adopt extends Application {
     }
 
     public void changeInfo(ChangeAdoptDto adoptDto) {
-        this.address = adoptDto.getAddress();
         this.job = adoptDto.getJob();
         this.married = adoptDto.getMarried();
     }

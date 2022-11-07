@@ -8,6 +8,7 @@ import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.application.Donation;
 import com.petmily.domain.core.application.TemporaryProtection;
+import com.petmily.domain.core.enum_type.LocationType;
 import com.petmily.domain.dto.application.*;
 import com.petmily.domain.core.enum_type.ApplicationStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -50,20 +51,20 @@ class ApplicationServiceTest {
         animalService.register(animal);
 
         ApplyAdoptDto adoptDto = new ApplyAdoptDto();
-        adoptDto.setAddress("addressA");
+        adoptDto.setLocation(LocationType.SEOUL);
         adoptDto.setJob("chef");
-        adoptDto.setMarried('N');
+        adoptDto.setMarried(true);
 
         //when
         Long adoptId = applicationService.adopt(member.getId(), animal.getId(), adoptDto);
-        Adopt adopt = applicationService.findOne(adoptId, Adopt.class).orElseThrow();
+        Adopt adopt = applicationService.findOne(adoptId, Adopt.class);
 
         log.info("adopt = {}", adopt);
 
         //then
         assertThat(adopt.getMember().getLoginId()).isEqualTo("memberA");
         assertThat(adopt.getAbandonedAnimal().getName()).isEqualTo("animalA");
-        assertThat(adopt.getAddress()).isEqualTo("addressA");
+        assertThat(adopt.getLocation()).isEqualTo("addressA");
         assertThat(adopt.getApplicationStatus()).isEqualTo(ApplicationStatus.WAIT);
         assertThat(member.getApplications().contains(adopt)).isTrue();
         assertThat(animal.getApplications().contains(adopt)).isTrue();
@@ -83,7 +84,7 @@ class ApplicationServiceTest {
 
         //when
         Long tempProtectId = applicationService.tempProtect(member.getId(), animal.getId(), tempProtectionDto);
-        TemporaryProtection temporaryProtection = applicationService.findOne(tempProtectId, TemporaryProtection.class).orElseThrow();
+        TemporaryProtection temporaryProtection = applicationService.findOne(tempProtectId, TemporaryProtection.class);
 
         log.info("temporaryProtection = {}", temporaryProtection);
 
@@ -110,7 +111,7 @@ class ApplicationServiceTest {
 
         //when
         Long donateId = applicationService.donate(member.getId(), animal.getId(), donationDto);
-        Donation donation = applicationService.findOne(donateId, Donation.class).orElseThrow();
+        Donation donation = applicationService.findOne(donateId, Donation.class);
 
         log.info("donation = {}", donateId);
 
@@ -138,11 +139,11 @@ class ApplicationServiceTest {
         //when
         applicationService.deleteApplication(donateId);
 
-        boolean isPresent = applicationService.findOne(donateId, Adopt.class).isPresent();
+        Adopt adopt = applicationService.findOne(donateId, Adopt.class);
         List<Application> all = applicationService.findAll();
 
         //then
-        assertThat(isPresent).isFalse();
+        assertThat(adopt).isNull();
         assertThat(all.size()).isEqualTo(0);
     }
 
@@ -156,24 +157,24 @@ class ApplicationServiceTest {
         animalService.register(animal);
 
         ApplyAdoptDto adoptDto = new ApplyAdoptDto();
-        adoptDto.setAddress("addressA");
+        adoptDto.setLocation(LocationType.SEOUL);
         adoptDto.setJob("chef");
-        adoptDto.setMarried('N');
+        adoptDto.setMarried(true);
 
         Long adoptId = applicationService.adopt(member.getId(), animal.getId(), adoptDto);
 
         ChangeAdoptDto changeAdoptDto = new ChangeAdoptDto();
         changeAdoptDto.setAddress("addressB");
         changeAdoptDto.setJob("teacher");
-        changeAdoptDto.setMarried('Y');
+        changeAdoptDto.setMarried(true);
 
         //when
         applicationService.changeAdoptInfo(adoptId, changeAdoptDto);
 
-        Adopt adopt = applicationService.findOne(adoptId, Adopt.class).orElseThrow();
+        Adopt adopt = applicationService.findOne(adoptId, Adopt.class);
 
         //then
-        assertThat(adopt.getAddress()).isEqualTo(changeAdoptDto.getAddress());
+        assertThat(adopt.getLocation()).isEqualTo(changeAdoptDto.getAddress());
         assertThat(adopt.getJob()).isEqualTo(changeAdoptDto.getJob());
         assertThat(adopt.getMarried()).isEqualTo(changeAdoptDto.getMarried());
         assertThat(adopt.getMember()).isEqualTo(member);
@@ -202,7 +203,7 @@ class ApplicationServiceTest {
         //when
         applicationService.changeTempProtectionInfo(tempProtectId, changeTempProtectionDto);
 
-        TemporaryProtection temporaryProtection = applicationService.findOne(tempProtectId, TemporaryProtection.class).orElseThrow();
+        TemporaryProtection temporaryProtection = applicationService.findOne(tempProtectId, TemporaryProtection.class);
 
         //then
         assertThat(temporaryProtection.getPeriod()).isEqualTo(changeTempProtectionDto.getPeriod());
@@ -231,7 +232,7 @@ class ApplicationServiceTest {
 
         //when
         applicationService.changeDonationInfo(donateId, changeDonationDto);
-        Donation donation = applicationService.findOne(donateId, Donation.class).orElseThrow();
+        Donation donation = applicationService.findOne(donateId, Donation.class);
 
         //then
         assertThat(donation.getAmount()).isEqualTo(changeDonationDto.getAmount());

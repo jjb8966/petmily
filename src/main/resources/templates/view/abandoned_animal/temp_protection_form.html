@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <p class="breadcrumbs mb-2">
+                        <span class="mr-2"><span>TempProtection - Submit<i class="ion-ios-arrow-forward"></i></span></span>
+                    </p>
+                    <h1 class="mb-0 bread">임시보호하기</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container survey">
+        <h1 id="title" class="text-center">임시보호 신청서</h1>
+
+        <p class="text-center" style="color: red">* 다음 양식을 채워주세요</p>
+        <p class="text-left">* 임시 보호의 최소 기간은 2개월입니다.</p>
+
+        <form th:action method="post">
+            <div class="form-group">
+                <p>* 보호할 동물</p>
+                <input type="text" class="form-control" th:value="${animalName}" readonly>
+            </div>
+
+            <div class="form-group">
+                <p>* 보호자 이름</p>
+                <input type="text" class="form-control" th:value="${session.loginMember.name}" readonly>
+            </div>
+            <br/>
+
+            <div class="form-group">
+                <p>거주 지역</p>
+                <select class="form-control" th:field="${tempProtectionDto.location}">
+                    <option th:each="location : ${locationType}"
+                            th:value="${location.name()}" th:text="${location.locationName}">
+                        지역이름
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <p>직업</p>
+                <input type="text" class="form-control" th:field="${tempProtectionDto.job}"
+                       th:errorclass="field-error" placeholder="직업을 입력해주세요.">
+                <div class="field-error" th:errors="${tempProtectionDto.job}"></div>
+            </div>
+
+            <div class="radiobuttons">
+                <p>결혼 여부</p>
+                <ul style="list-style: none;">
+                    <li class="radio">
+                        <input type="radio" class="userRatings" th:field="${tempProtectionDto.married}"
+                               th:errorclass="field-error" value="true"> 기혼
+                    </li>
+                    <li class="radio">
+                        <input type="radio" class="userRatings" th:field="${tempProtectionDto.married}"
+                               th:errorclass="field-error" value="false"> 미혼
+                    </li>
+                    <div class="field-error" th:errors="${tempProtectionDto.married}"></div>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <p>보호 기간</p>
+                <div class="form-check form-check-inline">
+                    <input type="radio" th:field="${tempProtectionDto.period}" value="1"/> 1개월
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" th:field="${tempProtectionDto.period}" value="2"/> 2개월
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" th:field="${tempProtectionDto.period}" value="3"/> 3개월
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" th:field="${tempProtectionDto.period}" value="6"/> 6개월
+                </div>
+                <input type="number" th:field="${tempProtectionDto.period}"
+                       th:errorclass="field-error" placeholder="직접 입력"> 개월
+                <div class="field-error" th:errors="${tempProtectionDto.period}"></div>
+            </div>
+            <br/>
+            <br/>
+
+            <div class="arr">
+                <button id="submit" type="submit" class="btn btn-secondary">제출</button>
+            </div>
+            <br/>
+            <br/>
+
+        </form>
+    </div>
+</th:block>
+</html>

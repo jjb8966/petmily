@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <script>
+        function doOpenCheck(chk) {
+            var obj = document.getElementsByName("donaSum");
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i] != chk) {
+                    obj[i].checked = false;
+                }
+            }
+        }
+
+        function zero() {
+            document.getElementById('blank').value = "";
+        }
+    </script>
+</head>
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <p class="breadcrumbs mb-2">
+                        <span class="mr-2"><span>Donate - Submit<i class="ion-ios-arrow-forward"></i></span></span>
+                    </p>
+                    <h1 class="mb-0 bread">후원하기</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br>
+
+    <div class="container survey">
+        <h1 id="title" class="text-center">후원하기</h1>
+        <p id="description" class="text-center"></p> <br><br>
+
+        <div class="form-group">
+            <p>후원받을 동물</p>
+            <input type="name" class="form-control" th:value="${animalName}" readonly>
+        </div>
+
+        <div class="form-group">
+            <p>후원자 이름</p>
+            <input type="name" class="form-control" th:value="${session.loginMember.name}" readonly>
+        </div>
+
+        <form th:action method="post">
+            <div class="form-row">
+                <div class="col">
+                    <p>은행명</p>
+                    <select class="form-control" th:field="${donationDto.bankType}">
+                        <option th:each="bank : ${bankType}"
+                                th:value="${bank.name()}" th:text="${bank.bankName}">
+                            은행 이름
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <p>예금주</p>
+                    <input type="text" class="form-control" th:field="${donationDto.donator}"
+                           th:errorclass="field-error" placeholder="예금주"/>
+                    <div class="field-error" th:errors="${donationDto.donator}"></div>
+                </div>
+
+                <div class="col">
+                    <p>계좌번호</p>
+                    <input type="text" class="form-control" th:field="${donationDto.accountNumber}"
+                           th:errorclass="field-error" placeholder="계좌번호">
+                    <div class="field-error" th:errors="${donationDto.accountNumber}"></div>
+                </div>
+            </div>
+            <br><br>
+
+            <div class="form-row">
+                <div class="col">
+                    <label>
+                        <input name="amount" value="20000" onclick="doOpenCheck(this);zero();"
+                               type="checkbox" class="userRatings"> 20,000원
+                    </label>
+                </div>
+                <div class="col">
+                    <label>
+                        <input name="amount" value="30000" onclick="doOpenCheck(this);zero();"
+                               type="checkbox" class="userRatings"> 30,000원
+                    </label>
+                </div>
+                <div class="col">
+                    <label>
+                        <input name="amount" value="50000" onclick="doOpenCheck(this);zero();"
+                               type="checkbox" class="userRatings"> 50,000원
+                    </label>
+                </div>
+                <div class="col">
+                    <label>
+                        <input name="amount" value="100000" onclick="doOpenCheck(this);zero();"
+                               type="checkbox" class="userRatings"> 100,000원
+                    </label>
+                </div>
+                <div class="inline">
+                    <input th:field="${donationDto.amount}" th:errorclass="field-error" onclick="doOpenCheck(this);"
+                           type="text" placeholder="직접 입력"/> 원
+                    <div class="field-error" th:errors="${donationDto.amount}"></div>
+                </div>
+            </div>
+            <br><br>
+
+            <div class="arr">
+                <button type="submit" class="btn btn-secondary">후원하기</button>
+            </div>
+        </form>
+        <br><br>
+    </div>
+</th:block>
+</html>

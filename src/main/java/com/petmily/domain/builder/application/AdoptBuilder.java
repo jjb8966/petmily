@@ -4,6 +4,7 @@ import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.enum_type.ApplicationStatus;
+import com.petmily.domain.core.enum_type.LocationType;
 import lombok.Getter;
 
 @Getter
@@ -12,9 +13,9 @@ public class AdoptBuilder {
     private Member member;
     private AbandonedAnimal abandonedAnimal;
     private ApplicationStatus applicationStatus = ApplicationStatus.WAIT;
-    private String address;
+    private LocationType location;
     private String job;
-    private Character married;
+    private Boolean married;
 
     public AdoptBuilder(Member member, AbandonedAnimal abandonedAnimal) {
         this.member = member;
@@ -36,8 +37,8 @@ public class AdoptBuilder {
         return this;
     }
 
-    public AdoptBuilder setAddress(String address) {
-        this.address = address;
+    public AdoptBuilder setLocation(LocationType location) {
+        this.location = location;
         return this;
     }
 
@@ -46,8 +47,9 @@ public class AdoptBuilder {
         return this;
     }
 
-    public AdoptBuilder setMarried(Character married) {
+    public AdoptBuilder setMarried(Boolean married) {
         this.married = married;
         return this;
     }
+
 }

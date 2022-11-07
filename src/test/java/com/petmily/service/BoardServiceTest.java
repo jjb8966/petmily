@@ -1,11 +1,13 @@
 package com.petmily.service;
 
+import com.petmily.domain.builder.BoardBuilder;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.board.ChangeBoardDto;
 import com.petmily.domain.dto.board.WriteBoardDto;
 import com.petmily.domain.dto.reply.ReplyDto;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@Slf4j
 class BoardServiceTest {
 
     @PersistenceContext
@@ -143,5 +146,29 @@ class BoardServiceTest {
         assertThat(replyService.findAll().isEmpty()).isTrue();
         assertThat(member1.getReplies().isEmpty()).isTrue();
         assertThat(member2.getReplies().isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName("게시글 작성 시간 및 수정 시간을 추적할 수 있다.")
+    void auditing() throws InterruptedException {
+        Member member = new MemberBuilder("memberA", "aaa").build();
+        memberService.join(member);
+
+        Long boardId = boardService.write(member.getId(), new WriteBoardDto());
+        Board board = boardService.findOne(boardId).get();
+        log.info("board.getCreatedDate() = {}", board.getCreatedDate());
+        log.info("board.getLastModifiedDate() = {}", board.getLastModifiedDate());
+
+        Thread.sleep(1000);
+
+        ChangeBoardDto boardDto = new ChangeBoardDto();
+        boardDto.setTitle("change");
+
+        boardService.changeBoardInfo(boardId, boardDto);
+
+        em.flush();
+
+        log.info("board.getCreatedDate() = {}", board.getCreatedDate());
+        log.info("board.getLastModifiedDate() = {}", board.getLastModifiedDate());
     }
 }

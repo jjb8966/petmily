@@ -156,8 +156,8 @@ class MemberServiceTest {
         assertThat(memberService.findOne(member.getId()).isEmpty()).isTrue();
         assertThat(boardService.findOne(boardId).isEmpty()).isTrue();
         assertThat(replyService.findOne(replyId).isEmpty()).isTrue();
-        assertThat(applicationService.findOne(adoptId, Adopt.class).isEmpty()).isTrue();
-        assertThat(animalService.findOne(animal.getId()).get().getApplications().isEmpty()).isTrue();
+        assertThat(applicationService.findOne(adoptId, Adopt.class)).isNull();
+        assertThat(animalService.findOne(animal.getId()).getApplications().isEmpty()).isTrue();
     }
 
     @Test

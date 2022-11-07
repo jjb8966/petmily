@@ -30,9 +30,9 @@ public class BoardService {
         Member member = getMember(memberId);
 
         Board board = new BoardBuilder(member, BoardType.FREE)
+                .setPictures(boardDto.getPictures())
                 .setTitle(boardDto.getTitle())
                 .setContent(boardDto.getContent())
-                .setReplies(boardDto.getReplies())
                 .setShownAll(boardDto.isShownAll())
                 .setWriteTime(LocalDateTime.now())
                 .build();

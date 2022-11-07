@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board {
+public class Board extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -30,6 +30,9 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Reply> replies;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Picture> pictures;
+
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
 
@@ -41,6 +44,7 @@ public class Board {
     public Board(BoardBuilder builder) {
         this.member = builder.getMember();
         this.replies = builder.getReplies();
+        this.pictures = builder.getPictures();
         this.boardType = builder.getBoardType();
         this.title = builder.getTitle();
         this.content = builder.getContent();

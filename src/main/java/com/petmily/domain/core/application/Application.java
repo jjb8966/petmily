@@ -1,6 +1,7 @@
 package com.petmily.domain.core.application;
 
 import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.enum_type.ApplicationStatus;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "app_type")
-public abstract class Application {
+public abstract class Application extends BaseEntity {
 
     @Id
     @GeneratedValue

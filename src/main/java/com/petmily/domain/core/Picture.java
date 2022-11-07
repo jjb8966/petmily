@@ -3,14 +3,13 @@ package com.petmily.domain.core;
 import com.petmily.domain.builder.PictureBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Picture {
+public class Picture extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "picture_id")
@@ -19,6 +18,10 @@ public class Picture {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "abandonedAnimal_id")
     private AbandonedAnimal abandonedAnimal;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     private String fileStoreName;
 

@@ -16,7 +16,7 @@ public class Picture {
     @Column(name = "picture_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "abandonedAnimal_id")
     private AbandonedAnimal abandonedAnimal;
 

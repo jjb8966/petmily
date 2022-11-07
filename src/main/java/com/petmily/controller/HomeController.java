@@ -13,10 +13,6 @@ public class HomeController {
     public String home(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Member loginMember,
                        Model model) {
 
-        if (loginMember != null) {
-            model.addAttribute(SessionConstant.LOGIN_MEMBER, loginMember);
-        }
-
         return "index";
     }
 }

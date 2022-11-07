@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -37,7 +36,7 @@ public class ApplicationService {
 
         // 지원서 생성
         Adopt adopt = new AdoptBuilder(member, animal)
-                .setAddress(adoptDto.getAddress())
+                .setLocation(adoptDto.getLocation())
                 .setJob(adoptDto.getJob())
                 .setMarried(adoptDto.getMarried())
                 .build();
@@ -56,6 +55,9 @@ public class ApplicationService {
 
         // 지원서 생성
         TemporaryProtection temporaryProtection = new TemporaryProtectionBuilder(member, animal)
+                .setLocation(tempProtectionDto.getLocation())
+                .setJob(tempProtectionDto.getJob())
+                .setMarried(tempProtectionDto.isMarried())
                 .setPeriod(tempProtectionDto.getPeriod())
                 .build();
 
@@ -73,6 +75,9 @@ public class ApplicationService {
 
         // 지원서 생성
         Donation donation = new DonationBuilder(member, animal)
+                .setBankType(donationDto.getBankType())
+                .setDonator(donationDto.getDonator())
+                .setAccountNumber(donationDto.getAccountNumber())
                 .setAmount(donationDto.getAmount())
                 .build();
 
@@ -91,11 +96,12 @@ public class ApplicationService {
     }
 
     // 지원서 조회
-    public <T extends Application> Optional<T> findOne(Long id, Class<T> type) {
+    public <T extends Application> T findOne(Long id, Class<T> type) {
         return applicationRepository.findById(id)
                 .map(application -> (T) application)
                 .stream()
-                .findAny();
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
     }
 
     // 전체 지원서 조회
@@ -105,9 +111,7 @@ public class ApplicationService {
 
     // 입양 정보 수정
     public Long changeAdoptInfo(Long id, ChangeAdoptDto adoptDto) {
-        Adopt adopt = findOne(id, Adopt.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
-
+        Adopt adopt = findOne(id, Adopt.class);
         adopt.changeInfo(adoptDto);
 
         return adopt.getId();
@@ -115,9 +119,7 @@ public class ApplicationService {
 
     // 임시보호 정보 수정
     public Long changeTempProtectionInfo(Long id, ChangeTempProtectionDto tempProtectionDto) {
-        TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
-
+        TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class);
         temporaryProtection.changeInfo(tempProtectionDto);
 
         return temporaryProtection.getId();
@@ -125,9 +127,7 @@ public class ApplicationService {
 
     // 후원 정보 수정
     public Long changeDonationInfo(Long id, ChangeDonationDto donationDto) {
-        Donation donation = findOne(id, Donation.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
-
+        Donation donation = findOne(id, Donation.class);
         donation.changeInfo(donationDto);
 
         return donation.getId();

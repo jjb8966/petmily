@@ -14,7 +14,7 @@ import java.util.List;
 public class AbandonedAnimalBuilder {
 
     private List<Application> applies = new ArrayList<>();
-    private List<Picture> pictures = new ArrayList<>();
+    private Picture picture;
     private AnimalSpecies species;
     private AnimalStatus status = AnimalStatus.PROTECTED;
     private String name;
@@ -31,8 +31,8 @@ public class AbandonedAnimalBuilder {
         return this;
     }
 
-    public AbandonedAnimalBuilder setPictures(List<Picture> pictures) {
-        this.pictures = pictures;
+    public AbandonedAnimalBuilder setPicture(Picture picture) {
+        this.picture = picture;
         return this;
     }
 

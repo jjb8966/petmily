@@ -4,6 +4,7 @@ import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.Donation;
 import com.petmily.domain.core.enum_type.ApplicationStatus;
+import com.petmily.domain.core.enum_type.BankType;
 import lombok.Getter;
 
 @Getter
@@ -12,6 +13,9 @@ public class DonationBuilder {
     private Member member;
     private AbandonedAnimal abandonedAnimal;
     private ApplicationStatus applicationStatus = ApplicationStatus.WAIT;
+    private BankType bankType;
+    private String donator;
+    private String accountNumber;
     private Integer amount;
 
     public DonationBuilder(Member member, AbandonedAnimal abandonedAnimal) {
@@ -31,6 +35,21 @@ public class DonationBuilder {
 
     public DonationBuilder setApplicationStatus(ApplicationStatus applicationStatus) {
         this.applicationStatus = applicationStatus;
+        return this;
+    }
+
+    public DonationBuilder setBankType(BankType bankType) {
+        this.bankType = bankType;
+        return this;
+    }
+
+    public DonationBuilder setDonator(String donator) {
+        this.donator = donator;
+        return this;
+    }
+
+    public DonationBuilder setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
         return this;
     }
 

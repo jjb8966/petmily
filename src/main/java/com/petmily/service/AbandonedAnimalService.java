@@ -1,9 +1,13 @@
 package com.petmily.service;
 
 import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.dto.PetmilyPage;
+import com.petmily.domain.dto.abandoned_animal.AnimalDetailForm;
 import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
 import com.petmily.repository.AbandonedAnimalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,13 +30,21 @@ public class AbandonedAnimalService {
     }
 
     // 유기동물 조회
-    public Optional<AbandonedAnimal> findOne(Long id) {
-        return animalRepository.findById(id);
+    public AbandonedAnimal findOne(Long id) {
+        AbandonedAnimal animal = animalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+
+        return animal;
     }
 
     // 전체 유기동물 조회
     public List<AbandonedAnimal> findAll() {
         return animalRepository.findAll();
+    }
+
+    // 전체 유기동물 조회 (페이지)
+    public Page<AbandonedAnimal> findAll(Pageable pageable) {
+        return animalRepository.findAll(pageable);
     }
 
     // 유기동물 정보 변경

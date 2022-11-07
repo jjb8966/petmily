@@ -4,8 +4,6 @@ import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Picture;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 public class PictureBuilder {
 
@@ -14,7 +12,7 @@ public class PictureBuilder {
 
     public Picture build() {
         Picture picture = new Picture(this);
-        abandonedAnimal.getPictures().add(picture);
+        abandonedAnimal.setPicture(picture);
 
         return picture;
     }

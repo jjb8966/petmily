@@ -27,8 +27,8 @@ public class AbandonedAnimal {
     @OneToMany(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)
     private List<Application> applications;
 
-    @OneToMany(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)
-    private List<Picture> pictures;
+    @OneToOne(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)
+    private Picture picture;
 
     @Enumerated(EnumType.STRING)
     private AnimalSpecies species;
@@ -43,7 +43,7 @@ public class AbandonedAnimal {
 
     public AbandonedAnimal(AbandonedAnimalBuilder builder) {
         this.applications = builder.getApplies();
-        this.pictures = builder.getPictures();
+        this.picture = builder.getPicture();
         this.species = builder.getSpecies();
         this.status = builder.getStatus();
         this.name = builder.getName();
@@ -60,7 +60,7 @@ public class AbandonedAnimal {
         this.weight = animalDto.getWeight();
     }
 
-    public void addPicture(Picture picture) {
-        pictures.add(picture);
+    public void setPicture(Picture picture) {
+        this.picture = picture;
     }
 }

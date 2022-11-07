@@ -8,5 +8,5 @@ public class ChangeAdoptDto {
 
     private String address;
     private String job;
-    private Character married;
+    private Boolean married;
 }

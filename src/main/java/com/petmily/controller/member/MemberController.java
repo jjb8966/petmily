@@ -10,12 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,11 +36,12 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginForm form,
+    public String login(@ModelAttribute @Validated LoginForm loginForm,
+                        @RequestParam(defaultValue = "/") String redirectURL,
                         BindingResult bindingResult,
                         HttpServletRequest request) {
 
-        log.info("form = {}", form);
+        log.info("form = {}", loginForm);
 
         if (bindingResult.hasErrors()) {
             log.info("error = {}", bindingResult.getAllErrors());
@@ -48,7 +49,7 @@ public class MemberController {
             return "/view/member/login_form";
         }
 
-        Optional<Member> optionalMember = memberService.login(form);
+        Optional<Member> optionalMember = memberService.login(loginForm);
 
         if (optionalMember.isEmpty()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
@@ -57,7 +58,9 @@ public class MemberController {
             HttpSession session = request.getSession();
             session.setAttribute(SessionConstant.LOGIN_MEMBER, optionalMember.get());
 
-            return "redirect:/";
+            log.info("redirectURL = {}", redirectURL);
+
+            return "redirect:" + redirectURL;
         }
     }
 
@@ -84,7 +87,7 @@ public class MemberController {
         String passwordCheck = form.getPasswordCheck();
 
         if (!password.equals(passwordCheck)) {
-            bindingResult.reject("passwordMismatch",null);
+            bindingResult.reject("passwordMismatch", null);
         }
 
         if (bindingResult.hasErrors()) {

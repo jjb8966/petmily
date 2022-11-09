@@ -1,4 +1,4 @@
-package com.petmily.formatter;
+package com.petmily.config.formatter;
 
 import com.petmily.domain.core.enum_type.BoardType;
 import org.springframework.format.Formatter;

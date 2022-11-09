@@ -23,6 +23,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -65,15 +68,10 @@ public class AbandonedAnimalController {
     }
 
     @GetMapping("/list")
-    public String list(@RequestParam(defaultValue = "1") Integer page,
-                       @RequestParam(defaultValue = "9") Integer size,
+    public String list(@PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.ASC) Pageable pageable,
                        Model model) {
 
-        log.info("page = {}, size = {}", page, size);
-
-        PageRequest pageRequest = PageRequest.of(--page, size);
-
-        Page<AbandonedAnimal> allAnimal = abandonedAnimalService.findAll(pageRequest);
+        Page<AbandonedAnimal> allAnimal = abandonedAnimalService.findAll(pageable);
         PetmilyPage<AnimalDetailForm> animalPage = changeToAnimalPage(allAnimal);
 
         model.addAttribute("animalPage", animalPage);

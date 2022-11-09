@@ -49,7 +49,7 @@
                             <!--6 페이지 이상인 경우 '<' 표시-->
                             <li>
                                 <p th:if="${(animalPage.realPage.number + 1) gt 5}">
-                                    <a th:href="|/abandoned_animal/list?page=${(animalPage.realPage.number + 1) - 5}|">&lt;</a>
+                                    <a th:href="|/abandoned_animal/list?page=${animalPage.realPage.number - 5}|">&lt;</a>
                                 </p>
                             </li>
 
@@ -57,14 +57,14 @@
                             <th:block th:each="pageNumber : ${#numbers.sequence(animalPage.startPage, animalPage.endPage)}">
                                 <li th:if="${pageNumberStat.current le animalPage.realPage.totalPages}"
                                     th:classappend="${pageNumberStat.current == (animalPage.realPage.number + 1)} ? 'active' : ''">
-                                    <a th:href="|/abandoned_animal/list?page=${pageNumberStat.current}|" th:text="${pageNumberStat.current}">페이지</a>
+                                    <a th:href="|/abandoned_animal/list?page=${pageNumberStat.current - 1}|" th:text="${pageNumberStat.current}">페이지</a>
                                 </li>
                             </th:block>
 
                             <!--이전 5개의 보여줄 페이지가 있을 시 '>'-->
                             <li>
                                 <p th:if="${animalPage.realPage.totalPages - (animalPage.realPage.number + 1) gt 0}">
-                                    <a th:href="|/abandoned_animal/list?page=${animalPage.startPage + 5}|">&gt;</a>
+                                    <a th:href="|/abandoned_animal/list?page=${animalPage.startPage + 4}|">&gt;</a>
                                 </p>
                             </li>
                         </ul>

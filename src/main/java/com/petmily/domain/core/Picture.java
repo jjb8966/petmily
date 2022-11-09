@@ -11,7 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Picture extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "picture_id")
     private Long id;
 
@@ -23,18 +24,17 @@ public class Picture extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    private String fileUploadName;
     private String fileStoreName;
 
     public Picture(PictureBuilder builder) {
         this.abandonedAnimal = builder.getAbandonedAnimal();
-        this.fileStoreName = builder.getFileStoreName();
+        this.board = builder.getBoard();
+        this.fileUploadName =
+                this.fileStoreName = builder.getFileStoreName();
     }
 
-    @Override
-    public String toString() {
-        return "Picture{" +
-                "abandonedAnimal=" + abandonedAnimal.getId() +
-                ", fileStoreName='" + fileStoreName + '\'' +
-                '}';
+    public void deleteBoard() {
+        board = null;
     }
 }

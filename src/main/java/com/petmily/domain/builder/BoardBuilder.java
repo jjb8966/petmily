@@ -7,7 +7,6 @@ import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.enum_type.BoardType;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class BoardBuilder {
     private String title;
     private String content;
     private boolean shownAll = true;
-    private LocalDateTime writeTime;
 
     public BoardBuilder(Member member, BoardType boardType) {
         this.member = member;
@@ -59,11 +57,6 @@ public class BoardBuilder {
 
     public BoardBuilder setShownAll(boolean shownAll) {
         this.shownAll = shownAll;
-        return this;
-    }
-
-    public BoardBuilder setWriteTime(LocalDateTime writeTime) {
-        this.writeTime = writeTime;
         return this;
     }
 }

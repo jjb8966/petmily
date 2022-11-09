@@ -23,7 +23,7 @@
                     </div>
 
                     <div th:if="${session.loginMember != null}">
-                        <p class="md-12 d-flex">
+                        <span class="md-12 d-flex">
                             <span class="text-white">
                              <b th:text="${session.loginMember.name}"></b><small> 님 환영합니다!</small>
                             </span>
@@ -35,7 +35,7 @@
                             <span>
                              <a class="text-white" href="/logout">로그아웃</a>
                             </span>
-                        </p>
+                        </span>
                     </div>
                 </div>
             </div>

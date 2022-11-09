@@ -76,9 +76,10 @@
                                     </form>
                                 </span>
                             </div>
+                            <br>
 
                             <!--댓글 작성-->
-                            <div class="card mb-2" id="message">
+                            <div class="card mb-2" id="message" th:if="${session.loginMember != null}">
                                 <div class="card-body">
                                     <div class="col-md-8 col-lg-12">
                                         <div class="comment-wrapper">

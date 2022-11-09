@@ -18,6 +18,7 @@ import com.petmily.service.AbandonedAnimalService;
 import com.petmily.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,9 @@ import java.net.MalformedURLException;
 @RequiredArgsConstructor
 @Slf4j
 public class AbandonedAnimalController {
+
+    @Value("${file.dir}")
+    private String storePath;
 
     private final AbandonedAnimalService abandonedAnimalService;
     private final AbandonedAnimalRepository abandonedAnimalRepository;
@@ -54,7 +58,7 @@ public class AbandonedAnimalController {
     @GetMapping("/image/{fileStoreName}")
     public Resource getImage(@PathVariable String fileStoreName) throws MalformedURLException {
         log.info("fileStoreName = {}", fileStoreName);
-        String fullPath = "classpath:/static/image/" + fileStoreName;
+        String fullPath = "file:" + storePath + fileStoreName;
         log.info("full path = {}", fullPath);
 
         return new UrlResource(fullPath);
@@ -232,7 +236,8 @@ public class AbandonedAnimalController {
 
         Long adoptId = applicationService.adopt(loginMember.getId(), animalId, adoptDto);
         Adopt adopt = applicationService.findOne(adoptId, Adopt.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));;
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+        ;
 
         log.info("입양 신청 완료 {}", adopt);
 

@@ -27,3 +27,6 @@ server:
   servlet:
     session:
       timeout: 1800
+
+file:
+  dir: /Users/joojongbum/store_image/

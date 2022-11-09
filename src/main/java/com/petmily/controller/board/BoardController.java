@@ -19,6 +19,7 @@ import com.petmily.service.BoardService;
 import com.petmily.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BoardController {
 
+    @Value("${file.dir}")
+    private String storePath;
+
     private final BoardService boardService;
     private final BoardRepository boardRepository;
     private final ReplyService replyService;
@@ -50,7 +54,7 @@ public class BoardController {
     @GetMapping("/image/{fileStoreName}")
     public Resource getImage(@PathVariable String fileStoreName) throws MalformedURLException {
         log.info("fileStoreName = {}", fileStoreName);
-        String fullPath = "file:" + "/Users/joojongbum/store_image/" + fileStoreName;
+        String fullPath = "file:" + storePath + fileStoreName;
         log.info("full path = {}", fullPath);
 
         return new UrlResource(fullPath);

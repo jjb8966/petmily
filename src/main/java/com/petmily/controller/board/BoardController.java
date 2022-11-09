@@ -277,7 +277,8 @@ public class BoardController {
         BoardDetailForm boardForm = changeToBoardDetailForm(board);
         Long replyId = replyService.reply(loginMember.getId(), boardId, form);
 
-        Reply reply = replyService.findOne(replyId);
+        Reply reply = replyService.findOne(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 
         log.info("댓글 작성 완료 {}", reply);
 

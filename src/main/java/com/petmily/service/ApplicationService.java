@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -96,12 +97,11 @@ public class ApplicationService {
     }
 
     // 지원서 조회
-    public <T extends Application> T findOne(Long id, Class<T> type) {
+    public <T extends Application> Optional<T> findOne(Long id, Class<T> type) {
         return applicationRepository.findById(id)
                 .map(application -> (T) application)
                 .stream()
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+                .findAny();
     }
 
     // 전체 지원서 조회
@@ -111,7 +111,9 @@ public class ApplicationService {
 
     // 입양 정보 수정
     public Long changeAdoptInfo(Long id, ChangeAdoptDto adoptDto) {
-        Adopt adopt = findOne(id, Adopt.class);
+        Adopt adopt = findOne(id, Adopt.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
         adopt.changeInfo(adoptDto);
 
         return adopt.getId();
@@ -119,7 +121,9 @@ public class ApplicationService {
 
     // 임시보호 정보 수정
     public Long changeTempProtectionInfo(Long id, ChangeTempProtectionDto tempProtectionDto) {
-        TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class);
+        TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
         temporaryProtection.changeInfo(tempProtectionDto);
 
         return temporaryProtection.getId();
@@ -127,7 +131,9 @@ public class ApplicationService {
 
     // 후원 정보 수정
     public Long changeDonationInfo(Long id, ChangeDonationDto donationDto) {
-        Donation donation = findOne(id, Donation.class);
+        Donation donation = findOne(id, Donation.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+
         donation.changeInfo(donationDto);
 
         return donation.getId();

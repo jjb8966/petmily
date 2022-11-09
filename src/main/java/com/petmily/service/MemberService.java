@@ -34,7 +34,8 @@ public class MemberService {
     public Optional<Member> login(LoginForm loginForm) {
         return memberRepository.findByLoginId(loginForm.getLoginId())
                 .filter(member -> member.getPassword().equals(loginForm.getPassword()))
-                .stream().findAny();
+                .stream()
+                .findAny();
     }
 
     private void duplicateCheck(Member member) {
@@ -50,9 +51,8 @@ public class MemberService {
     }
 
     // 회원 조회
-    public Member findOne(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    public Optional<Member> findOne(Long id) {
+        return memberRepository.findById(id);
     }
 
     // 전체 회원 조회

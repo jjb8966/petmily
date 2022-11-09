@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
@@ -36,10 +35,10 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute @Validated LoginForm loginForm,
-                        @RequestParam(defaultValue = "/") String redirectURL,
+    public String login(@RequestParam(defaultValue = "/") String redirectURL,
+                        @ModelAttribute @Validated LoginForm loginForm,
                         BindingResult bindingResult,
-                        HttpServletRequest request) {
+                        HttpSession session) {
 
         log.info("form = {}", loginForm);
 
@@ -49,19 +48,18 @@ public class MemberController {
             return "/view/member/login_form";
         }
 
-        Optional<Member> optionalMember = memberService.login(loginForm);
+        Optional<Member> loginMember = memberService.login(loginForm);
 
-        if (optionalMember.isEmpty()) {
+        if (loginMember.isEmpty()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "/view/member/login_form";
-        } else {
-            HttpSession session = request.getSession();
-            session.setAttribute(SessionConstant.LOGIN_MEMBER, optionalMember.get());
-
-            log.info("redirectURL = {}", redirectURL);
-
-            return "redirect:" + redirectURL;
         }
+
+        session.setAttribute(SessionConstant.LOGIN_MEMBER, loginMember.get());
+
+        log.info("redirectURL = {}", redirectURL);
+
+        return "redirect:" + redirectURL;
     }
 
     @GetMapping("/logout")

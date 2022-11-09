@@ -100,7 +100,9 @@ public class AbandonedAnimalController {
     public String detailForm(@PathVariable Long id, Model model) {
         log.info("animal id = {}", id);
 
-        AbandonedAnimal animalOrigin = abandonedAnimalService.findOne(id);
+        AbandonedAnimal animalOrigin = abandonedAnimalService.findOne(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+
         AnimalDetailForm animalForm = changeToAnimalDetailForm(animalOrigin);
 
         model.addAttribute("animal", animalForm);
@@ -153,7 +155,8 @@ public class AbandonedAnimalController {
         }
 
         Long donateId = applicationService.donate(loginMember.getId(), animalId, donationDto);
-        Donation donation = applicationService.findOne(donateId, Donation.class);
+        Donation donation = applicationService.findOne(donateId, Donation.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 
         log.info("후원 신청 완료 {}", donation);
 
@@ -190,7 +193,8 @@ public class AbandonedAnimalController {
         }
 
         Long tempProtectId = applicationService.tempProtect(loginMember.getId(), animalId, tempProtectionDto);
-        TemporaryProtection temporaryProtection = applicationService.findOne(tempProtectId, TemporaryProtection.class);
+        TemporaryProtection temporaryProtection = applicationService.findOne(tempProtectId, TemporaryProtection.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 
         log.info("임시보호 신청 완료 {}", temporaryProtection);
 
@@ -227,7 +231,8 @@ public class AbandonedAnimalController {
         }
 
         Long adoptId = applicationService.adopt(loginMember.getId(), animalId, adoptDto);
-        Adopt adopt = applicationService.findOne(adoptId, Adopt.class);
+        Adopt adopt = applicationService.findOne(adoptId, Adopt.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));;
 
         log.info("입양 신청 완료 {}", adopt);
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,11 +50,8 @@ public class ReplyService {
     }
 
     // 댓글 조회
-    public Reply findOne(Long id) {
-        Reply reply = replyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
-
-        return reply;
+    public Optional<Reply> findOne(Long id) {
+        return replyRepository.findById(id);
     }
 
     // 전체 댓글 조회

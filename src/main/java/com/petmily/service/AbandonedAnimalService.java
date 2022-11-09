@@ -1,8 +1,6 @@
 package com.petmily.service;
 
 import com.petmily.domain.core.AbandonedAnimal;
-import com.petmily.domain.dto.PetmilyPage;
-import com.petmily.domain.dto.abandoned_animal.AnimalDetailForm;
 import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
 import com.petmily.repository.AbandonedAnimalRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +28,8 @@ public class AbandonedAnimalService {
     }
 
     // 유기동물 조회
-    public AbandonedAnimal findOne(Long id) {
-        AbandonedAnimal animal = animalRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
-
-        return animal;
+    public Optional<AbandonedAnimal> findOne(Long id) {
+        return animalRepository.findById(id);
     }
 
     // 전체 유기동물 조회

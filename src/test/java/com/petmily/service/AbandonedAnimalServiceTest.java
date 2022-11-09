@@ -54,7 +54,7 @@ class AbandonedAnimalServiceTest {
 
         //when
         animalService.register(abandonedAnimal);
-        AbandonedAnimal findAnimal = animalService.findOne(abandonedAnimal.getId()).orElseThrow();
+        AbandonedAnimal findAnimal = animalService.findOne(abandonedAnimal.getId());
 
         //then
         assertThat(findAnimal.getAge()).isEqualTo(10);
@@ -110,8 +110,8 @@ class AbandonedAnimalServiceTest {
         animalService.deleteAnimal(animalA.getId());
 
         //then
-        boolean isPresent = animalService.findOne(animalA.getId()).isPresent();
-        assertThat(isPresent).isFalse();
+        AbandonedAnimal animal = animalService.findOne(animalA.getId());
+        assertThat(animal).isNull();
     }
 
     @Test
@@ -130,8 +130,8 @@ class AbandonedAnimalServiceTest {
         animalService.deleteAnimal(animal.getId());
 
         //then
-        assertThat(animalService.findOne(animal.getId()).isEmpty()).isTrue();
-        assertThat(applicationService.findOne(donateId, Donation.class).isEmpty()).isTrue();
-        assertThat(applicationService.findOne(adoptId, Adopt.class).isEmpty()).isTrue();
+        assertThat(animalService.findOne(animal.getId())).isNull();
+        assertThat(applicationService.findOne(donateId, Donation.class)).isNull();
+        assertThat(applicationService.findOne(adoptId, Adopt.class)).isNull();
     }
 }

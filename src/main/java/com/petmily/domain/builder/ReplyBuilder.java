@@ -5,15 +5,12 @@ import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class ReplyBuilder {
 
     private Member member;
     private Board board;
     private String content;
-    private LocalDateTime writeTime;
 
     public ReplyBuilder(Member member, Board board) {
         this.member = member;
@@ -34,8 +31,4 @@ public class ReplyBuilder {
         return this;
     }
 
-    public ReplyBuilder setWriteTime(LocalDateTime writeTime) {
-        this.writeTime = writeTime;
-        return this;
-    }
 }

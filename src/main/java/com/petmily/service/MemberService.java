@@ -1,6 +1,5 @@
 package com.petmily.service;
 
-import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.ChangeMemberDto;
 import com.petmily.domain.dto.member.LoginForm;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,8 +50,9 @@ public class MemberService {
     }
 
     // 회원 조회
-    public Optional<Member> findOne(Long id) {
-        return memberRepository.findById(id);
+    public Member findOne(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 
     // 전체 회원 조회

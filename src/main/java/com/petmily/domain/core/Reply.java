@@ -7,14 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reply {
+public class Reply extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -30,18 +29,15 @@ public class Reply {
     private Board board;
 
     private String content;
-    private LocalDateTime writeTime;
 
     public Reply(ReplyBuilder builder) {
         this.member = builder.getMember();
         this.board = builder.getBoard();
         this.content = builder.getContent();
-        this.writeTime = builder.getWriteTime();
     }
 
     public void changeInfo(ChangeReplyDto replyDto) {
         this.content = replyDto.getContent();
-        this.writeTime = LocalDateTime.now();
     }
 
     @Override
@@ -51,7 +47,7 @@ public class Reply {
                 ", member=" + member +
                 ", board.getId()=" + board.getId() +
                 ", content='" + content + '\'' +
-                ", writeTime=" + writeTime +
                 '}';
     }
+
 }

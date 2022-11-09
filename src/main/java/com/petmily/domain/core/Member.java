@@ -1,9 +1,9 @@
 package com.petmily.domain.core;
 
-import com.petmily.domain.core.application.Application;
 import com.petmily.domain.builder.MemberBuilder;
-import com.petmily.domain.dto.member.ChangeMemberDto;
+import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.enum_type.MemberGrade;
+import com.petmily.domain.dto.member.ChangeMemberDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,14 +11,13 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @ToString(of = {"loginId", "password", "name", "birth", "email", "phone", "grade"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -63,5 +62,9 @@ public class Member {
         this.name = memberDto.getName();
         this.email = memberDto.getEmail();
         this.phone = memberDto.getPhone();
+    }
+
+    public void deleteBoard(Board board) {
+        boards.remove(board);
     }
 }

@@ -5,7 +5,7 @@ import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.dto.reply.ChangeReplyDto;
-import com.petmily.domain.dto.reply.ReplyDto;
+import com.petmily.domain.dto.reply.WriteReplyForm;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import com.petmily.repository.ReplyRepository;
@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,13 +25,12 @@ public class ReplyService {
     private final BoardRepository boardRepository;
 
     // 댓글 작성
-    public Long reply(Long memberId, Long boardId, ReplyDto replyDto) {
+    public Long reply(Long memberId, Long boardId, WriteReplyForm writeReplyForm) {
         Member member = getMember(memberId);
         Board board = getBoard(boardId);
 
         Reply reply = new ReplyBuilder(member, board)
-                .setContent(replyDto.getContent())
-                .setWriteTime(LocalDateTime.now())
+                .setContent(writeReplyForm.getContent())
                 .build();
 
         replyRepository.save(reply);
@@ -52,8 +49,11 @@ public class ReplyService {
     }
 
     // 댓글 조회
-    public Optional<Reply> findOne(Long id) {
-        return replyRepository.findById(id);
+    public Reply findOne(Long id) {
+        Reply reply = replyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+
+        return reply;
     }
 
     // 전체 댓글 조회
@@ -86,4 +86,5 @@ public class ReplyService {
 
         replyRepository.deleteById(id);
     }
+
 }

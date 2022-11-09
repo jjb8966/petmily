@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @ToString(of = {"name", "kind", "age", "weight", "species", "status"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AbandonedAnimal {
+public class AbandonedAnimal extends BaseEntity {
 
     @Id
     @GeneratedValue

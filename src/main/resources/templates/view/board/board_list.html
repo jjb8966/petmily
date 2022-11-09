@@ -60,15 +60,6 @@
                                     </div>
 
                                     <div th:if="${board.shownAll == false}">
-<!--                                        <span th:if="${session.loginMember != null && (session.loginMember.id == board.memberId || session.loginMember.grade.name() == 'ADMIN')}">-->
-<!--                                            <a class="text-body" style="font-size: 1.3em;" th:href="|/board/${boardType}/detail/${board.id}|"-->
-<!--                                               th:text="${board.title}">게시글 제목</a>-->
-<!--                                        </span>-->
-
-<!--                                        <span th:if="${session.loginMember == null || (session.loginMember)}">-->
-<!--                                            <a class="text-body" style="font-size: 1.3em;" th:text="${board.title}">게시글 제목</a>-->
-<!--                                        </span>-->
-
                                         <span th:if="${session.loginMember != null && (session.loginMember.id == board.memberId || session.loginMember.grade.name() == 'ADMIN')}">
                                             <a class="text-body" style="font-size: 1.3em;" th:href="|/board/${boardType}/detail/${board.id}|"
                                                th:text="${board.title}">게시글 제목</a>

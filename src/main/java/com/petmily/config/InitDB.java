@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Component
@@ -37,8 +38,9 @@ public class InitDB {
             for (int i = 1; i <= 5; i++) {
                 Member member = new MemberBuilder("m" + i, "123")
                         .setName("member" + i)
-                        .setPhone("010-" + i)
+                        .setBirth(LocalDate.now())
                         .setEmail("email@" + i + ".com")
+                        .setPhone("010-" + i)
                         .build();
 
                 em.persist(member);

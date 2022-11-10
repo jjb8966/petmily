@@ -1,8 +1,8 @@
 package com.petmily.service;
 
 import com.petmily.domain.core.Member;
-import com.petmily.domain.dto.member.ChangeMemberDto;
 import com.petmily.domain.dto.member.LoginForm;
+import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class MemberService {
 
     // 회원 가입
     public Long join(Member member) {
-        duplicateCheck(member);
+        duplicateCheck(member.getLoginId());
         memberRepository.save(member);
 
         return member.getId();
@@ -38,9 +38,8 @@ public class MemberService {
                 .findAny();
     }
 
-    private void duplicateCheck(Member member) {
+    private void duplicateCheck(String loginId) {
         List<Member> allMember = findAll();
-        String loginId = member.getLoginId();
 
         allMember.stream()
                 .filter(m -> m.getLoginId().equals(loginId))
@@ -61,11 +60,11 @@ public class MemberService {
     }
 
     // 회원 정보 변경
-    public Long changeMemberInfo(Long id, ChangeMemberDto memberDto) {
+    public Long modify(Long id, ModifyMemberForm form) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        member.changeInfo(memberDto);
+        member.changeInfo(form);
 
         return member.getId();
     }

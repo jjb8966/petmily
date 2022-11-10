@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <p class="breadcrumbs mb-2">
+                        <span class="mr-2"><span>Member - Mypage <i class="ion-ios-arrow-forward"></i></span></span>
+                    </p>
+                    <h1 class="mb-0 bread">마이페이지</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section" th:text="|${session.loginMember.name}님의 마이페이지|">~~~님의 마이페이지</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="wrapper">
+                        <div class="row mb-5">
+                            <div class="col-md-3">
+                                <div class="dbox w-100 text-center">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-map-marker"></span>
+                                    </div>
+                                    <div class="text">
+                                        <p><span>생년월일 : </span><span th:text="${session.loginMember.birth}">0000-00-00</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="dbox w-100 text-center">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-phone"></span>
+                                    </div>
+                                    <div class="text">
+                                        <p><span>이메일 : </span><span th:text="${session.loginMember.email}">~~@~~</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="dbox w-100 text-center">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-paper-plane"></span>
+                                    </div>
+                                    <div class="text">
+                                        <p><span>전화번호 : </span><span th:text="${session.loginMember.phone}">010-1111-1111</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="dbox w-100 text-center">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-globe"></span>
+                                    </div>
+                                    <div class="text">
+                                        <p><span>회원 등급 : </span><span th:text="${session.loginMember.grade}">회원 등급</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <div class="row mb-5 pb-5">
+                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">신청 내역</h3>
+                                            <a href="/member/auth/myApply/adopt" class="btn-custom d-flex align-items-center justify-content-center"><span
+                                                    class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">내가 쓴 게시글</h3>
+                                            <a href="#" class="btn-custom d-flex align-items-center justify-content-center"><span
+                                                    class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">찾아요 매칭 결과</h3>
+                                            <a href="/member/auth/checkMatching" class="btn-custom d-flex align-items-center justify-content-center"><span
+                                                    class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5 pt-4">
+                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">회원 정보 변경</h3>
+                                            <a href="/member/auth/modify" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                                <i class="sr-only">Read more</i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">회원 탈퇴</h3>
+                                            <a href="/member/auth/withdraw" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                                <i class="sr-only">Read more</i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+</html>

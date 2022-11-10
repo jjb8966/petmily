@@ -5,17 +5,17 @@ import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.JoinForm;
 import com.petmily.domain.dto.member.LoginForm;
+import com.petmily.domain.dto.member.ModifyMemberForm;
+import com.petmily.domain.dto.member.WithdrawMemberForm;
 import com.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -84,7 +84,7 @@ public class MemberController {
         String password = form.getPassword();
         String passwordCheck = form.getPasswordCheck();
 
-        if (!password.equals(passwordCheck)) {
+        if (hasText(password, passwordCheck) && !matchPasswordCheck(password, passwordCheck)) {
             bindingResult.reject("passwordMismatch", null);
         }
 
@@ -93,16 +93,123 @@ public class MemberController {
             return "/view/member/join_form";
         }
 
-        Member member = new MemberBuilder(form.getLoginId(), form.getPassword())
-                .setName(form.getName())
-                .setBirth(form.getBirth())
-                .setEmail(form.getEmail())
-                .setPhone(form.getPhone()).build();
+        Member member = changeToMember(form);
 
         memberService.join(member);
 
         log.info("회원가입 완료 member = {}", member);
 
         return "redirect:/login";
+    }
+
+    private boolean hasText(String password, String passwordCheck) {
+        return StringUtils.hasText(password) && StringUtils.hasText(passwordCheck);
+    }
+
+    private boolean matchPasswordCheck(String password, String passwordCheck) {
+        return password.equals(passwordCheck);
+    }
+
+    private static Member changeToMember(JoinForm form) {
+        return new MemberBuilder(form.getLoginId(), form.getPassword())
+                .setName(form.getName())
+                .setBirth(form.getBirth())
+                .setEmail(form.getEmail())
+                .setPhone(form.getPhone())
+                .build();
+    }
+
+    @GetMapping("/member/auth/mypage")
+    public String mypage() {
+        return "/view/member/mypage";
+    }
+
+    @GetMapping("/member/auth/modify")
+    public String modifyForm(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
+                             Model model) {
+
+        Member member = memberService.findOne(loginMember.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        ModifyMemberForm modifyMemberForm = changeToModifyForm(member);
+
+        model.addAttribute("modifyMemberForm", modifyMemberForm);
+
+        return "/view/member/modify_form";
+    }
+
+    private ModifyMemberForm changeToModifyForm(Member member) {
+        ModifyMemberForm modifyMemberForm = new ModifyMemberForm();
+
+        modifyMemberForm.setLoginId(member.getLoginId());
+        modifyMemberForm.setPassword(member.getPassword());
+        modifyMemberForm.setName(member.getName());
+        modifyMemberForm.setPhone(member.getPhone());
+        modifyMemberForm.setEmail(member.getEmail());
+
+        return modifyMemberForm;
+    }
+
+    @PostMapping("/member/auth/modify")
+    public String modify(@ModelAttribute @Valid ModifyMemberForm form,
+                         BindingResult bindingResult,
+                         HttpSession session) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("회원정보 변경 실패 {}", bindingResult.getAllErrors());
+            return "/view/member/modify_form";
+        }
+
+        Member loginMember = (Member) session.getAttribute(SessionConstant.LOGIN_MEMBER);
+
+        Long memberId = memberService.modify(loginMember.getId(), form);
+        Member modifiedMember = memberService.findOne(memberId).orElseThrow();
+
+        session.setAttribute(SessionConstant.LOGIN_MEMBER, modifiedMember);
+
+        log.info("회원정보 변경 성공 {}", modifiedMember);
+
+        return "redirect:/member/auth/mypage";
+    }
+
+    @GetMapping("/member/auth/withdraw")
+    public String withdrawForm(Model model) {
+        model.addAttribute("withdrawMemberForm", new WithdrawMemberForm());
+        return "/view/member/withdraw_form";
+    }
+
+    @PostMapping("/member/auth/withdraw")
+    public String withdraw(@ModelAttribute @Valid WithdrawMemberForm form,
+                           BindingResult bindingResult,
+                           HttpSession session) {
+
+        Member loginMember = (Member) session.getAttribute(SessionConstant.LOGIN_MEMBER);
+
+        String password = form.getPassword();
+        String passwordCheck = form.getPasswordCheck();
+
+        if (hasText(password, passwordCheck) && !matchPasswordCheck(password, passwordCheck)) {
+            bindingResult.reject("passwordMismatch", null);
+        }
+
+        if (hasText(password, passwordCheck) && matchPasswordCheck(password, passwordCheck) && !correctPassword(password, loginMember.getPassword())) {
+            bindingResult.reject("incorrectPassword", null);
+        }
+
+        if (bindingResult.hasErrors()) {
+            log.info("회원 탈퇴 실패 {}", bindingResult.getAllErrors());
+            return "/view/member/withdraw_form";
+        }
+
+        memberService.withdrawMember(loginMember.getId());
+        session.invalidate();
+
+        log.info("회원 탈퇴 성공");
+
+        return "redirect:/";
+    }
+
+    private boolean correctPassword(String password, String loginMemberPassword) {
+        return password.equals(loginMemberPassword);
     }
 }

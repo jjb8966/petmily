@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">신청서 내역</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+
+                <div class="card mb-2" th:each="form : ${forms}">
+                    <div class="card-body p-2 p-sm-3">
+                        <div class="media forum-item">
+                            <!-- 글 번호 -->
+                            <div class="media-body">
+
+                                <small><i class="far fa-eye" th:text="|${form.type}|"></i></small>
+                                <!-- 제목 -->
+                                <div class="text-secondary">
+                                    <strong th:text="|동물 이름 : ${form.animalName}|"></strong>
+                                    <strong th:text="|신청서 상태 : ${form.status}|" style="float: right;"></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+</html>

@@ -30,6 +30,7 @@
                 <div class="col-md-12">
                     <div class="wrapper">
                         <div class="row mb-5">
+                            <!--생년월일-->
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
@@ -40,6 +41,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!--이메일-->
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
@@ -50,6 +53,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!--전화번호-->
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
@@ -60,6 +65,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!--회원 등급-->
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
@@ -74,53 +81,50 @@
 
                         <div class="container">
                             <div class="row mb-5 pb-5">
-                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+                                <!--신청 내역-->
+                                <div class="col-6 d-flex align-self-stretch px-4 ftco-animate">
                                     <div class="d-block services text-center">
                                         <div class="media-body p-4">
                                             <h3 class="heading">신청 내역</h3>
-                                            <a href="/member/auth/myApply/adopt" class="btn-custom d-flex align-items-center justify-content-center"><span
-                                                    class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+                                            <a th:href="|/member/auth/apply/${session.loginMember.id}|" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+
+                                <!--내가 쓴 게시글-->
+                                <div class="col-6 d-flex align-self-stretch px-4 ftco-animate">
                                     <div class="d-block services text-center">
                                         <div class="media-body p-4">
                                             <h3 class="heading">내가 쓴 게시글</h3>
-                                            <a href="#" class="btn-custom d-flex align-items-center justify-content-center"><span
-                                                    class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
-                                    <div class="d-block services text-center">
-                                        <div class="media-body p-4">
-                                            <h3 class="heading">찾아요 매칭 결과</h3>
-                                            <a href="/member/auth/checkMatching" class="btn-custom d-flex align-items-center justify-content-center"><span
-                                                    class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+                                            <a th:href="|/member/auth/board/${session.loginMember.id}|" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt-5 pt-4">
-                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+                                <!--회원 정보 변경-->
+                                <div class="col-6 d-flex align-self-stretch px-4 ftco-animate">
                                     <div class="d-block services text-center">
                                         <div class="media-body p-4">
                                             <h3 class="heading">회원 정보 변경</h3>
                                             <a href="/member/auth/modify" class="btn-custom d-flex align-items-center justify-content-center">
                                                 <span class="fa fa-chevron-right"></span>
-                                                <i class="sr-only">Read more</i>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+
+                                <!--회원 탈퇴-->
+                                <div class="col-6 d-flex align-self-stretch px-4 ftco-animate">
                                     <div class="d-block services text-center">
                                         <div class="media-body p-4">
                                             <h3 class="heading">회원 탈퇴</h3>
                                             <a href="/member/auth/withdraw" class="btn-custom d-flex align-items-center justify-content-center">
                                                 <span class="fa fa-chevron-right"></span>
-                                                <i class="sr-only">Read more</i></a>
                                         </div>
                                     </div>
                                 </div>

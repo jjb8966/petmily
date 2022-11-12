@@ -1,10 +1,11 @@
 package com.petmily.config;
 
 import com.petmily.domain.builder.*;
+import com.petmily.domain.builder.application.AdoptBuilder;
+import com.petmily.domain.builder.application.DonationBuilder;
+import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
 import com.petmily.domain.core.*;
-import com.petmily.domain.core.enum_type.AnimalSpecies;
-import com.petmily.domain.core.enum_type.BoardType;
-import com.petmily.domain.core.enum_type.MemberGrade;
+import com.petmily.domain.core.enum_type.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class InitDB {
     public void init() {
         initService.initMember();
         initService.initAbandonedAnimal();
+        initService.initApplication();
         initService.initBoard();
     }
 
@@ -109,6 +112,46 @@ public class InitDB {
             }
 
             return BoardType.ADOPT_REVIEW;
+        }
+
+        public void initApplication() {
+            List<Member> allMembers = em.createQuery("select m from Member m", Member.class)
+                    .getResultList();
+
+            List<AbandonedAnimal> allAnimals = em.createQuery("select a from AbandonedAnimal a", AbandonedAnimal.class)
+                    .getResultList();
+
+            for (Member member : allMembers) {
+                for (int i = 0; i < 6; i++) {
+                    AbandonedAnimal animal = allAnimals.remove(0);
+
+                    if (i % 3 == 0) {
+                        new DonationBuilder(member, animal)
+                                .setAccountNumber("1234-1234")
+                                .setBankType(BankType.KB)
+                                .setAmount(10000)
+                                .setDonator(member.getName())
+                                .build();
+                    }
+
+                    if (i % 3 == 1) {
+                        new TemporaryProtectionBuilder(member, animal)
+                                .setMarried(true)
+                                .setJob("student")
+                                .setLocation(LocationType.SEOUL)
+                                .setPeriod(10)
+                                .build();
+                    }
+
+                    if (i % 3 == 2) {
+                        new AdoptBuilder(member, animal)
+                                .setMarried(true)
+                                .setJob("student")
+                                .setLocation(LocationType.SEOUL)
+                                .build();
+                    }
+                }
+            }
         }
     }
 }

@@ -2,17 +2,15 @@ package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
 import com.petmily.domain.core.enum_type.LocationType;
-import com.petmily.domain.dto.application.ChangeTempProtectionDto;
+import com.petmily.domain.dto.application.ChangeTempProtectionForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
 @Getter
-@DiscriminatorValue("temp_protection")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TemporaryProtection extends Application {
 
@@ -44,7 +42,7 @@ public class TemporaryProtection extends Application {
                 '}';
     }
 
-    public void changeInfo(ChangeTempProtectionDto tempProtectionDto) {
+    public void changeInfo(ChangeTempProtectionForm tempProtectionDto) {
         this.period = tempProtectionDto.getPeriod();
     }
 }

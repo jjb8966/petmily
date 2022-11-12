@@ -13,13 +13,16 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "app_type")
+@DiscriminatorColumn(name = "app_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Application extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "application_id")
     private Long id;
+
+    @Column(name = "app_type", insertable = false, updatable = false)
+    private String applicationType;
 
     @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "member_id")

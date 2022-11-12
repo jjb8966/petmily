@@ -2,7 +2,7 @@ package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.AdoptBuilder;
 import com.petmily.domain.core.enum_type.LocationType;
-import com.petmily.domain.dto.application.ChangeAdoptDto;
+import com.petmily.domain.dto.application.ChangeAdoptForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +39,7 @@ public class Adopt extends Application {
                 '}';
     }
 
-    public void changeInfo(ChangeAdoptDto adoptDto) {
+    public void changeInfo(ChangeAdoptForm adoptDto) {
         this.job = adoptDto.getJob();
         this.married = adoptDto.getMarried();
     }

@@ -3,10 +3,13 @@ package com.petmily.controller.member;
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;
+import com.petmily.domain.core.application.Application;
+import com.petmily.domain.dto.application.ApplicationListForm;
 import com.petmily.domain.dto.member.JoinForm;
 import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto.member.WithdrawMemberForm;
+import com.petmily.service.ApplicationService;
 import com.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
+    private final ApplicationService applicationService;
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -212,4 +218,53 @@ public class MemberController {
     private boolean correctPassword(String password, String loginMemberPassword) {
         return password.equals(loginMemberPassword);
     }
+
+    @GetMapping("/member/auth/apply/{memberId}")
+    public String applyList(@PathVariable Long memberId, Model model) {
+        log.info("memberId = {}", memberId);
+
+        Member member = memberService.findOne(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        List<Application> applications = applicationService.findAll(member);
+        List<ApplicationListForm> forms = changeToApplicationListForm(applications);
+
+        model.addAttribute("forms", forms);
+
+        return "/view/member/apply_list";
+    }
+
+    private List<ApplicationListForm> changeToApplicationListForm(List<Application> applications) {
+        return applications.stream()
+                .map(application -> {
+                    ApplicationListForm form = new ApplicationListForm();
+
+                    form.setId(application.getId());
+                    form.setAnimalName(application.getAbandonedAnimal().getName());
+                    form.setType(getType(application.getApplicationType()));
+                    form.setStatus(application.getApplicationStatus());
+
+                    return form;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private String getType(String applicationType) {
+        String result = null;
+
+        if (applicationType.equals("Donation")) {
+            result = "후원";
+        }
+
+        if (applicationType.equals("TemporaryProtection")) {
+            result = "임시보호";
+        }
+
+        if (applicationType.equals("Adopt")) {
+            result = "입양";
+        }
+
+        return result;
+    }
+
 }

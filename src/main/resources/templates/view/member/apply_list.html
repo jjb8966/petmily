@@ -26,10 +26,14 @@
                             <!-- 글 번호 -->
                             <div class="media-body">
 
-                                <small><i class="far fa-eye" th:text="|${form.type}|"></i></small>
+                                <small><i class="far fa-eye" th:if="${form.type == 'Donation'}">후원</i></small>
+                                <small><i class="far fa-eye" th:if="${form.type == 'TemporaryProtection'}">임시보호</i></small>
+                                <small><i class="far fa-eye" th:if="${form.type == 'Adopt'}">입양</i></small>
                                 <!-- 제목 -->
                                 <div class="text-secondary">
-                                    <strong th:text="|동물 이름 : ${form.animalName}|"></strong>
+                                    <a th:href="|/member/auth/apply/detail/${form.type}/${form.id}|">
+                                        <strong th:text="|동물 이름 : ${form.animalName}|"></strong>
+                                    </a>
                                     <strong th:text="|신청서 상태 : ${form.status}|" style="float: right;"></strong>
                                 </div>
                             </div>

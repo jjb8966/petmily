@@ -2,13 +2,21 @@ package com.petmily.controller.member;
 
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.builder.MemberBuilder;
+import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
+import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.application.Application;
+import com.petmily.domain.core.application.Donation;
+import com.petmily.domain.core.application.TemporaryProtection;
+import com.petmily.domain.dto.application.AdoptDetailForm;
 import com.petmily.domain.dto.application.ApplicationListForm;
+import com.petmily.domain.dto.application.DonationDetailForm;
+import com.petmily.domain.dto.application.TempProtectionDetailForm;
 import com.petmily.domain.dto.member.JoinForm;
 import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto.member.WithdrawMemberForm;
+import com.petmily.service.AbandonedAnimalService;
 import com.petmily.service.ApplicationService;
 import com.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +41,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final ApplicationService applicationService;
+    private final AbandonedAnimalService animalService;
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -241,7 +250,7 @@ public class MemberController {
 
                     form.setId(application.getId());
                     form.setAnimalName(application.getAbandonedAnimal().getName());
-                    form.setType(getType(application.getApplicationType()));
+                    form.setType(application.getApplicationType());
                     form.setStatus(application.getApplicationStatus());
 
                     return form;
@@ -265,6 +274,105 @@ public class MemberController {
         }
 
         return result;
+    }
+
+    @GetMapping("/member/auth/apply/detail/{appType}/{appId}")
+    public String applicationDetailForm(@PathVariable String appType,
+                                        @PathVariable Long appId,
+                                        Model model) {
+
+        log.info("id = {}", appId);
+
+        if (appType.equals("Donation")) {
+            Donation donation = applicationService.findOne(appId, Donation.class)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+            DonationDetailForm form = changeToDonationDetailForm(donation);
+            model.addAttribute("form", form);
+        }
+
+        if (appType.equals("TemporaryProtection")) {
+            TemporaryProtection temporaryProtection = applicationService.findOne(appId, TemporaryProtection.class)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+            TempProtectionDetailForm form = changeToTempProtectionDetailForm(temporaryProtection);
+            model.addAttribute("form", form);
+        }
+
+        if (appType.equals("Adopt")) {
+            Adopt adopt = applicationService.findOne(appId, Adopt.class)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+            AdoptDetailForm form = changeToAdoptDetailForm(adopt);
+            model.addAttribute("form", form);
+        }
+
+        model.addAttribute("appType", appType);
+
+        return "/view/member/apply_detail_form";
+    }
+
+    private TempProtectionDetailForm changeToTempProtectionDetailForm(TemporaryProtection temporaryProtection) {
+        AbandonedAnimal animal = animalService.findOne(temporaryProtection.getAbandonedAnimal().getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+
+        TempProtectionDetailForm form = new TempProtectionDetailForm();
+
+        form.setFileStoreName(animal.getPicture().getFileStoreName());
+        form.setStatus(animal.getStatus());
+        form.setSpecies(animal.getSpecies());
+        form.setKind(animal.getKind());
+        form.setAnimalName(animal.getName());
+        form.setAge(animal.getAge());
+        form.setWeight(animal.getWeight());
+        form.setLocation(temporaryProtection.getLocation());
+        form.setJob(temporaryProtection.getJob());
+        form.setMarried(temporaryProtection.getMarried());
+        form.setPeriod(temporaryProtection.getPeriod());
+
+        return form;
+    }
+
+    private AdoptDetailForm changeToAdoptDetailForm(Adopt adopt) {
+        AbandonedAnimal animal = animalService.findOne(adopt.getAbandonedAnimal().getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+
+        AdoptDetailForm form = new AdoptDetailForm();
+
+        form.setFileStoreName(animal.getPicture().getFileStoreName());
+        form.setStatus(animal.getStatus());
+        form.setSpecies(animal.getSpecies());
+        form.setKind(animal.getKind());
+        form.setAnimalName(animal.getName());
+        form.setAge(animal.getAge());
+        form.setWeight(animal.getWeight());
+        form.setLocation(adopt.getLocation());
+        form.setJob(adopt.getJob());
+        form.setMarried(adopt.getMarried());
+
+        return form;
+    }
+
+    private DonationDetailForm changeToDonationDetailForm(Donation donation) {
+        AbandonedAnimal animal = animalService.findOne(donation.getAbandonedAnimal().getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+
+        DonationDetailForm form = new DonationDetailForm();
+
+        form.setFileStoreName(animal.getPicture().getFileStoreName());
+        form.setStatus(animal.getStatus());
+        form.setSpecies(animal.getSpecies());
+        form.setKind(animal.getKind());
+        form.setAnimalName(animal.getName());
+        form.setAge(animal.getAge());
+        form.setWeight(animal.getWeight());
+
+        form.setBankType(donation.getBankType());
+        form.setDonator(donation.getDonator());
+        form.setAccountNumber(donation.getAccountNumber());
+        form.setAmount(donation.getAmount());
+
+        return form;
     }
 
 }

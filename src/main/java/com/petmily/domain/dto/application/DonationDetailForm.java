@@ -24,6 +24,8 @@ public class DonationDetailForm {
     private Integer age;
     private Float weight;
 
+    private Long applicationId;
+
     @NotNull
     private BankType bankType;
 

@@ -3,6 +3,15 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
+<head>
+    <style>
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+
 <th:block layout:fragment="content">
     <section class="hero-wrap hero-wrap-2"
              style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
@@ -10,7 +19,7 @@
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <h1 class="mb-0 bread">신청서 상세보기</h1>
+                    <h1 class="mb-0 bread">신청서 수정</h1>
                 </div>
             </div>
         </div>
@@ -70,20 +79,28 @@
             </div>
         </div>
 
-        <div>
+        <form th:action method="post" th:object="${form}">
+            <!--        <form class="container" th:if="${appType == 'Donation'}" th:action method="post" th:object="${form}">-->
             <div class="container" th:if="${appType == 'Donation'}">
                 <div class="row">
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">기부자</h5>
-                            <p class="card-text" th:text="${form.donator}"></p>
+                            <input type="text" th:field="*{donator}" th:errorclass="field-error">
+                            <span class="field-error" th:errors="*{donator}"></span>
                         </div>
                     </div>
 
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">은행명</h5>
-                            <p class="card-text" th:text="${form.bankType.bankName}"></p>
+                            <select class="form-control" th:field="*{bankType}" th:errorclass="field-error">
+                                <option th:each="bank : ${bankType}"
+                                        th:value="${bank.name()}" th:text="${bank.bankName}">
+                                    은행 이름
+                                </option>
+                            </select>
+                            <span class="field-error" th:errors="*{bankType}"></span>
                         </div>
                     </div>
                 </div>
@@ -91,16 +108,24 @@
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">계좌번호</h5>
-                            <p class="card-text" th:text="${form.accountNumber}"></p>
+                            <input type="text" th:field="*{accountNumber}">
+                            <span class="field-error" th:errors="*{accountNumber}"></span>
                         </div>
                     </div>
 
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">기부금</h5>
-                            <p class="card-text" th:text="|${form.amount}원|"></p>
+                            <input type="number" class="card-text" th:field="*{amount}"><span>원</span>
+                            <span class="field-error" th:errors="*{amount}"></span>
                         </div>
                     </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary">수정</button>
+                    <a type="button" class="btn btn-danger"
+                       th:href="|/member/auth/apply/detail/${appType}/${form.applicationId}|">취소</a>
                 </div>
                 <br/>
             </div>
@@ -110,14 +135,21 @@
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">지역</h5>
-                            <p class="card-text" th:text="${form.location.locationName}"></p>
+                            <select class="form-control" th:field="*{location}" th:errorclass="field-error">
+                                <option th:each="location : ${locationType}"
+                                        th:value="${location.name()}" th:text="${location.locationName}">
+                                    지역이름
+                                </option>
+                            </select>
+                            <span class="field-error" th:errors="*{location}"></span>
                         </div>
                     </div>
 
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">직업</h5>
-                            <p class="card-text" th:text="${form.job}"></p>
+                            <input type="text" th:field="*{job}" th:errorclass="field-error">
+                            <span th:errors="*{job}"></span>
                         </div>
                     </div>
                 </div>
@@ -125,18 +157,29 @@
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">결혼 여부</h5>
-                            <p class="card-text" th:if="${form.married}">Yes</p>
-                            <p class="card-text" th:remove="${form.married} ? all">No</p>
+                            <ul style="list-style: none;">
+                                <li class="radio">
+                                    <input type="radio" class="userRatings" th:field="*{married}"
+                                           th:errorclass="field-error" value="true"> 기혼
+                                </li>
+                                <li class="radio">
+                                    <input type="radio" class="userRatings" th:field="*{married}"
+                                           th:errorclass="field-error" value="false"> 미혼
+                                </li>
+                                <div class="field-error" th:errors="*{married}"></div>
+                            </ul>
                         </div>
                     </div>
 
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">보호 기간</h5>
-                            <p class="card-text" th:text="|${form.period}달|"></p>
+                            <input type="number" th:field="*{period}" th:errorclass="field-error">
+                            <span class="field-error" th:errors="*{period}"></span>
                         </div>
                     </div>
                 </div>
+                <br/>
                 <br/>
             </div>
 
@@ -145,14 +188,21 @@
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">지역</h5>
-                            <p class="card-text" th:text="${form.location.locationName}"></p>
+                            <select class="form-control" th:field="*{location}" th:errorclass="field-error">
+                                <option th:each="location : ${locationType}"
+                                        th:value="${location.name()}" th:text="${location.locationName}">
+                                    지역이름
+                                </option>
+                            </select>
+                            <span class="field-error" th:errors="*{location}"></span>
                         </div>
                     </div>
 
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">직업</h5>
-                            <p class="card-text" th:text="${form.job}"></p>
+                            <input type="text" th:field="*{job}" th:errorclass="field-error">
+                            <span th:errors="*{job}"></span>
                         </div>
                     </div>
                 </div>
@@ -160,19 +210,30 @@
                     <div class="card col-6">
                         <div class="card-body">
                             <h5 class="card-title">결혼 여부</h5>
-                            <p class="card-text" th:if="${form.married == true}">Yes</p>
-                            <p class="card-text" th:remove="${form.married == true} ? all">No</p>
+                            <ul style="list-style: none;">
+                                <li class="radio">
+                                    <input type="radio" class="userRatings" th:field="*{married}"
+                                           th:errorclass="field-error" value="true"> 기혼
+                                </li>
+                                <li class="radio">
+                                    <input type="radio" class="userRatings" th:field="*{married}"
+                                           th:errorclass="field-error" value="false"> 미혼
+                                </li>
+                                <div class="field-error" th:errors="*{married}"></div>
+                            </ul>
                         </div>
                     </div>
                 </div>
                 <br/>
             </div>
+
             <div class="container">
-                <a type="button" class="btn btn-primary" th:href="|/member/auth/apply/modify/${appType}/${form.applicationId}|">수정</a>
-                <a type="button" class="btn btn-danger" th:href="|/member/auth/apply/delete/${form.applicationId}|">삭제</a>
+                <button type="submit" class="btn btn-primary">수정</button>
+                <a type="button" class="btn btn-danger"
+                   th:href="|/member/auth/apply/detail/${appType}/${form.applicationId}|">취소</a>
             </div>
-            <br/>
-        </div>
+            <br>
+        </form>
     </section>
 </th:block>
 </html>

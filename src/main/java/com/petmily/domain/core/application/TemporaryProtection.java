@@ -2,7 +2,7 @@ package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
 import com.petmily.domain.core.enum_type.LocationType;
-import com.petmily.domain.dto.application.ChangeTempProtectionForm;
+import com.petmily.domain.dto.application.ModifyTempProtectionForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,7 +42,10 @@ public class TemporaryProtection extends Application {
                 '}';
     }
 
-    public void changeInfo(ChangeTempProtectionForm tempProtectionDto) {
-        this.period = tempProtectionDto.getPeriod();
+    public void changeInfo(ModifyTempProtectionForm form) {
+        this.location = form.getLocation();
+        this.job = form.getJob();
+        this.married = form.getMarried();
+        this.period = form.getPeriod();
     }
 }

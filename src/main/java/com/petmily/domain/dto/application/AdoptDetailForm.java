@@ -24,6 +24,8 @@ public class AdoptDetailForm {
     private Integer age;
     private Float weight;
 
+    private Long applicationId;
+
     @NotNull
     private LocationType location;
 

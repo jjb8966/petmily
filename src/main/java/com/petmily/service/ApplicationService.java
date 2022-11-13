@@ -115,7 +115,7 @@ public class ApplicationService {
     }
 
     // 입양 정보 수정
-    public Long changeAdoptInfo(Long id, ChangeAdoptForm adoptDto) {
+    public Long modifyAdopt(Long id, ModifyAdoptForm adoptDto) {
         Adopt adopt = findOne(id, Adopt.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 
@@ -125,7 +125,7 @@ public class ApplicationService {
     }
 
     // 임시보호 정보 수정
-    public Long changeTempProtectionInfo(Long id, ChangeTempProtectionForm tempProtectionDto) {
+    public Long modifyTempProtection(Long id, ModifyTempProtectionForm tempProtectionDto) {
         TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 
@@ -135,7 +135,7 @@ public class ApplicationService {
     }
 
     // 후원 정보 수정
-    public Long changeDonationInfo(Long id, ChangeDonationForm donationDto) {
+    public Long modifyDonation(Long id, ModifyDonationForm donationDto) {
         Donation donation = findOne(id, Donation.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 

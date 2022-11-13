@@ -8,10 +8,9 @@ import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.application.Donation;
 import com.petmily.domain.core.application.TemporaryProtection;
-import com.petmily.domain.dto.application.AdoptDetailForm;
-import com.petmily.domain.dto.application.ApplicationListForm;
-import com.petmily.domain.dto.application.DonationDetailForm;
-import com.petmily.domain.dto.application.TempProtectionDetailForm;
+import com.petmily.domain.core.enum_type.BankType;
+import com.petmily.domain.core.enum_type.LocationType;
+import com.petmily.domain.dto.application.*;
 import com.petmily.domain.dto.member.JoinForm;
 import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
@@ -27,6 +26,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -42,6 +42,16 @@ public class MemberController {
     private final MemberService memberService;
     private final ApplicationService applicationService;
     private final AbandonedAnimalService animalService;
+
+    @ModelAttribute(name = "bankType")
+    public BankType[] bankTypes() {
+        return BankType.values();
+    }
+
+    @ModelAttribute(name = "locationType")
+    public LocationType[] locationTypes() {
+        return LocationType.values();
+    }
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -146,14 +156,14 @@ public class MemberController {
         Member member = memberService.findOne(loginMember.getId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        ModifyMemberForm modifyMemberForm = changeToModifyForm(member);
+        ModifyMemberForm modifyMemberForm = changeToModifyDonationForm(member);
 
         model.addAttribute("modifyMemberForm", modifyMemberForm);
 
         return "/view/member/modify_form";
     }
 
-    private ModifyMemberForm changeToModifyForm(Member member) {
+    private ModifyMemberForm changeToModifyDonationForm(Member member) {
         ModifyMemberForm modifyMemberForm = new ModifyMemberForm();
 
         modifyMemberForm.setLoginId(member.getLoginId());
@@ -258,24 +268,6 @@ public class MemberController {
                 .collect(Collectors.toList());
     }
 
-    private String getType(String applicationType) {
-        String result = null;
-
-        if (applicationType.equals("Donation")) {
-            result = "후원";
-        }
-
-        if (applicationType.equals("TemporaryProtection")) {
-            result = "임시보호";
-        }
-
-        if (applicationType.equals("Adopt")) {
-            result = "입양";
-        }
-
-        return result;
-    }
-
     @GetMapping("/member/auth/apply/detail/{appType}/{appId}")
     public String applicationDetailForm(@PathVariable String appType,
                                         @PathVariable Long appId,
@@ -284,32 +276,31 @@ public class MemberController {
         log.info("id = {}", appId);
 
         if (appType.equals("Donation")) {
-            Donation donation = applicationService.findOne(appId, Donation.class)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
-
-            DonationDetailForm form = changeToDonationDetailForm(donation);
+            DonationDetailForm form = getDonationDetailForm(appId);
             model.addAttribute("form", form);
         }
 
         if (appType.equals("TemporaryProtection")) {
-            TemporaryProtection temporaryProtection = applicationService.findOne(appId, TemporaryProtection.class)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
-
-            TempProtectionDetailForm form = changeToTempProtectionDetailForm(temporaryProtection);
+            TempProtectionDetailForm form = getTempProtectionDetailForm(appId);
             model.addAttribute("form", form);
         }
 
         if (appType.equals("Adopt")) {
-            Adopt adopt = applicationService.findOne(appId, Adopt.class)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
-
-            AdoptDetailForm form = changeToAdoptDetailForm(adopt);
+            AdoptDetailForm form = getAdoptDetailForm(appId);
             model.addAttribute("form", form);
         }
 
         model.addAttribute("appType", appType);
 
         return "/view/member/apply_detail_form";
+    }
+
+    private AdoptDetailForm getAdoptDetailForm(Long appId) {
+        Adopt adopt = applicationService.findOne(appId, Adopt.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+        AdoptDetailForm form = changeToAdoptDetailForm(adopt);
+        return form;
     }
 
     private TempProtectionDetailForm changeToTempProtectionDetailForm(TemporaryProtection temporaryProtection) {
@@ -325,6 +316,7 @@ public class MemberController {
         form.setAnimalName(animal.getName());
         form.setAge(animal.getAge());
         form.setWeight(animal.getWeight());
+        form.setApplicationId(temporaryProtection.getId());
         form.setLocation(temporaryProtection.getLocation());
         form.setJob(temporaryProtection.getJob());
         form.setMarried(temporaryProtection.getMarried());
@@ -346,6 +338,7 @@ public class MemberController {
         form.setAnimalName(animal.getName());
         form.setAge(animal.getAge());
         form.setWeight(animal.getWeight());
+        form.setApplicationId(adopt.getId());
         form.setLocation(adopt.getLocation());
         form.setJob(adopt.getJob());
         form.setMarried(adopt.getMarried());
@@ -366,7 +359,7 @@ public class MemberController {
         form.setAnimalName(animal.getName());
         form.setAge(animal.getAge());
         form.setWeight(animal.getWeight());
-
+        form.setApplicationId(donation.getId());
         form.setBankType(donation.getBankType());
         form.setDonator(donation.getDonator());
         form.setAccountNumber(donation.getAccountNumber());
@@ -375,4 +368,152 @@ public class MemberController {
         return form;
     }
 
+    @GetMapping("/member/auth/apply/modify/{appType}/{appId}")
+    public String modifyApplicationForm(@PathVariable String appType,
+                                        @PathVariable Long appId,
+                                        Model model) {
+
+        if (appType.equals("Donation")) {
+            DonationDetailForm form = getDonationDetailForm(appId);
+            model.addAttribute("form", form);
+            log.info("form = {}", form);
+        }
+
+        if (appType.equals("TemporaryProtection")) {
+            TempProtectionDetailForm form = getTempProtectionDetailForm(appId);
+            model.addAttribute("form", form);
+            log.info("form = {}", form);
+        }
+
+        if (appType.equals("Adopt")) {
+            AdoptDetailForm form = getAdoptDetailForm(appId);
+            model.addAttribute("form", form);
+            log.info("form = {}", form);
+        }
+
+        return "/view/member/apply_modify_form";
+    }
+
+    private TempProtectionDetailForm getTempProtectionDetailForm(Long appId) {
+        TemporaryProtection temporaryProtection = applicationService.findOne(appId, TemporaryProtection.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+        TempProtectionDetailForm form = changeToTempProtectionDetailForm(temporaryProtection);
+        return form;
+    }
+
+    @PostMapping("/member/auth/apply/modify/Donation/{appId}")
+    public String modifyDonation(@PathVariable Long appId,
+                                 @ModelAttribute @Valid DonationDetailForm form,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes,
+                                 Model model) {
+
+        log.info("form = {}", form);
+
+        redirectAttributes.addAttribute("appId", appId);
+
+        if (bindingResult.hasErrors()) {
+            log.error("error {}", bindingResult.getAllErrors());
+            return "/member/auth/apply/modify/Donation/{appId}";
+        }
+
+        ModifyDonationForm modifyForm = changeToModifyDonationForm(form);
+        applicationService.modifyDonation(appId, modifyForm);
+
+        DonationDetailForm donationDetailForm = getDonationDetailForm(appId);
+        model.addAttribute("form", donationDetailForm);
+
+        return "redirect:/member/auth/apply/detail/Donation/{appId}";
+    }
+
+    @PostMapping("/member/auth/apply/modify/TemporaryProtection/{appId}")
+    public String modifyTempProtection(@PathVariable Long appId,
+                                       @ModelAttribute @Valid TempProtectionDetailForm form,
+                                       BindingResult bindingResult,
+                                       RedirectAttributes redirectAttributes,
+                                       Model model) {
+
+        log.info("form = {}", form);
+
+        redirectAttributes.addAttribute("appId", appId);
+
+        if (bindingResult.hasErrors()) {
+            log.error("error {}", bindingResult.getAllErrors());
+            return "/member/auth/apply/modify/TemporaryProtection/{appId}";
+        }
+
+        ModifyTempProtectionForm modifyForm = changeToModifyTempProtectionForm(form);
+        applicationService.modifyTempProtection(appId, modifyForm);
+
+        TempProtectionDetailForm tempProtectionDetailForm = getTempProtectionDetailForm(appId);
+        model.addAttribute("form", tempProtectionDetailForm);
+
+        return "redirect:/member/auth/apply/detail/TemporaryProtection/{appId}";
+    }
+
+    private ModifyTempProtectionForm changeToModifyTempProtectionForm(TempProtectionDetailForm form) {
+        ModifyTempProtectionForm modifyForm = new ModifyTempProtectionForm();
+
+        modifyForm.setLocation(form.getLocation());
+        modifyForm.setJob(form.getJob());
+        modifyForm.setMarried(form.getMarried());
+        modifyForm.setPeriod(form.getPeriod());
+
+        return modifyForm;
+    }
+
+    @PostMapping("/member/auth/apply/modify/Adopt/{appId}")
+    public String modifyAdopt(@PathVariable Long appId,
+                              @ModelAttribute @Valid AdoptDetailForm form,
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes,
+                              Model model) {
+
+        log.info("form = {}", form);
+
+        redirectAttributes.addAttribute("appId", appId);
+
+        if (bindingResult.hasErrors()) {
+            log.error("error {}", bindingResult.getAllErrors());
+            return "/member/auth/apply/modify/Adopt/{appId}";
+        }
+
+        ModifyAdoptForm modifyForm = changeToModifyAdoptForm(form);
+        applicationService.modifyAdopt(appId, modifyForm);
+
+        AdoptDetailForm adoptDetailForm = getAdoptDetailForm(appId);
+        model.addAttribute("form", adoptDetailForm);
+
+        return "redirect:/member/auth/apply/detail/Adopt/{appId}";
+    }
+
+    private ModifyAdoptForm changeToModifyAdoptForm(AdoptDetailForm form) {
+        ModifyAdoptForm modifyForm = new ModifyAdoptForm();
+
+        modifyForm.setLocation(form.getLocation());
+        modifyForm.setJob(form.getJob());
+        modifyForm.setMarried(form.getMarried());
+
+        return modifyForm;
+    }
+
+    private DonationDetailForm getDonationDetailForm(Long appId) {
+        Donation donation = applicationService.findOne(appId, Donation.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+        DonationDetailForm donationDetailForm = changeToDonationDetailForm(donation);
+        return donationDetailForm;
+    }
+
+    private ModifyDonationForm changeToModifyDonationForm(DonationDetailForm form) {
+        ModifyDonationForm modifyForm = new ModifyDonationForm();
+
+        modifyForm.setDonator(form.getDonator());
+        modifyForm.setBankType(form.getBankType());
+        modifyForm.setAccountNumber(form.getAccountNumber());
+        modifyForm.setAmount(form.getAmount());
+
+        return modifyForm;
+    }
 }

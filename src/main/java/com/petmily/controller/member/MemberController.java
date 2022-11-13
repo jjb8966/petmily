@@ -404,7 +404,7 @@ public class MemberController {
 
     @PostMapping("/member/auth/apply/modify/Donation/{appId}")
     public String modifyDonation(@PathVariable Long appId,
-                                 @ModelAttribute @Valid DonationDetailForm form,
+                                 @ModelAttribute("form") @Valid DonationDetailForm form,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes,
                                  Model model) {
@@ -415,21 +415,20 @@ public class MemberController {
 
         if (bindingResult.hasErrors()) {
             log.error("error {}", bindingResult.getAllErrors());
-            return "/member/auth/apply/modify/Donation/{appId}";
+            model.addAttribute("appType", "Donation");
+
+            return "/view/member/apply_modify_form";
         }
 
         ModifyDonationForm modifyForm = changeToModifyDonationForm(form);
         applicationService.modifyDonation(appId, modifyForm);
-
-        DonationDetailForm donationDetailForm = getDonationDetailForm(appId);
-        model.addAttribute("form", donationDetailForm);
 
         return "redirect:/member/auth/apply/detail/Donation/{appId}";
     }
 
     @PostMapping("/member/auth/apply/modify/TemporaryProtection/{appId}")
     public String modifyTempProtection(@PathVariable Long appId,
-                                       @ModelAttribute @Valid TempProtectionDetailForm form,
+                                       @ModelAttribute("form") @Valid TempProtectionDetailForm form,
                                        BindingResult bindingResult,
                                        RedirectAttributes redirectAttributes,
                                        Model model) {
@@ -440,14 +439,13 @@ public class MemberController {
 
         if (bindingResult.hasErrors()) {
             log.error("error {}", bindingResult.getAllErrors());
-            return "/member/auth/apply/modify/TemporaryProtection/{appId}";
+            model.addAttribute("appType", "TemporaryProtection");
+
+            return "/view/member/apply_modify_form";
         }
 
         ModifyTempProtectionForm modifyForm = changeToModifyTempProtectionForm(form);
         applicationService.modifyTempProtection(appId, modifyForm);
-
-        TempProtectionDetailForm tempProtectionDetailForm = getTempProtectionDetailForm(appId);
-        model.addAttribute("form", tempProtectionDetailForm);
 
         return "redirect:/member/auth/apply/detail/TemporaryProtection/{appId}";
     }
@@ -465,7 +463,7 @@ public class MemberController {
 
     @PostMapping("/member/auth/apply/modify/Adopt/{appId}")
     public String modifyAdopt(@PathVariable Long appId,
-                              @ModelAttribute @Valid AdoptDetailForm form,
+                              @ModelAttribute("form") @Valid AdoptDetailForm form,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes,
                               Model model) {
@@ -476,14 +474,13 @@ public class MemberController {
 
         if (bindingResult.hasErrors()) {
             log.error("error {}", bindingResult.getAllErrors());
-            return "/member/auth/apply/modify/Adopt/{appId}";
+            model.addAttribute("appType", "Adopt");
+
+            return "/view/member/apply_modify_form";
         }
 
         ModifyAdoptForm modifyForm = changeToModifyAdoptForm(form);
         applicationService.modifyAdopt(appId, modifyForm);
-
-        AdoptDetailForm adoptDetailForm = getAdoptDetailForm(appId);
-        model.addAttribute("form", adoptDetailForm);
 
         return "redirect:/member/auth/apply/detail/Adopt/{appId}";
     }

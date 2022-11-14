@@ -31,7 +31,7 @@
                                 <small><i class="far fa-eye" th:if="${form.type == 'Adopt'}">입양</i></small>
                                 <!-- 제목 -->
                                 <div class="text-secondary">
-                                    <a th:href="|/member/auth/apply/detail/${form.type}/${form.id}|">
+                                    <a th:href="|/member/auth/application/detail/${form.type}/${form.id}|">
                                         <strong th:text="|동물 이름 : ${form.animalName}|"></strong>
                                     </a>
                                     <strong th:text="|신청서 상태 : ${form.status}|" style="float: right;"></strong>

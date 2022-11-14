@@ -169,9 +169,9 @@
             </div>
             <div class="container">
                 <div class="row">
-                    <a type="button" class="btn btn-primary" th:href="|/member/auth/apply/modify/${appType}/${form.applicationId}|">수정</a>
-                    <form th:action="|/member/auth/apply/delete/${form.applicationId}|" method="post"><button type="submit" class="btn btn-danger">삭제</button></form>
-                    <a type="button" class="btn btn-primary offset-9" th:href="|/member/auth/apply/${session.loginMember.id}|">목록으로</a>
+                    <a type="button" class="btn btn-primary" th:href="|/member/auth/application/modify/${appType}/${form.applicationId}|">수정</a>
+                    <form th:action="|/member/auth/application/delete/${form.applicationId}|" method="post"><button type="submit" class="btn btn-danger">삭제</button></form>
+                    <a type="button" class="btn btn-primary offset-9" href="/member/auth/application/list">목록으로</a>
                 </div>
             </div>
             <br/>

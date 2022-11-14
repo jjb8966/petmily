@@ -238,11 +238,11 @@ public class MemberController {
         return password.equals(loginMemberPassword);
     }
 
-    @GetMapping("/member/auth/apply/{memberId}")
-    public String applyList(@PathVariable Long memberId, Model model) {
-        log.info("memberId = {}", memberId);
+    @GetMapping("/member/auth/application/list")
+    public String applicationList(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
+                                  Model model) {
 
-        Member member = memberService.findOne(memberId)
+        Member member = memberService.findOne(loginMember.getId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         List<Application> applications = applicationService.findAll(member);
@@ -250,7 +250,7 @@ public class MemberController {
 
         model.addAttribute("forms", forms);
 
-        return "/view/member/apply_list";
+        return "/view/member/application_list";
     }
 
     private List<ApplicationListForm> changeToApplicationListForm(List<Application> applications) {
@@ -268,7 +268,7 @@ public class MemberController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/member/auth/apply/detail/{appType}/{appId}")
+    @GetMapping("/member/auth/application/detail/{appType}/{appId}")
     public String applicationDetailForm(@PathVariable String appType,
                                         @PathVariable Long appId,
                                         Model model) {
@@ -292,7 +292,7 @@ public class MemberController {
 
         model.addAttribute("appType", appType);
 
-        return "/view/member/apply_detail_form";
+        return "/view/member/application_detail_form";
     }
 
     private AdoptDetailForm getAdoptDetailForm(Long appId) {
@@ -368,7 +368,7 @@ public class MemberController {
         return form;
     }
 
-    @GetMapping("/member/auth/apply/modify/{appType}/{appId}")
+    @GetMapping("/member/auth/application/modify/{appType}/{appId}")
     public String modifyApplicationForm(@PathVariable String appType,
                                         @PathVariable Long appId,
                                         Model model) {
@@ -391,7 +391,7 @@ public class MemberController {
             log.info("form = {}", form);
         }
 
-        return "/view/member/apply_modify_form";
+        return "/view/member/application_modify_form";
     }
 
     private TempProtectionDetailForm getTempProtectionDetailForm(Long appId) {
@@ -402,7 +402,7 @@ public class MemberController {
         return form;
     }
 
-    @PostMapping("/member/auth/apply/modify/Donation/{appId}")
+    @PostMapping("/member/auth/application/modify/Donation/{appId}")
     public String modifyDonation(@PathVariable Long appId,
                                  @ModelAttribute("form") @Valid DonationDetailForm form,
                                  BindingResult bindingResult,
@@ -417,16 +417,16 @@ public class MemberController {
             log.error("error {}", bindingResult.getAllErrors());
             model.addAttribute("appType", "Donation");
 
-            return "/view/member/apply_modify_form";
+            return "/view/member/application_modify_form";
         }
 
         ModifyDonationForm modifyForm = changeToModifyDonationForm(form);
         applicationService.modifyDonation(appId, modifyForm);
 
-        return "redirect:/member/auth/apply/detail/Donation/{appId}";
+        return "redirect:/member/auth/application/detail/Donation/{appId}";
     }
 
-    @PostMapping("/member/auth/apply/modify/TemporaryProtection/{appId}")
+    @PostMapping("/member/auth/application/modify/TemporaryProtection/{appId}")
     public String modifyTempProtection(@PathVariable Long appId,
                                        @ModelAttribute("form") @Valid TempProtectionDetailForm form,
                                        BindingResult bindingResult,
@@ -441,13 +441,13 @@ public class MemberController {
             log.error("error {}", bindingResult.getAllErrors());
             model.addAttribute("appType", "TemporaryProtection");
 
-            return "/view/member/apply_modify_form";
+            return "/view/member/application_modify_form";
         }
 
         ModifyTempProtectionForm modifyForm = changeToModifyTempProtectionForm(form);
         applicationService.modifyTempProtection(appId, modifyForm);
 
-        return "redirect:/member/auth/apply/detail/TemporaryProtection/{appId}";
+        return "redirect:/member/auth/application/detail/TemporaryProtection/{appId}";
     }
 
     private ModifyTempProtectionForm changeToModifyTempProtectionForm(TempProtectionDetailForm form) {
@@ -461,7 +461,7 @@ public class MemberController {
         return modifyForm;
     }
 
-    @PostMapping("/member/auth/apply/modify/Adopt/{appId}")
+    @PostMapping("/member/auth/application/modify/Adopt/{appId}")
     public String modifyAdopt(@PathVariable Long appId,
                               @ModelAttribute("form") @Valid AdoptDetailForm form,
                               BindingResult bindingResult,
@@ -476,13 +476,13 @@ public class MemberController {
             log.error("error {}", bindingResult.getAllErrors());
             model.addAttribute("appType", "Adopt");
 
-            return "/view/member/apply_modify_form";
+            return "/view/member/application_modify_form";
         }
 
         ModifyAdoptForm modifyForm = changeToModifyAdoptForm(form);
         applicationService.modifyAdopt(appId, modifyForm);
 
-        return "redirect:/member/auth/apply/detail/Adopt/{appId}";
+        return "redirect:/member/auth/application/detail/Adopt/{appId}";
     }
 
     private ModifyAdoptForm changeToModifyAdoptForm(AdoptDetailForm form) {
@@ -514,15 +514,11 @@ public class MemberController {
         return modifyForm;
     }
 
-    @PostMapping("/member/auth/apply/delete/{appId}")
-    public String deleteApplication(@PathVariable Long appId,
-                                    @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
-                                    RedirectAttributes redirectAttributes) {
+    @PostMapping("/member/auth/application/delete/{appId}")
+    public String deleteApplication(@PathVariable Long appId) {
 
         applicationService.deleteApplication(appId);
 
-        redirectAttributes.addAttribute("memberId", loginMember.getId());
-
-        return "redirect:/member/auth/apply/{memberId}";
+        return "redirect:/member/auth/application/list";
     }
 }

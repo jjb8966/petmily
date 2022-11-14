@@ -513,4 +513,16 @@ public class MemberController {
 
         return modifyForm;
     }
+
+    @PostMapping("/member/auth/apply/delete/{appId}")
+    public String deleteApplication(@PathVariable Long appId,
+                                    @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
+                                    RedirectAttributes redirectAttributes) {
+
+        applicationService.deleteApplication(appId);
+
+        redirectAttributes.addAttribute("memberId", loginMember.getId());
+
+        return "redirect:/member/auth/apply/{memberId}";
+    }
 }

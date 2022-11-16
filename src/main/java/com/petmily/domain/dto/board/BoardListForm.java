@@ -1,5 +1,6 @@
 package com.petmily.domain.dto.board;
 
+import com.petmily.domain.core.enum_type.BoardType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,4 +18,5 @@ public class BoardListForm {
     private String title;
     private LocalDateTime createdDate;
     private Boolean shownAll;
+    private BoardType boardType;
 }

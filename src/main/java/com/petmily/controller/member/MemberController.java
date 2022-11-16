@@ -3,6 +3,7 @@ package com.petmily.controller.member;
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.application.Application;
@@ -11,12 +12,14 @@ import com.petmily.domain.core.application.TemporaryProtection;
 import com.petmily.domain.core.enum_type.BankType;
 import com.petmily.domain.core.enum_type.LocationType;
 import com.petmily.domain.dto.application.*;
+import com.petmily.domain.dto.board.BoardListForm;
 import com.petmily.domain.dto.member.JoinForm;
 import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto.member.WithdrawMemberForm;
 import com.petmily.service.AbandonedAnimalService;
 import com.petmily.service.ApplicationService;
+import com.petmily.service.BoardService;
 import com.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +45,7 @@ public class MemberController {
     private final MemberService memberService;
     private final ApplicationService applicationService;
     private final AbandonedAnimalService animalService;
+    private final BoardService boardService;
 
     @ModelAttribute(name = "bankType")
     public BankType[] bankTypes() {
@@ -520,5 +524,37 @@ public class MemberController {
         applicationService.deleteApplication(appId);
 
         return "redirect:/member/auth/application/list";
+    }
+
+    @GetMapping("/member/auth/board/list")
+    public String boardList(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
+                            Model model) {
+
+        Member member = memberService.findOne(loginMember.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        List<Board> boards = boardService.findAll(member);
+        List<BoardListForm> forms = changeToBoardListForm(boards);
+
+        model.addAttribute("forms", forms);
+
+        return "/view/member/board_list";
+    }
+
+    private List<BoardListForm> changeToBoardListForm(List<Board> boards) {
+        return boards.stream().map(board -> {
+                    BoardListForm form = new BoardListForm();
+
+                    form.setId(board.getId());
+                    form.setMemberId(board.getMember().getId());
+                    form.setWriterName(board.getMember().getName());
+                    form.setTitle(board.getTitle());
+                    form.setCreatedDate(board.getCreatedDate());
+                    form.setShownAll(board.getShownAll());
+                    form.setBoardType(board.getBoardType());
+
+                    return form;
+                })
+                .collect(Collectors.toList());
     }
 }

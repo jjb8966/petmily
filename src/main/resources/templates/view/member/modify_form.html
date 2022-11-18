@@ -13,69 +13,84 @@
 </head>
 
 <th:block layout:fragment="content">
-    <div class="row no-gutters">
-        <div class="col-md-7">
-            <div class="contact-wrap w-100 p-md-5 p-4">
-                <h3 class="mb-4">회원 정보 변경</h3>
-                <form class="contactForm" th:action method="post">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="label">아이디</label>
-                                <input type="text" class="form-control" th:errorclass="field-error"
-                                       th:field="${modifyMemberForm.loginId}" readonly>
-                            </div>
-                        </div>
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">회원 정보 변경</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="wrapper">
+                        <div class="row no-gutters">
+                            <div class="col-md-7">
+                                <div class="contact-wrap w-100 p-md-5 p-4">
+                                    <form class="contactForm" th:action method="post">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label">아이디</label>
+                                                    <input type="text" class="form-control" th:errorclass="field-error"
+                                                           th:field="${modifyMemberForm.loginId}" readonly>
+                                                </div>
+                                            </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="label">비밀번호</label>
-                                <input type="text" class="form-control" th:errorclass="field-error"
-                                       th:field="${modifyMemberForm.password}"/>
-                                <div class="field-error" th:errors="${modifyMemberForm.password}"></div>
-                            </div>
-                        </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label">비밀번호</label>
+                                                    <input type="text" class="form-control" th:errorclass="field-error"
+                                                           th:field="${modifyMemberForm.password}"/>
+                                                    <div class="field-error" th:errors="${modifyMemberForm.password}"></div>
+                                                </div>
+                                            </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="label">이름</label>
-                                <input type="text" class="form-control" th:errorclass="field-error"
-                                       th:field="${modifyMemberForm.name}"/>
-                                <div class="field-error" th:errors="${modifyMemberForm.name}"></div>
-                            </div>
-                        </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label">이름</label>
+                                                    <input type="text" class="form-control" th:errorclass="field-error"
+                                                           th:field="${modifyMemberForm.name}"/>
+                                                    <div class="field-error" th:errors="${modifyMemberForm.name}"></div>
+                                                </div>
+                                            </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="label">이메일</label>
-                                <input type="text" class="form-control" th:errorclass="field-error"
-                                       th:field="${modifyMemberForm.email}"/>
-                                <div class="field-error" th:errors="${modifyMemberForm.email}"></div>
-                            </div>
-                        </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label">이메일</label>
+                                                    <input type="text" class="form-control" th:errorclass="field-error"
+                                                           th:field="${modifyMemberForm.email}"/>
+                                                    <div class="field-error" th:errors="${modifyMemberForm.email}"></div>
+                                                </div>
+                                            </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="label">연락처</label>
-                                <input type="text" class="form-control" th:errorclass="field-error"
-                                       th:field="${modifyMemberForm.phone}"/>
-                                <div class="field-error" th:errors="${modifyMemberForm.phone}"></div>
-                            </div>
-                        </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="label">연락처</label>
+                                                    <input type="text" class="form-control" th:errorclass="field-error"
+                                                           th:field="${modifyMemberForm.phone}"/>
+                                                    <div class="field-error" th:errors="${modifyMemberForm.phone}"></div>
+                                                </div>
+                                            </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">저장</button>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary">저장</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-5 d-flex align-items-stretch">
+                                <div class="info-wrap w-100 p-5 img"
+                                     style="background-image: url(/petsitting-master/images/img.jpg);">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-
-        <div class="col-md-5 d-flex align-items-stretch">
-            <div class="info-wrap w-100 p-5 img" style="background-image: url('/petsitting-master/images/img.jpg');"></div>
-        </div>
-    </div>
+    </section>
 </th:block>
 </html>

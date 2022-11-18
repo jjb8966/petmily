@@ -10,6 +10,7 @@ import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
+import com.petmily.domain.core.embeded_type.Email;
 import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.*;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class InitDB {
                 Member member = new MemberBuilder("m" + i, "123")
                         .setName("member" + i)
                         .setBirth(LocalDate.now())
-                        .setEmail("email@" + i + ".com")
+                        .setEmail(new Email("abc", "naver", "com"))
                         .setPhoneNumber(new PhoneNumber("010", "1111", "2222"))
                         .build();
 

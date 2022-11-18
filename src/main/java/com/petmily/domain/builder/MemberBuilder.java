@@ -4,6 +4,7 @@ import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.application.Application;
+import com.petmily.domain.core.embeded_type.Email;
 import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.MemberGrade;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class MemberBuilder {
     private String password;
     private String name;
     private LocalDate birth;
-    private String email;
+    private Email email;
     private PhoneNumber phoneNumber;
 
     public MemberBuilder(String loginId, String password) {
@@ -65,7 +66,7 @@ public class MemberBuilder {
         return this;
     }
 
-    public MemberBuilder setEmail(String email) {
+    public MemberBuilder setEmail(Email email) {
         this.email = email;
         return this;
     }

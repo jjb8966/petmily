@@ -2,6 +2,7 @@ package com.petmily.domain.core;
 
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.application.Application;
+import com.petmily.domain.core.embeded_type.Email;
 import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.MemberGrade;
 import com.petmily.domain.dto.member.ModifyMemberForm;
@@ -40,11 +41,13 @@ public class Member extends BaseEntity {
     @Embedded
     private PhoneNumber phoneNumber;
 
+    @Embedded
+    private Email email;
+
     private String loginId;
     private String password;
     private String name;
     private LocalDate birth;
-    private String email;
 
     public Member(MemberBuilder builder) {
         this.boards = builder.getBoards();

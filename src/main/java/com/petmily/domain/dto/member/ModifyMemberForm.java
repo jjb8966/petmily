@@ -1,5 +1,6 @@
 package com.petmily.domain.dto.member;
 
+import com.petmily.domain.core.embeded_type.Email;
 import com.petmily.domain.core.embeded_type.PhoneNumber;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +21,8 @@ public class ModifyMemberForm {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String email;
+    @NotNull
+    private Email email;
 
     @NotNull
     private PhoneNumber phoneNumber;

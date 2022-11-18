@@ -2,6 +2,7 @@ package com.petmily.domain.core;
 
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.application.Application;
+import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.MemberGrade;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import lombok.AccessLevel;
@@ -36,12 +37,14 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;
 
+    @Embedded
+    private PhoneNumber phoneNumber;
+
     private String loginId;
     private String password;
     private String name;
     private LocalDate birth;
     private String email;
-    private String phone;
 
     public Member(MemberBuilder builder) {
         this.boards = builder.getBoards();
@@ -53,14 +56,14 @@ public class Member extends BaseEntity {
         this.name = builder.getName();
         this.birth = builder.getBirth();
         this.email = builder.getEmail();
-        this.phone = builder.getPhone();
+        this.phoneNumber = builder.getPhoneNumber();
     }
 
     public void changeInfo(ModifyMemberForm memberDto) {
         this.password = memberDto.getPassword();
         this.name = memberDto.getName();
         this.email = memberDto.getEmail();
-        this.phone = memberDto.getPhone();
+        this.phoneNumber = memberDto.getPhoneNumber();
     }
 
     public void deleteBoard(Board board) {

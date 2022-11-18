@@ -1,17 +1,19 @@
 package com.petmily.domain.dto.member;
 
+import com.petmily.domain.core.embeded_type.PhoneNumber;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @ToString
 @Getter
 @Setter
-public class JoinForm {
+public class MemberJoinForm {
 
     @NotBlank
     private String loginId;
@@ -31,6 +33,6 @@ public class JoinForm {
     @NotBlank
     private String email;
 
-    @NotBlank
-    private String phone;
+    @NotNull
+    private PhoneNumber phoneNumber;
 }

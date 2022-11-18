@@ -13,8 +13,8 @@ import com.petmily.domain.core.enum_type.BankType;
 import com.petmily.domain.core.enum_type.LocationType;
 import com.petmily.domain.dto.application.*;
 import com.petmily.domain.dto.board.BoardListForm;
-import com.petmily.domain.dto.member.JoinForm;
 import com.petmily.domain.dto.member.LoginForm;
+import com.petmily.domain.dto.member.MemberJoinForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto.member.WithdrawMemberForm;
 import com.petmily.service.AbandonedAnimalService;
@@ -102,12 +102,12 @@ public class MemberController {
 
     @GetMapping("/join")
     public String joinForm(Model model) {
-        model.addAttribute("form", new JoinForm());
+        model.addAttribute("form", new MemberJoinForm());
         return "/view/member/join_form";
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute("form") @Valid JoinForm form, BindingResult bindingResult) {
+    public String join(@ModelAttribute("form") @Valid MemberJoinForm form, BindingResult bindingResult) {
         log.info("form = {}", form);
 
         String password = form.getPassword();
@@ -139,12 +139,12 @@ public class MemberController {
         return password.equals(passwordCheck);
     }
 
-    private static Member changeToMember(JoinForm form) {
+    private static Member changeToMember(MemberJoinForm form) {
         return new MemberBuilder(form.getLoginId(), form.getPassword())
                 .setName(form.getName())
                 .setBirth(form.getBirth())
                 .setEmail(form.getEmail())
-                .setPhone(form.getPhone())
+                .setPhoneNumber(form.getPhoneNumber())
                 .build();
     }
 
@@ -173,7 +173,7 @@ public class MemberController {
         modifyMemberForm.setLoginId(member.getLoginId());
         modifyMemberForm.setPassword(member.getPassword());
         modifyMemberForm.setName(member.getName());
-        modifyMemberForm.setPhone(member.getPhone());
+        modifyMemberForm.setPhoneNumber(member.getPhoneNumber());
         modifyMemberForm.setEmail(member.getEmail());
 
         return modifyMemberForm;

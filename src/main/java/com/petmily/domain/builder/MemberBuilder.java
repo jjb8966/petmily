@@ -4,11 +4,11 @@ import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.application.Application;
+import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.MemberGrade;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class MemberBuilder {
     private String name;
     private LocalDate birth;
     private String email;
-    private String phone;
+    private PhoneNumber phoneNumber;
 
     public MemberBuilder(String loginId, String password) {
         this.loginId = loginId;
@@ -70,8 +70,8 @@ public class MemberBuilder {
         return this;
     }
 
-    public MemberBuilder setPhone(String phone) {
-        this.phone = phone;
+    public MemberBuilder setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
         return this;
     }
 }

@@ -1,6 +1,7 @@
 package com.petmily.config;
 
 import com.petmily.config.formatter.BoardTypeFormatter;
+import com.petmily.config.formatter.PhoneNumberFormatter;
 import com.petmily.config.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -13,6 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new BoardTypeFormatter());
+        registry.addFormatter(new PhoneNumberFormatter());
     }
 
     @Override

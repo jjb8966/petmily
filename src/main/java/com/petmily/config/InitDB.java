@@ -10,6 +10,7 @@ import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
+import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,7 @@ public class InitDB {
                         .setName("member" + i)
                         .setBirth(LocalDate.now())
                         .setEmail("email@" + i + ".com")
-                        .setPhone("010-" + i)
+                        .setPhoneNumber(new PhoneNumber("010", "1111", "2222"))
                         .build();
 
                 em.persist(member);

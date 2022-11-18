@@ -57,6 +57,7 @@ public class InitDB {
             Member admin = new MemberBuilder("ADMIN", "123")
                     .setName("관리자")
                     .setMemberGrade(MemberGrade.ADMIN)
+                    .setPhoneNumber(new PhoneNumber("010", "0000", "0000"))
                     .build();
 
             em.persist(admin);

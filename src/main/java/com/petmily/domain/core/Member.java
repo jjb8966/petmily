@@ -3,7 +3,7 @@ package com.petmily.domain.core;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.enum_type.MemberGrade;
-import com.petmily.domain.dto.member.ChangeMemberDto;
+import com.petmily.domain.dto.member.ModifyMemberForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,8 +56,7 @@ public class Member extends BaseEntity {
         this.phone = builder.getPhone();
     }
 
-    public void changeInfo(ChangeMemberDto memberDto) {
-        this.loginId = memberDto.getLoginId();
+    public void changeInfo(ModifyMemberForm memberDto) {
         this.password = memberDto.getPassword();
         this.name = memberDto.getName();
         this.email = memberDto.getEmail();

@@ -19,3 +19,6 @@ logging:
     org.hibernate.SQL: debug
 #    org.hibernate.trace: trace
 #    -> 콘솔
+
+file:
+  dir: /Users/joojongbum/store_image/

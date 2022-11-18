@@ -2,7 +2,7 @@ package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.DonationBuilder;
 import com.petmily.domain.core.enum_type.BankType;
-import com.petmily.domain.dto.application.ChangeDonationDto;
+import com.petmily.domain.dto.application.ModifyDonationForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +45,10 @@ public class Donation extends Application {
                 '}';
     }
 
-    public void changeInfo(ChangeDonationDto donationDto) {
-        this.amount = donationDto.getAmount();
+    public void changeInfo(ModifyDonationForm form) {
+        this.bankType = form.getBankType();
+        this.donator = form.getDonator();
+        this.accountNumber = form.getAccountNumber();
+        this.amount = form.getAmount();
     }
 }

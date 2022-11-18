@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">신청서 상세보기</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section ftco-no-pt ftco-no-pb">
+        <div class="container">
+            <div class="row d-flex no-gutters">
+                <div class="col-md-5 d-flex">
+                    <img th:src="|/abandoned_animal/image/${form.fileStoreName}|"
+                         style='width: 100%; object-fit: contain'/>
+                </div>
+                <div class="col-md-7 pl-md-5 py-md-5">
+                    <div class="heading-section pt-md-5">
+                        <h2 class="mb-4" th:text="${form.animalName}">유기동물 이름</h2>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 services-2 w-100 d-flex">
+                            <div class="icon d-flex align-items-center justify-content-center">
+                                <span class="flaticon-stethoscope"></span></div>
+                            <div class="text pl-3">
+                                <h4>종</h4>
+                                <p th:text="${form.species}">유기동물 종</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 services-2 w-100 d-flex">
+                            <div class="icon d-flex align-items-center justify-content-center"><span
+                                    class="flaticon-customer-service"></span></div>
+                            <div class="text pl-3">
+                                <h4>나이</h4>
+                                <p th:text="|${form.age}살|">몇 살</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 services-2 w-100 d-flex">
+                            <div class="icon d-flex align-items-center justify-content-center"><span
+                                    class="flaticon-emergency-call"></span></div>
+                            <div class="text pl-3">
+                                <h4>몸무게</h4>
+                                <p th:text="|${form.weight}Kg|"> 몇 Kg</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 services-2 w-100 d-flex">
+                            <div class="icon d-flex align-items-center justify-content-center"><span
+                                    class="flaticon-veterinarian"></span></div>
+                            <div class="text pl-3">
+                                <h4>상태</h4>
+                                <p th:text="${form.status}">유기동물 상태</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="container" th:if="${appType == 'Donation'}">
+                <div class="row">
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">기부자</h5>
+                            <p class="card-text" th:text="${form.donator}"></p>
+                        </div>
+                    </div>
+
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">은행명</h5>
+                            <p class="card-text" th:text="${form.bankType.bankName}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">계좌번호</h5>
+                            <p class="card-text" th:text="${form.accountNumber}"></p>
+                        </div>
+                    </div>
+
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">기부금</h5>
+                            <p class="card-text" th:text="|${form.amount}원|"></p>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            </div>
+
+            <div class="container" th:if="${appType == 'TemporaryProtection'}">
+                <div class="row">
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">지역</h5>
+                            <p class="card-text" th:text="${form.location.locationName}"></p>
+                        </div>
+                    </div>
+
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">직업</h5>
+                            <p class="card-text" th:text="${form.job}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">결혼 여부</h5>
+                            <p class="card-text" th:if="${form.married}">Yes</p>
+                            <p class="card-text" th:remove="${form.married} ? all">No</p>
+                        </div>
+                    </div>
+
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">보호 기간</h5>
+                            <p class="card-text" th:text="|${form.period}달|"></p>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            </div>
+
+            <div class="container" th:if="${appType == 'Adopt'}">
+                <div class="row">
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">지역</h5>
+                            <p class="card-text" th:text="${form.location.locationName}"></p>
+                        </div>
+                    </div>
+
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">직업</h5>
+                            <p class="card-text" th:text="${form.job}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card col-6">
+                        <div class="card-body">
+                            <h5 class="card-title">결혼 여부</h5>
+                            <p class="card-text" th:if="${form.married == true}">Yes</p>
+                            <p class="card-text" th:remove="${form.married == true} ? all">No</p>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <a type="button" class="btn btn-primary" th:href="|/member/auth/application/modify/${appType}/${form.applicationId}|">수정</a>
+                    <form th:action="|/member/auth/application/delete/${form.applicationId}|" method="post"><button type="submit" class="btn btn-danger">삭제</button></form>
+                    <a type="button" class="btn btn-primary offset-9" href="/member/auth/application/list">목록으로</a>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </section>
+</th:block>
+</html>

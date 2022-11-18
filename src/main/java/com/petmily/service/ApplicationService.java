@@ -30,7 +30,7 @@ public class ApplicationService {
     private final AbandonedAnimalRepository animalRepository;
 
     // 입양하기
-    public Long adopt(Long memberId, Long animalId, ApplyAdoptDto adoptDto) {
+    public Long adopt(Long memberId, Long animalId, ApplyAdoptForm adoptDto) {
         // 엔티티 조회
         Member member = getMember(memberId);
         AbandonedAnimal animal = getAnimal(animalId);
@@ -49,7 +49,7 @@ public class ApplicationService {
     }
 
     // 임시보호하기
-    public Long tempProtect(Long memberId, Long animalId, ApplyTempProtectionDto tempProtectionDto) {
+    public Long tempProtect(Long memberId, Long animalId, ApplyTempProtectionForm tempProtectionDto) {
         // 엔티티 조회
         Member member = getMember(memberId);
         AbandonedAnimal animal = getAnimal(animalId);
@@ -69,7 +69,7 @@ public class ApplicationService {
     }
 
     // 후원하기
-    public Long donate(Long memberId, Long animalId, ApplyDonationDto donationDto) {
+    public Long donate(Long memberId, Long animalId, ApplyDonationForm donationDto) {
         // 엔티티 조회
         Member member = getMember(memberId);
         AbandonedAnimal animal = getAnimal(animalId);
@@ -109,8 +109,13 @@ public class ApplicationService {
         return applicationRepository.findAll();
     }
 
+    // 특정 회원의 전체 지원서 조회
+    public List<Application> findAll(Member member) {
+        return applicationRepository.findAllByMemberOrderByApplicationType(member);
+    }
+
     // 입양 정보 수정
-    public Long changeAdoptInfo(Long id, ChangeAdoptDto adoptDto) {
+    public Long modifyAdopt(Long id, ModifyAdoptForm adoptDto) {
         Adopt adopt = findOne(id, Adopt.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 
@@ -120,7 +125,7 @@ public class ApplicationService {
     }
 
     // 임시보호 정보 수정
-    public Long changeTempProtectionInfo(Long id, ChangeTempProtectionDto tempProtectionDto) {
+    public Long modifyTempProtection(Long id, ModifyTempProtectionForm tempProtectionDto) {
         TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 
@@ -130,7 +135,7 @@ public class ApplicationService {
     }
 
     // 후원 정보 수정
-    public Long changeDonationInfo(Long id, ChangeDonationDto donationDto) {
+    public Long modifyDonation(Long id, ModifyDonationForm donationDto) {
         Donation donation = findOne(id, Donation.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
 

@@ -10,9 +10,9 @@ import com.petmily.domain.core.enum_type.BankType;
 import com.petmily.domain.core.enum_type.LocationType;
 import com.petmily.domain.dto.PetmilyPage;
 import com.petmily.domain.dto.abandoned_animal.AnimalDetailForm;
-import com.petmily.domain.dto.application.ApplyAdoptDto;
-import com.petmily.domain.dto.application.ApplyDonationDto;
-import com.petmily.domain.dto.application.ApplyTempProtectionDto;
+import com.petmily.domain.dto.application.ApplyAdoptForm;
+import com.petmily.domain.dto.application.ApplyDonationForm;
+import com.petmily.domain.dto.application.ApplyTempProtectionForm;
 import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.service.AbandonedAnimalService;
 import com.petmily.service.ApplicationService;
@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -132,7 +131,7 @@ public class AbandonedAnimalController {
 
         log.info("animal id = {}", id);
 
-        ApplyDonationDto donationDto = new ApplyDonationDto();
+        ApplyDonationForm donationDto = new ApplyDonationForm();
 
         model.addAttribute("animalName", abandonedAnimalRepository.findName(id));
         model.addAttribute("donationDto", donationDto);
@@ -143,7 +142,7 @@ public class AbandonedAnimalController {
     @PostMapping("/auth/donate/{id}")
     public String donate(@PathVariable("id") Long animalId,
                          @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
-                         @ModelAttribute("donationDto") @Valid ApplyDonationDto donationDto,
+                         @ModelAttribute("donationDto") @Valid ApplyDonationForm donationDto,
                          BindingResult bindingResult,
                          Model model) {
 
@@ -170,7 +169,7 @@ public class AbandonedAnimalController {
 
         log.info("animal id = {}", id);
 
-        ApplyTempProtectionDto tempProtectionDto = new ApplyTempProtectionDto();
+        ApplyTempProtectionForm tempProtectionDto = new ApplyTempProtectionForm();
 
         model.addAttribute("animalName", abandonedAnimalRepository.findName(id));
         model.addAttribute("tempProtectionDto", tempProtectionDto);
@@ -181,7 +180,7 @@ public class AbandonedAnimalController {
     @PostMapping("/auth/tempProtect/{id}")
     public String tempProtect(@PathVariable("id") Long animalId,
                               @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
-                              @ModelAttribute("tempProtectionDto") @Valid ApplyTempProtectionDto tempProtectionDto,
+                              @ModelAttribute("tempProtectionDto") @Valid ApplyTempProtectionForm tempProtectionDto,
                               BindingResult bindingResult,
                               Model model) {
 
@@ -208,7 +207,7 @@ public class AbandonedAnimalController {
 
         log.info("animal id = {}", id);
 
-        ApplyAdoptDto adoptDto = new ApplyAdoptDto();
+        ApplyAdoptForm adoptDto = new ApplyAdoptForm();
 
         model.addAttribute("animalName", abandonedAnimalRepository.findName(id));
         model.addAttribute("adoptDto", adoptDto);
@@ -219,7 +218,7 @@ public class AbandonedAnimalController {
     @PostMapping("/auth/adopt/{id}")
     public String adopt(@PathVariable("id") Long animalId,
                         @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
-                        @ModelAttribute("adoptDto") @Valid ApplyAdoptDto adoptDto,
+                        @ModelAttribute("adoptDto") @Valid ApplyAdoptForm adoptDto,
                         BindingResult bindingResult,
                         Model model) {
 

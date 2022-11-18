@@ -75,6 +75,11 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
+    // 회원으로 전체 게시글 조회
+    public List<Board> findAll(Member member) {
+        return boardRepository.findAllByMemberOrderByBoardType(member);
+    }
+
     // 게시글 수정
     public Long modifyBoardInfo(Long id, ModifyBoardForm form) {
         Board board = boardRepository.findById(id)

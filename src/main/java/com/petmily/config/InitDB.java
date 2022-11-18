@@ -1,17 +1,24 @@
 package com.petmily.config;
 
-import com.petmily.domain.builder.*;
-import com.petmily.domain.core.*;
-import com.petmily.domain.core.enum_type.AnimalSpecies;
-import com.petmily.domain.core.enum_type.BoardType;
-import com.petmily.domain.core.enum_type.MemberGrade;
+import com.petmily.domain.builder.AbandonedAnimalBuilder;
+import com.petmily.domain.builder.BoardBuilder;
+import com.petmily.domain.builder.MemberBuilder;
+import com.petmily.domain.builder.PictureBuilder;
+import com.petmily.domain.builder.application.AdoptBuilder;
+import com.petmily.domain.builder.application.DonationBuilder;
+import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
+import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.core.Picture;
+import com.petmily.domain.core.enum_type.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -23,6 +30,7 @@ public class InitDB {
     public void init() {
         initService.initMember();
         initService.initAbandonedAnimal();
+        initService.initApplication();
         initService.initBoard();
     }
 
@@ -37,8 +45,9 @@ public class InitDB {
             for (int i = 1; i <= 5; i++) {
                 Member member = new MemberBuilder("m" + i, "123")
                         .setName("member" + i)
-                        .setPhone("010-" + i)
+                        .setBirth(LocalDate.now())
                         .setEmail("email@" + i + ".com")
+                        .setPhone("010-" + i)
                         .build();
 
                 em.persist(member);
@@ -74,39 +83,82 @@ public class InitDB {
         }
 
         public void initBoard() {
-            Member member = new MemberBuilder("wm", "123").setName("write member").build();
+            List<Member> allMembers = em.createQuery("select m from Member m", Member.class)
+                    .getResultList();
 
-            for (int i = 1; i <= 50; i++) {
-                Board board = new BoardBuilder(member, getBoardType(i))
-                        .setTitle("board" + i)
-                        .setContent("content" + i)
-                        .setShownAll(true)
-                        .setPictures(new ArrayList<>())
-                        .build();
+            for (Member member : allMembers) {
+                for (int i = 0; i < 6; i++) {
+                    if (i % 3 == 0) {
+                        new BoardBuilder(member, BoardType.FREE)
+                                .setShownAll(true)
+                                .setTitle("board" + i)
+                                .setContent("content" + i)
+                                .build();
 
-                Reply reply = new ReplyBuilder(member, board)
-                        .setContent("reply" + i)
-                        .build();
+                        new BoardBuilder(member, BoardType.FREE)
+                                .setShownAll(false)
+                                .setTitle("board 비공개" + i)
+                                .setContent("content" + i)
+                                .build();
+                    }
 
-                Picture picture = new PictureBuilder()
-                        .setFileStoreName("dog" + (i % 5 + 1) + ".jpeg")
-                        .setBoard(board)
-                        .build();
+                    if (i % 3 == 1) {
+                        new BoardBuilder(member, BoardType.INQUIRY)
+                                .setShownAll(true)
+                                .setTitle("board" + i)
+                                .setContent("content" + i)
+                                .build();
+                    }
+
+                    if (i % 3 == 2) {
+                        new BoardBuilder(member, BoardType.ADOPT_REVIEW)
+                                .setShownAll(true)
+                                .setTitle("board" + i)
+                                .setContent("content" + i)
+                                .build();
+                    }
+                }
             }
-
-            em.persist(member);
         }
 
-        private BoardType getBoardType(int i) {
-            if (i % 3 == 0) {
-                return BoardType.FREE;
-            }
+        public void initApplication() {
+            List<Member> allMembers = em.createQuery("select m from Member m", Member.class)
+                    .getResultList();
 
-            if (i % 3 == 1) {
-                return BoardType.INQUIRY;
-            }
+            List<AbandonedAnimal> allAnimals = em.createQuery("select a from AbandonedAnimal a", AbandonedAnimal.class)
+                    .getResultList();
 
-            return BoardType.ADOPT_REVIEW;
+            for (Member member : allMembers) {
+                for (int i = 0; i < 6; i++) {
+                    AbandonedAnimal animal = allAnimals.remove(0);
+
+                    if (i % 3 == 0) {
+                        new DonationBuilder(member, animal)
+                                .setAccountNumber("1234-1234")
+                                .setBankType(BankType.KB)
+                                .setAmount(10000)
+                                .setDonator(member.getName())
+                                .build();
+                    }
+
+                    if (i % 3 == 1) {
+                        new TemporaryProtectionBuilder(member, animal)
+                                .setMarried(true)
+                                .setJob("student")
+                                .setLocation(LocationType.SEOUL)
+                                .setPeriod(10)
+                                .build();
+                    }
+
+                    if (i % 3 == 2) {
+                        new AdoptBuilder(member, animal)
+                                .setMarried(true)
+                                .setJob("student")
+                                .setLocation(LocationType.SEOUL)
+                                .build();
+                    }
+                }
+            }
         }
     }
 }

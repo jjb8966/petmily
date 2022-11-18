@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Getter @Setter
+@Getter
+@Setter
 @ToString
-public class ApplyDonationDto {
+public class ApplyDonationForm {
 
     @NotNull
     private BankType bankType;

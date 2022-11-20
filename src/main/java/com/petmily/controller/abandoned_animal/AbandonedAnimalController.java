@@ -101,10 +101,10 @@ public class AbandonedAnimalController {
     public String detailForm(@PathVariable Long id, Model model) {
         log.info("animal id = {}", id);
 
-        AbandonedAnimal animalOrigin = abandonedAnimalService.findOne(id)
+        AbandonedAnimal animal = abandonedAnimalService.findOne(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
 
-        AnimalDetailForm animalForm = changeToAnimalDetailForm(animalOrigin);
+        AnimalDetailForm animalForm = changeToAnimalDetailForm(animal);
 
         model.addAttribute("animal", animalForm);
 

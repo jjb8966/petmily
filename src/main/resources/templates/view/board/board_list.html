@@ -101,7 +101,7 @@
                 <div class="col text-center">
                     <div class="block-27">
                         <ul>
-                            <!--6 페이지 이상인 경우 '<' 표시-->
+                            <!--이전 5개의 보여줄 페이지가 있을 경우 '<'-->
                             <li>
                                 <p th:if="${(boardPage.realPage.number + 1) gt 5}">
                                     <a th:href="|/board/${boardType}/list?page=${boardPage.realPage.number - 5}|">&lt;</a>
@@ -116,7 +116,7 @@
                                 </li>
                             </th:block>
 
-                            <!--이전 5개의 보여줄 페이지가 있을 시 '>'-->
+                            <!--6 페이지 이상인 경우 '>'-->
                             <li>
                                 <p th:if="${(boardPage.realPage.totalPages - boardPage.endPage) gt 0}">
                                     <a th:href="|/board/${boardType}/list?page=${boardPage.startPage + 4}|">&gt;</a>

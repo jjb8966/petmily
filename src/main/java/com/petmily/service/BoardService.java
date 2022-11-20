@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BoardService {
 
@@ -30,6 +30,7 @@ public class BoardService {
     private final ReplyService replyService;
 
     // 게시글 등록
+    @Transactional
     public Long write(Long memberId, BoardType boardType, WriteBoardForm form) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -81,6 +82,7 @@ public class BoardService {
     }
 
     // 게시글 수정
+    @Transactional
     public Long modifyBoardInfo(Long id, ModifyBoardForm form) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
@@ -97,6 +99,7 @@ public class BoardService {
     }
 
     // 게시글 삭제
+    @Transactional
     public void deleteBoard(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));

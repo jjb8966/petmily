@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ApplicationService {
 
@@ -30,6 +30,7 @@ public class ApplicationService {
     private final AbandonedAnimalRepository animalRepository;
 
     // 입양하기
+    @Transactional
     public Long adopt(Long memberId, Long animalId, ApplyAdoptForm adoptDto) {
         // 엔티티 조회
         Member member = getMember(memberId);
@@ -49,6 +50,7 @@ public class ApplicationService {
     }
 
     // 임시보호하기
+    @Transactional
     public Long tempProtect(Long memberId, Long animalId, ApplyTempProtectionForm tempProtectionDto) {
         // 엔티티 조회
         Member member = getMember(memberId);
@@ -69,6 +71,7 @@ public class ApplicationService {
     }
 
     // 후원하기
+    @Transactional
     public Long donate(Long memberId, Long animalId, ApplyDonationForm donationDto) {
         // 엔티티 조회
         Member member = getMember(memberId);
@@ -115,6 +118,7 @@ public class ApplicationService {
     }
 
     // 입양 정보 수정
+    @Transactional
     public Long modifyAdopt(Long id, ModifyAdoptForm adoptDto) {
         Adopt adopt = findOne(id, Adopt.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
@@ -125,6 +129,7 @@ public class ApplicationService {
     }
 
     // 임시보호 정보 수정
+    @Transactional
     public Long modifyTempProtection(Long id, ModifyTempProtectionForm tempProtectionDto) {
         TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
@@ -135,6 +140,7 @@ public class ApplicationService {
     }
 
     // 후원 정보 수정
+    @Transactional
     public Long modifyDonation(Long id, ModifyDonationForm donationDto) {
         Donation donation = findOne(id, Donation.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
@@ -145,6 +151,7 @@ public class ApplicationService {
     }
 
     // 지원서 삭제
+    @Transactional
     public void deleteApplication(Long id) {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -23,6 +23,7 @@ public class MemberService {
     private final BoardService boardService;
 
     // 회원 가입
+    @Transactional
     public Long join(Member member) {
         duplicateCheck(member.getLoginId());
         memberRepository.save(member);
@@ -60,6 +61,7 @@ public class MemberService {
     }
 
     // 회원 정보 변경
+    @Transactional
     public Long modify(Long id, ModifyMemberForm form) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -70,6 +72,7 @@ public class MemberService {
     }
 
     // 회원 탈퇴
+    @Transactional
     public void withdrawMember(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));

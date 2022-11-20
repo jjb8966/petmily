@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReplyService {
 
@@ -26,6 +26,7 @@ public class ReplyService {
     private final BoardRepository boardRepository;
 
     // 댓글 작성
+    @Transactional
     public Long reply(Long memberId, Long boardId, WriteReplyForm writeReplyForm) {
         Member member = getMember(memberId);
         Board board = getBoard(boardId);
@@ -60,6 +61,7 @@ public class ReplyService {
     }
 
     // 댓글 수정
+    @Transactional
     public Long changeReplyInfo(Long id, ChangeReplyDto replyDto) {
         Reply reply = replyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
@@ -70,6 +72,7 @@ public class ReplyService {
     }
 
     // 댓글 삭제
+    @Transactional
     public void deleteReply(Long id) {
         Reply reply = replyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));

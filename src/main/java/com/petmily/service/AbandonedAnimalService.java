@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AbandonedAnimalService {
 
@@ -21,6 +21,7 @@ public class AbandonedAnimalService {
     private final ApplicationService applicationService;
 
     // 유기동물 등록
+    @Transactional
     public Long register(AbandonedAnimal abandonedAnimal) {
         animalRepository.save(abandonedAnimal);
 
@@ -43,6 +44,7 @@ public class AbandonedAnimalService {
     }
 
     // 유기동물 정보 변경
+    @Transactional
     public Long changeAnimalInfo(Long id, ChangeAnimalDto animalDto) {
         AbandonedAnimal abandonedAnimal = animalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
@@ -53,6 +55,7 @@ public class AbandonedAnimalService {
     }
 
     // 유기동물 삭제
+    @Transactional
     public void deleteAnimal(Long id) {
         AbandonedAnimal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));

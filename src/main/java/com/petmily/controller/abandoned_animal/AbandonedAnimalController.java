@@ -17,11 +17,10 @@ import com.petmily.domain.dto_converter.AnimalDtoConverter;
 import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.service.AbandonedAnimalService;
 import com.petmily.service.ApplicationService;
+import com.petmily.service.PictureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,12 +39,10 @@ import java.net.MalformedURLException;
 @Slf4j
 public class AbandonedAnimalController {
 
-    @Value("${file.dir}")
-    private String storePath;
-
     private final AbandonedAnimalService abandonedAnimalService;
-    private final AbandonedAnimalRepository abandonedAnimalRepository;
     private final ApplicationService applicationService;
+    private final PictureService pictureService;
+    private final AbandonedAnimalRepository abandonedAnimalRepository;
     private final AnimalDtoConverter animalDtoConverter;
 
     @ModelAttribute("bankType")
@@ -61,11 +58,7 @@ public class AbandonedAnimalController {
     @ResponseBody
     @GetMapping("/image/{fileStoreName}")
     public Resource getImage(@PathVariable String fileStoreName) throws MalformedURLException {
-        log.info("fileStoreName = {}", fileStoreName);
-        String fullPath = "file:" + storePath + fileStoreName;
-        log.info("full path = {}", fullPath);
-
-        return new UrlResource(fullPath);
+        return pictureService.findOne(fileStoreName);
     }
 
     @GetMapping("/list")

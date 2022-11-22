@@ -2,7 +2,6 @@ package com.petmily.controller.member;
 
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.builder.MemberBuilder;
-import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.Adopt;
@@ -17,7 +16,9 @@ import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.domain.dto.member.MemberJoinForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto.member.WithdrawMemberForm;
-import com.petmily.service.AbandonedAnimalService;
+import com.petmily.domain.dto_converter.ApplicationDtoConverter;
+import com.petmily.domain.dto_converter.BoardDtoConverter;
+import com.petmily.domain.dto_converter.MemberDtoConverter;
 import com.petmily.service.ApplicationService;
 import com.petmily.service.BoardService;
 import com.petmily.service.MemberService;
@@ -44,8 +45,10 @@ public class MemberController {
 
     private final MemberService memberService;
     private final ApplicationService applicationService;
-    private final AbandonedAnimalService animalService;
     private final BoardService boardService;
+    private final ApplicationDtoConverter applicationDtoConverter;
+    private final MemberDtoConverter memberDtoConverter;
+    private final BoardDtoConverter boardDtoConverter;
 
     @ModelAttribute(name = "bankType")
     public BankType[] bankTypes() {
@@ -93,7 +96,7 @@ public class MemberController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        if (session != null) {
+        if (session != null && session.getAttribute(SessionConstant.LOGIN_MEMBER) != null) {
             session.invalidate();
         }
 
@@ -160,23 +163,12 @@ public class MemberController {
         Member member = memberService.findOne(loginMember.getId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        ModifyMemberForm modifyMemberForm = changeToModifyDonationForm(member);
+        ModifyMemberForm modifyMemberForm = memberDtoConverter.entityToDto(member, ModifyMemberForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
 
         model.addAttribute("modifyMemberForm", modifyMemberForm);
 
         return "/view/member/modify_form";
-    }
-
-    private ModifyMemberForm changeToModifyDonationForm(Member member) {
-        ModifyMemberForm modifyMemberForm = new ModifyMemberForm();
-
-        modifyMemberForm.setLoginId(member.getLoginId());
-        modifyMemberForm.setPassword(member.getPassword());
-        modifyMemberForm.setName(member.getName());
-        modifyMemberForm.setPhoneNumber(member.getPhoneNumber());
-        modifyMemberForm.setEmail(member.getEmail());
-
-        return modifyMemberForm;
     }
 
     @PostMapping("/member/auth/modify")
@@ -250,26 +242,15 @@ public class MemberController {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         List<Application> applications = applicationService.findAll(member);
-        List<ApplicationListForm> forms = changeToApplicationListForm(applications);
+
+        List<ApplicationListForm> forms = applications.stream()
+                .map(application -> applicationDtoConverter.entityToDto(application, ApplicationListForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")))
+                .collect(Collectors.toList());
 
         model.addAttribute("forms", forms);
 
         return "/view/member/application_list";
-    }
-
-    private List<ApplicationListForm> changeToApplicationListForm(List<Application> applications) {
-        return applications.stream()
-                .map(application -> {
-                    ApplicationListForm form = new ApplicationListForm();
-
-                    form.setId(application.getId());
-                    form.setAnimalName(application.getAbandonedAnimal().getName());
-                    form.setType(application.getApplicationType());
-                    form.setStatus(application.getApplicationStatus());
-
-                    return form;
-                })
-                .collect(Collectors.toList());
     }
 
     @GetMapping("/member/auth/application/detail/{appType}/{appId}")
@@ -299,77 +280,28 @@ public class MemberController {
         return "/view/member/application_detail_form";
     }
 
+    private DonationDetailForm getDonationDetailForm(Long appId) {
+        Donation donation = applicationService.findOne(appId, Donation.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+        return applicationDtoConverter.entityToDto(donation, DonationDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+    }
+
+    private TempProtectionDetailForm getTempProtectionDetailForm(Long appId) {
+        TemporaryProtection temporaryProtection = applicationService.findOne(appId, TemporaryProtection.class)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+
+        return applicationDtoConverter.entityToDto(temporaryProtection, TempProtectionDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+    }
+
     private AdoptDetailForm getAdoptDetailForm(Long appId) {
         Adopt adopt = applicationService.findOne(appId, Adopt.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
 
-        AdoptDetailForm form = changeToAdoptDetailForm(adopt);
-        return form;
-    }
-
-    private TempProtectionDetailForm changeToTempProtectionDetailForm(TemporaryProtection temporaryProtection) {
-        AbandonedAnimal animal = animalService.findOne(temporaryProtection.getAbandonedAnimal().getId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
-
-        TempProtectionDetailForm form = new TempProtectionDetailForm();
-
-        form.setFileStoreName(animal.getPicture().getFileStoreName());
-        form.setStatus(animal.getStatus());
-        form.setSpecies(animal.getSpecies());
-        form.setKind(animal.getKind());
-        form.setAnimalName(animal.getName());
-        form.setAge(animal.getAge());
-        form.setWeight(animal.getWeight());
-        form.setApplicationId(temporaryProtection.getId());
-        form.setLocation(temporaryProtection.getLocation());
-        form.setJob(temporaryProtection.getJob());
-        form.setMarried(temporaryProtection.getMarried());
-        form.setPeriod(temporaryProtection.getPeriod());
-
-        return form;
-    }
-
-    private AdoptDetailForm changeToAdoptDetailForm(Adopt adopt) {
-        AbandonedAnimal animal = animalService.findOne(adopt.getAbandonedAnimal().getId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
-
-        AdoptDetailForm form = new AdoptDetailForm();
-
-        form.setFileStoreName(animal.getPicture().getFileStoreName());
-        form.setStatus(animal.getStatus());
-        form.setSpecies(animal.getSpecies());
-        form.setKind(animal.getKind());
-        form.setAnimalName(animal.getName());
-        form.setAge(animal.getAge());
-        form.setWeight(animal.getWeight());
-        form.setApplicationId(adopt.getId());
-        form.setLocation(adopt.getLocation());
-        form.setJob(adopt.getJob());
-        form.setMarried(adopt.getMarried());
-
-        return form;
-    }
-
-    private DonationDetailForm changeToDonationDetailForm(Donation donation) {
-        AbandonedAnimal animal = animalService.findOne(donation.getAbandonedAnimal().getId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
-
-        DonationDetailForm form = new DonationDetailForm();
-
-        form.setFileStoreName(animal.getPicture().getFileStoreName());
-        form.setStatus(animal.getStatus());
-        form.setSpecies(animal.getSpecies());
-        form.setKind(animal.getKind());
-        form.setAnimalName(animal.getName());
-        form.setAge(animal.getAge());
-        form.setWeight(animal.getWeight());
-        form.setApplicationId(donation.getId());
-        form.setBankType(donation.getBankType());
-        form.setDonator(donation.getDonator());
-        form.setAccountNumber(donation.getAccountNumber());
-        form.setAmount(donation.getAmount());
-
-        return form;
+        return applicationDtoConverter.entityToDto(adopt, AdoptDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
     }
 
     @GetMapping("/member/auth/application/modify/{appType}/{appId}")
@@ -398,14 +330,6 @@ public class MemberController {
         return "/view/member/application_modify_form";
     }
 
-    private TempProtectionDetailForm getTempProtectionDetailForm(Long appId) {
-        TemporaryProtection temporaryProtection = applicationService.findOne(appId, TemporaryProtection.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
-
-        TempProtectionDetailForm form = changeToTempProtectionDetailForm(temporaryProtection);
-        return form;
-    }
-
     @PostMapping("/member/auth/application/modify/Donation/{appId}")
     public String modifyDonation(@PathVariable Long appId,
                                  @ModelAttribute("form") @Valid DonationDetailForm form,
@@ -428,6 +352,17 @@ public class MemberController {
         applicationService.modifyDonation(appId, modifyForm);
 
         return "redirect:/member/auth/application/detail/Donation/{appId}";
+    }
+
+    private ModifyDonationForm changeToModifyDonationForm(DonationDetailForm form) {
+        ModifyDonationForm modifyForm = new ModifyDonationForm();
+
+        modifyForm.setDonator(form.getDonator());
+        modifyForm.setBankType(form.getBankType());
+        modifyForm.setAccountNumber(form.getAccountNumber());
+        modifyForm.setAmount(form.getAmount());
+
+        return modifyForm;
     }
 
     @PostMapping("/member/auth/application/modify/TemporaryProtection/{appId}")
@@ -499,28 +434,8 @@ public class MemberController {
         return modifyForm;
     }
 
-    private DonationDetailForm getDonationDetailForm(Long appId) {
-        Donation donation = applicationService.findOne(appId, Donation.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
-
-        DonationDetailForm donationDetailForm = changeToDonationDetailForm(donation);
-        return donationDetailForm;
-    }
-
-    private ModifyDonationForm changeToModifyDonationForm(DonationDetailForm form) {
-        ModifyDonationForm modifyForm = new ModifyDonationForm();
-
-        modifyForm.setDonator(form.getDonator());
-        modifyForm.setBankType(form.getBankType());
-        modifyForm.setAccountNumber(form.getAccountNumber());
-        modifyForm.setAmount(form.getAmount());
-
-        return modifyForm;
-    }
-
     @PostMapping("/member/auth/application/delete/{appId}")
     public String deleteApplication(@PathVariable Long appId) {
-
         applicationService.deleteApplication(appId);
 
         return "redirect:/member/auth/application/list";
@@ -534,27 +449,15 @@ public class MemberController {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         List<Board> boards = boardService.findAll(member);
-        List<BoardListForm> forms = changeToBoardListForm(boards);
+
+        List<BoardListForm> forms = boards.stream()
+                .map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")))
+                .collect(Collectors.toList());
 
         model.addAttribute("forms", forms);
 
         return "/view/member/board_list";
     }
 
-    private List<BoardListForm> changeToBoardListForm(List<Board> boards) {
-        return boards.stream().map(board -> {
-                    BoardListForm form = new BoardListForm();
-
-                    form.setId(board.getId());
-                    form.setMemberId(board.getMember().getId());
-                    form.setWriterName(board.getMember().getName());
-                    form.setTitle(board.getTitle());
-                    form.setCreatedDate(board.getCreatedDate());
-                    form.setShownAll(board.getShownAll());
-                    form.setBoardType(board.getBoardType());
-
-                    return form;
-                })
-                .collect(Collectors.toList());
-    }
 }

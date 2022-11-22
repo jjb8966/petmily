@@ -32,9 +32,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/board")
 @RequiredArgsConstructor
 @Slf4j
 public class BoardController {
@@ -46,12 +46,12 @@ public class BoardController {
     private final BoardDtoConverter boardDtoConverter;
 
     @ResponseBody
-    @GetMapping("/image/{fileStoreName}")
+    @GetMapping("/board/image/{fileStoreName}")
     public Resource getImage(@PathVariable String fileStoreName) throws MalformedURLException {
         return pictureService.findOne(fileStoreName);
     }
 
-    @GetMapping("/{boardType}/list")
+    @GetMapping("/board/{boardType}/list")
     public String list(@PathVariable BoardType boardType,
                        @PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model) {
@@ -72,7 +72,7 @@ public class BoardController {
         return "/view/board/board_list";
     }
 
-    @GetMapping("/{boardType}/detail/{boardId}")
+    @GetMapping("/board/{boardType}/detail/{boardId}")
     public String detailForm(@PathVariable BoardType boardType,
                              @PathVariable Long boardId,
                              Model model) {
@@ -92,7 +92,7 @@ public class BoardController {
         return "/view/board/detail_form";
     }
 
-    @GetMapping("/{boardType}/auth/write")
+    @GetMapping("/board/{boardType}/auth/write")
     public String writeForm(@PathVariable BoardType boardType, Model model) {
         log.info("board type = {}", boardType);
 
@@ -102,7 +102,7 @@ public class BoardController {
         return "/view/board/write_form";
     }
 
-    @PostMapping("/{boardType}/auth/write")
+    @PostMapping("/board/{boardType}/auth/write")
     public String write(@PathVariable BoardType boardType,
                         @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
                         @ModelAttribute("form") @Valid WriteBoardForm form,
@@ -124,7 +124,7 @@ public class BoardController {
         return "redirect:/board/{boardType}/detail/{id}";
     }
 
-    @GetMapping("/{boardType}/auth/modify/{id}")
+    @GetMapping("/board/{boardType}/auth/modify/{id}")
     public String modifyForm(@PathVariable BoardType boardType,
                              @PathVariable Long id,
                              Model model) {
@@ -144,7 +144,7 @@ public class BoardController {
         return "/view/board/modify_form";
     }
 
-    @PostMapping("/{boardType}/auth/modify/{id}")
+    @PostMapping("/board/{boardType}/auth/modify/{id}")
     public String modify(@PathVariable BoardType boardType,
                          @PathVariable Long id,
                          @ModelAttribute("form") @Valid ModifyBoardForm form,
@@ -172,7 +172,7 @@ public class BoardController {
         return "redirect:/board/{boardType}/detail/{id}";
     }
 
-    @GetMapping("/{boardType}/auth/delete/{id}")
+    @GetMapping("/board/{boardType}/auth/delete/{id}")
     public String delete(@PathVariable BoardType boardType,
                          @PathVariable Long id,
                          RedirectAttributes redirectAttributes) {
@@ -218,7 +218,7 @@ public class BoardController {
         return "redirect:/board/{boardType}/detail/{id}";
     }
 
-    @PostMapping("/{boardType}/{boardId}/auth/reply/write")
+    @PostMapping("/board/{boardType}/{boardId}/auth/reply/write")
     public String writeReply(@PathVariable BoardType boardType,
                              @PathVariable Long boardId,
                              @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
@@ -241,7 +241,7 @@ public class BoardController {
         return "redirect:/board/{boardType}/detail/{id}";
     }
 
-    @PostMapping("/{boardType}/{boardId}/auth/reply/delete/{replyId}")
+    @PostMapping("/board/{boardType}/{boardId}/auth/reply/delete/{replyId}")
     public String deleteReply(@PathVariable BoardType boardType,
                               @PathVariable Long boardId,
                               @PathVariable Long replyId,
@@ -255,5 +255,21 @@ public class BoardController {
         redirectAttributes.addAttribute("id", boardId);
 
         return "redirect:/board/{boardType}/detail/{id}";
+    }
+
+    @GetMapping("/member/auth/board/list")
+    public String memberBoardList(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
+                                  Model model) {
+
+        List<Board> boards = boardService.findAll(loginMember);
+
+        List<BoardListForm> forms = boards.stream()
+                .map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")))
+                .collect(Collectors.toList());
+
+        model.addAttribute("forms", forms);
+
+        return "/view/member/board_list";
     }
 }

@@ -3,7 +3,6 @@ package com.petmily.controller.board;
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.enum_type.BoardType;
 import com.petmily.domain.dto.PetmilyPage;
@@ -11,9 +10,8 @@ import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
-import com.petmily.domain.dto.picutre.BoardPictureForm;
-import com.petmily.domain.dto.reply.ReplyDetailForm;
 import com.petmily.domain.dto.reply.WriteReplyForm;
+import com.petmily.domain.dto_converter.BoardDtoConverter;
 import com.petmily.repository.BoardRepository;
 import com.petmily.service.BoardService;
 import com.petmily.service.ReplyService;
@@ -35,7 +33,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/board")
@@ -49,6 +46,7 @@ public class BoardController {
     private final BoardService boardService;
     private final BoardRepository boardRepository;
     private final ReplyService replyService;
+    private final BoardDtoConverter boardDtoConverter;
 
     @ResponseBody
     @GetMapping("/image/{fileStoreName}")
@@ -70,29 +68,15 @@ public class BoardController {
         log.info("total element = {}", allBoards.getTotalElements());
         log.info("total pages = {}", allBoards.getTotalPages());
 
-        PetmilyPage<BoardListForm> boardPage = changeToBoardPage(allBoards);
+        Page<BoardListForm> mapToDto = allBoards.map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")));
+
+        PetmilyPage<BoardListForm> boardPage = new PetmilyPage<>(mapToDto);
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("boardPage", boardPage);
 
         return "/view/board/board_list";
-    }
-
-    private PetmilyPage<BoardListForm> changeToBoardPage(Page<Board> allBoards) {
-        Page<BoardListForm> allBoardsForm = allBoards.map(board -> {
-            BoardListForm boardForm = new BoardListForm();
-
-            boardForm.setId(board.getId());
-            boardForm.setMemberId(board.getMember().getId());
-            boardForm.setWriterName(board.getMember().getName());
-            boardForm.setTitle(board.getTitle());
-            boardForm.setCreatedDate(board.getCreatedDate());
-            boardForm.setShownAll(board.getShownAll());
-
-            return boardForm;
-        });
-
-        return new PetmilyPage<>(allBoardsForm);
     }
 
     @GetMapping("/{boardType}/detail/{boardId}")
@@ -105,61 +89,14 @@ public class BoardController {
         Board board = boardService.findOne(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        BoardDetailForm boardForm = changeToBoardDetailForm(board);
+        BoardDetailForm boardForm = boardDtoConverter.entityToDto(board, BoardDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("board", boardForm);
         model.addAttribute("writeReplyForm", new WriteReplyForm());
 
         return "/view/board/detail_form";
-    }
-
-    private BoardDetailForm changeToBoardDetailForm(Board board) {
-        BoardDetailForm boardForm = new BoardDetailForm();
-
-        boardForm.setId(board.getId());
-        boardForm.setCreatedDate(board.getCreatedDate());
-        boardForm.setLastModifiedDate(board.getLastModifiedDate());
-        boardForm.setMember(board.getMember());
-        boardForm.setTitle(board.getTitle());
-        boardForm.setContent(board.getContent());
-        boardForm.setShownAll(board.getShownAll());
-
-        setReplyForms(board.getReplies(), boardForm);
-        setPictureForms(board.getPictures(), boardForm);
-
-        return boardForm;
-    }
-
-    private static void setReplyForms(List<Reply> replies, BoardDetailForm boardForm) {
-        List<ReplyDetailForm> replyForms = replies.stream()
-                .map(reply -> {
-                    ReplyDetailForm form = new ReplyDetailForm();
-
-                    form.setId(reply.getId());
-                    form.setMemberId(reply.getMember().getId());
-                    form.setLastModifiedDate(reply.getLastModifiedDate());
-                    form.setWriterName(reply.getMember().getName());
-                    form.setContent(reply.getContent());
-
-                    return form;
-                })
-                .collect(Collectors.toList());
-
-        boardForm.setReplies(replyForms);
-    }
-
-    private void setPictureForms(List<Picture> pictures, BoardDetailForm boardForm) {
-        List<BoardPictureForm> pictureForms = pictures.stream()
-                .map(picture -> {
-                    BoardPictureForm form = new BoardPictureForm();
-                    form.setFileStoreName(picture.getFileStoreName());
-
-                    return form;
-                })
-                .collect(Collectors.toList());
-
-        boardForm.setPictures(pictureForms);
     }
 
     @GetMapping("/{boardType}/auth/write")
@@ -204,23 +141,14 @@ public class BoardController {
         Board board = boardService.findOne(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
-        ModifyBoardForm boardForm = changeToModifyForm(board);
+        ModifyBoardForm boardForm = boardDtoConverter.entityToDto(board, ModifyBoardForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("id", id);
         model.addAttribute("form", boardForm);
 
         return "/view/board/modify_form";
-    }
-
-    private static ModifyBoardForm changeToModifyForm(Board board) {
-        ModifyBoardForm boardForm = new ModifyBoardForm();
-
-        boardForm.setTitle(board.getTitle());
-        boardForm.setContent(board.getContent());
-        boardForm.setShownAll(board.getShownAll());
-
-        return boardForm;
     }
 
     @PostMapping("/{boardType}/auth/modify/{id}")
@@ -278,7 +206,9 @@ public class BoardController {
         Board board = boardService.findOne(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
-        BoardDetailForm boardForm = changeToBoardDetailForm(board);
+        BoardDetailForm boardForm = boardDtoConverter.entityToDto(board, BoardDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+
         Long replyId = replyService.reply(loginMember.getId(), boardId, form);
 
         Reply reply = replyService.findOne(replyId)

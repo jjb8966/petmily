@@ -35,11 +35,7 @@ public class BoardService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        Board board = new BoardBuilder(member, boardType)
-                .setTitle(form.getTitle())
-                .setContent(form.getContent())
-                .setShownAll(form.getShownAll())
-                .build();
+        Board board = writeBoard(boardType, form, member);
 
         if (hasPicture(form.getPictures())) {
             storePicture(form.getPictures(), board);
@@ -48,6 +44,14 @@ public class BoardService {
         boardRepository.save(board);
 
         return board.getId();
+    }
+
+    private static Board writeBoard(BoardType boardType, WriteBoardForm form, Member member) {
+        return new BoardBuilder(member, boardType)
+                .setTitle(form.getTitle())
+                .setContent(form.getContent())
+                .setShownAll(form.getShownAll())
+                .build();
     }
 
     private static boolean hasPicture(List<MultipartFile> form) {
@@ -114,7 +118,8 @@ public class BoardService {
     }
 
     private void deleteReplyAboutBoard(Long boardId) {
-        replyService.findAll().stream()
+        replyService.findAll()
+                .stream()
                 .filter(reply -> reply.getBoard().getId().equals(boardId))
                 .forEach(reply -> replyService.deleteReply(reply.getId()));
     }

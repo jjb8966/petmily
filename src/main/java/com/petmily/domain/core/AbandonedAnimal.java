@@ -24,7 +24,7 @@ public class AbandonedAnimal extends BaseEntity {
     @Column(name = "abandonedAnimal_id")
     private Long id;
 
-    @OneToMany(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Application> applications;
 
     @OneToOne(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)

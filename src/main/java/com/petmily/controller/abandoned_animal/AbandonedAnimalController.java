@@ -13,6 +13,7 @@ import com.petmily.domain.dto.abandoned_animal.AnimalDetailForm;
 import com.petmily.domain.dto.application.ApplyAdoptForm;
 import com.petmily.domain.dto.application.ApplyDonationForm;
 import com.petmily.domain.dto.application.ApplyTempProtectionForm;
+import com.petmily.domain.dto_converter.AnimalDtoConverter;
 import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.service.AbandonedAnimalService;
 import com.petmily.service.ApplicationService;
@@ -45,6 +46,7 @@ public class AbandonedAnimalController {
     private final AbandonedAnimalService abandonedAnimalService;
     private final AbandonedAnimalRepository abandonedAnimalRepository;
     private final ApplicationService applicationService;
+    private final AnimalDtoConverter animalDtoConverter;
 
     @ModelAttribute("bankType")
     public BankType[] bankTypes() {
@@ -71,30 +73,15 @@ public class AbandonedAnimalController {
                        Model model) {
 
         Page<AbandonedAnimal> allAnimal = abandonedAnimalService.findAll(pageable);
-        PetmilyPage<AnimalDetailForm> animalPage = changeToAnimalPage(allAnimal);
+        Page<AnimalDetailForm> mapToDto = allAnimal
+                .map(abandonedAnimal -> animalDtoConverter.entityToDto(abandonedAnimal, AnimalDetailForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")));
+
+        PetmilyPage<AnimalDetailForm> animalPage = new PetmilyPage<>(mapToDto);
 
         model.addAttribute("animalPage", animalPage);
 
         return "/view/abandoned_animal/animal_list";
-    }
-
-    private PetmilyPage<AnimalDetailForm> changeToAnimalPage(Page<AbandonedAnimal> allAnimal) {
-        Page<AnimalDetailForm> allAnimalForm = allAnimal.map(animal -> {
-            AnimalDetailForm animalDetailForm = new AnimalDetailForm();
-
-            animalDetailForm.setId(animal.getId());
-            animalDetailForm.setPicture(animal.getPicture());
-            animalDetailForm.setSpecies(animal.getSpecies());
-            animalDetailForm.setStatus(animal.getStatus());
-            animalDetailForm.setName(animal.getName());
-            animalDetailForm.setKind(animal.getKind());
-            animalDetailForm.setAge(animal.getAge());
-            animalDetailForm.setWeight(animal.getWeight());
-
-            return animalDetailForm;
-        });
-
-        return new PetmilyPage<>(allAnimalForm);
     }
 
     @GetMapping("/detail/{id}")
@@ -104,26 +91,12 @@ public class AbandonedAnimalController {
         AbandonedAnimal animal = abandonedAnimalService.findOne(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
 
-        AnimalDetailForm animalForm = changeToAnimalDetailForm(animal);
+        AnimalDetailForm animalForm = animalDtoConverter.entityToDto(animal, AnimalDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
 
         model.addAttribute("animal", animalForm);
 
         return "/view/abandoned_animal/detail_form";
-    }
-
-    private AnimalDetailForm changeToAnimalDetailForm(AbandonedAnimal animal) {
-        AnimalDetailForm animalDetailForm = new AnimalDetailForm();
-
-        animalDetailForm.setId(animal.getId());
-        animalDetailForm.setPicture(animal.getPicture());
-        animalDetailForm.setSpecies(animal.getSpecies());
-        animalDetailForm.setStatus(animal.getStatus());
-        animalDetailForm.setName(animal.getName());
-        animalDetailForm.setKind(animal.getKind());
-        animalDetailForm.setAge(animal.getAge());
-        animalDetailForm.setWeight(animal.getWeight());
-
-        return animalDetailForm;
     }
 
     @GetMapping("/auth/donate/{id}")
@@ -234,7 +207,6 @@ public class AbandonedAnimalController {
         Long adoptId = applicationService.adopt(loginMember.getId(), animalId, adoptDto);
         Adopt adopt = applicationService.findOne(adoptId, Adopt.class)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
-        ;
 
         log.info("입양 신청 완료 {}", adopt);
 

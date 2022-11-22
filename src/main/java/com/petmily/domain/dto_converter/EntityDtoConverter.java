@@ -6,7 +6,5 @@ import java.util.Optional;
 
 public interface EntityDtoConverter {
 
-    public default <T> Optional<T> entityToDto(BaseEntity entity, Class<T> dtoType) {
-        return Optional.empty();
-    }
+    public <T> Optional<T> entityToDto(BaseEntity entity, Class<T> dtoType);
 }

@@ -9,8 +9,4 @@ public interface EntityDtoConverter {
     public default <T> Optional<T> entityToDto(BaseEntity entity, Class<T> dtoType) {
         return Optional.empty();
     }
-
-    public default <T> Optional<BaseEntity> dtoToEntity(T dto) {
-        return Optional.empty();
-    }
 }

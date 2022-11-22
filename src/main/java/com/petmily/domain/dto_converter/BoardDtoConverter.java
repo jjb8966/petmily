@@ -52,6 +52,7 @@ public class BoardDtoConverter implements EntityDtoConverter {
         boardForm.setTitle(board.getTitle());
         boardForm.setCreatedDate(board.getCreatedDate());
         boardForm.setShownAll(board.getShownAll());
+        boardForm.setBoardType(board.getBoardType());
 
         return boardForm;
     }

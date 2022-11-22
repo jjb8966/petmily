@@ -1,7 +1,6 @@
 package com.petmily.service;
 
 import com.petmily.domain.builder.BoardBuilder;
-import com.petmily.domain.builder.PictureBuilder;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.enum_type.BoardType;
@@ -10,7 +9,6 @@ import com.petmily.domain.dto.board.WriteBoardForm;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,11 +21,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardService {
 
-    @Value("${file.dir}")
-    private String storePath;
+    private final ReplyService replyService;
+    private final PictureService pictureService;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
-    private final ReplyService replyService;
 
     // 게시글 등록
     @Transactional
@@ -38,7 +35,7 @@ public class BoardService {
         Board board = writeBoard(boardType, form, member);
 
         if (hasPicture(form.getPictures())) {
-            storePicture(form.getPictures(), board);
+            pictureService.store(form.getPictures(), board);
         }
 
         boardRepository.save(board);
@@ -60,14 +57,6 @@ public class BoardService {
         }
 
         return !form.get(0).isEmpty();
-    }
-
-    private void storePicture(List<MultipartFile> multipartFiles, Board board) {
-        multipartFiles.stream().forEach(multipartFile ->
-                new PictureBuilder()
-                        .setBoard(board)
-                        .store(multipartFile, storePath)
-                        .build());
     }
 
     // 게시글 조회
@@ -94,7 +83,7 @@ public class BoardService {
         board.clearPicture();
 
         if (hasPicture(form.getPictures())) {
-            storePicture(form.getPictures(), board);
+            pictureService.store(form.getPictures(), board);
         }
 
         board.changeInfo(form);

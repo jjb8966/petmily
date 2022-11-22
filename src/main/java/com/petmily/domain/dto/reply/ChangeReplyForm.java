@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChangeReplyDto {
+public class ChangeReplyForm {
 
     private String content;
 }

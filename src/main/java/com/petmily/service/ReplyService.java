@@ -4,7 +4,7 @@ import com.petmily.domain.builder.ReplyBuilder;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
-import com.petmily.domain.dto.reply.ChangeReplyDto;
+import com.petmily.domain.dto.reply.ChangeReplyForm;
 import com.petmily.domain.dto.reply.WriteReplyForm;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
@@ -62,7 +62,7 @@ public class ReplyService {
 
     // 댓글 수정
     @Transactional
-    public Long changeReplyInfo(Long id, ChangeReplyDto replyDto) {
+    public Long changeReplyInfo(Long id, ChangeReplyForm replyDto) {
         Reply reply = replyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 

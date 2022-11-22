@@ -1,10 +1,10 @@
 package com.petmily.domain.core;
 
-import com.petmily.domain.core.application.Application;
 import com.petmily.domain.builder.AbandonedAnimalBuilder;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
+import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.enum_type.AnimalSpecies;
 import com.petmily.domain.core.enum_type.AnimalStatus;
+import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +52,7 @@ public class AbandonedAnimal extends BaseEntity {
         this.weight = builder.getWeight();
     }
 
-    public void changeInfo(ChangeAnimalDto animalDto) {
+    public void changeInfo(ChangeAnimalForm animalDto) {
         this.species = animalDto.getSpecies();
         this.name = animalDto.getName();
         this.kind = animalDto.getKind();

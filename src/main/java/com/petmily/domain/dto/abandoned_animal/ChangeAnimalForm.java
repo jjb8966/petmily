@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChangeAnimalDto {
+public class ChangeAnimalForm {
 
     private AnimalSpecies species;
     private String name;

@@ -1,7 +1,7 @@
 package com.petmily.service;
 
 import com.petmily.domain.core.AbandonedAnimal;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalDto;
+import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import com.petmily.repository.AbandonedAnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,7 +45,7 @@ public class AbandonedAnimalService {
 
     // 유기동물 정보 변경
     @Transactional
-    public Long changeAnimalInfo(Long id, ChangeAnimalDto animalDto) {
+    public Long changeAnimalInfo(Long id, ChangeAnimalForm animalDto) {
         AbandonedAnimal abandonedAnimal = animalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
 

@@ -1,7 +1,7 @@
 package com.petmily.domain.core;
 
 import com.petmily.domain.builder.ReplyBuilder;
-import com.petmily.domain.dto.reply.ChangeReplyDto;
+import com.petmily.domain.dto.reply.ChangeReplyForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +36,7 @@ public class Reply extends BaseEntity {
         this.content = builder.getContent();
     }
 
-    public void changeInfo(ChangeReplyDto replyDto) {
+    public void changeInfo(ChangeReplyForm replyDto) {
         this.content = replyDto.getContent();
     }
 

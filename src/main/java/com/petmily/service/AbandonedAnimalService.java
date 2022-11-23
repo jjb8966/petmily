@@ -57,17 +57,6 @@ public class AbandonedAnimalService {
     // 유기동물 삭제
     @Transactional
     public void deleteAnimal(Long id) {
-        AbandonedAnimal animal = animalRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
-
-        deleteApplicationsAboutAnimal(id);
-
         animalRepository.deleteById(id);
-    }
-
-    private void deleteApplicationsAboutAnimal(Long animalId) {
-        applicationService.findAll().stream()
-                .filter(application -> application.getAbandonedAnimal().getId().equals(animalId))
-                .forEach(application -> applicationService.deleteApplication(application.getId()));
     }
 }

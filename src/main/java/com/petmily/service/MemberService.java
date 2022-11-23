@@ -74,31 +74,6 @@ public class MemberService {
     // 회원 탈퇴
     @Transactional
     public void withdrawMember(Long id) {
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-
-        deleteApplicationsAboutMember(id);
-        deleteRepliesAboutMember(id);
-        deleteBoardsAboutMember(id);
-
         memberRepository.deleteById(id);
-    }
-
-    private void deleteApplicationsAboutMember(Long memberId) {
-        applicationService.findAll().stream()
-                .filter(application -> application.getMember().getId().equals(memberId))
-                .forEach(application -> applicationService.deleteApplication(application.getId()));
-    }
-
-    private void deleteRepliesAboutMember(Long memberId) {
-        replyService.findAll().stream()
-                .filter(reply -> reply.getMember().getId().equals(memberId))
-                .forEach(reply -> replyService.deleteReply(reply.getId()));
-    }
-
-    private void deleteBoardsAboutMember(Long memberId) {
-        boardService.findAll().stream()
-                .filter(board -> board.getMember().getId().equals(memberId))
-                .forEach(board -> boardService.deleteBoard(board.getId()));
     }
 }

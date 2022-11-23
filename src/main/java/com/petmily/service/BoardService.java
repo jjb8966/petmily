@@ -94,23 +94,6 @@ public class BoardService {
     // 게시글 삭제
     @Transactional
     public void deleteBoard(Long id) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
-
-        board.getMember()
-                .getBoards()
-                .removeIf(b -> b.getId().equals(id));
-
-        deleteReplyAboutBoard(id);
-
         boardRepository.deleteById(id);
     }
-
-    private void deleteReplyAboutBoard(Long boardId) {
-        replyService.findAll()
-                .stream()
-                .filter(reply -> reply.getBoard().getId().equals(boardId))
-                .forEach(reply -> replyService.deleteReply(reply.getId()));
-    }
-
 }

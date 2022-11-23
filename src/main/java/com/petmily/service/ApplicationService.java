@@ -153,17 +153,6 @@ public class ApplicationService {
     // 지원서 삭제
     @Transactional
     public void deleteApplication(Long id) {
-        Application application = applicationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
-
-        application.getAbandonedAnimal()
-                .getApplications()
-                .removeIf(app -> app.getId().equals(id));
-
-        application.getMember()
-                .getApplications()
-                .removeIf(app -> app.getId().equals(id));
-
         applicationRepository.deleteById(id);
     }
 }

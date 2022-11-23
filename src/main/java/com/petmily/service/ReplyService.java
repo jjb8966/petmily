@@ -74,18 +74,6 @@ public class ReplyService {
     // 댓글 삭제
     @Transactional
     public void deleteReply(Long id) {
-        Reply reply = replyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
-
-        reply.getMember()
-                .getReplies()
-                .removeIf(r -> r.getId().equals(id));
-
-        reply.getBoard()
-                .getReplies()
-                .removeIf(r -> r.getId().equals(id));
-
         replyRepository.deleteById(id);
     }
-
 }

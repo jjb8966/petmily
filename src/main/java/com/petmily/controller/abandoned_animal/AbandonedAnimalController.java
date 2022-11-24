@@ -8,6 +8,7 @@ import com.petmily.service.AbandonedAnimalService;
 import com.petmily.service.PictureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.MalformedURLException;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/abandoned_animal")
@@ -31,6 +33,7 @@ public class AbandonedAnimalController {
     private final AbandonedAnimalService abandonedAnimalService;
     private final PictureService pictureService;
     private final AnimalDtoConverter animalDtoConverter;
+    private final MessageSource ms;
 
     @ResponseBody
     @GetMapping("/image/{fileStoreName}")
@@ -45,7 +48,7 @@ public class AbandonedAnimalController {
         Page<AbandonedAnimal> allAnimal = abandonedAnimalService.findAll(pageable);
         Page<AnimalDetailForm> mapToDto = allAnimal
                 .map(abandonedAnimal -> animalDtoConverter.entityToDto(abandonedAnimal, AnimalDetailForm.class)
-                        .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")));
+                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))));
 
         PetmilyPage<AnimalDetailForm> animalPage = new PetmilyPage<>(mapToDto);
 
@@ -59,13 +62,17 @@ public class AbandonedAnimalController {
         log.info("animal id = {}", id);
 
         AbandonedAnimal animal = abandonedAnimalService.findOne(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.animal.null")));
 
         AnimalDetailForm animalForm = animalDtoConverter.entityToDto(animal, AnimalDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.converter")));
 
         model.addAttribute("animal", animalForm);
 
         return "/view/abandoned_animal/detail_form";
+    }
+
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
     }
 }

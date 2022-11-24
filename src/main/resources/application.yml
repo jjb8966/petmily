@@ -15,11 +15,14 @@ spring:
         format_sql: true
 
   messages:
-    basename: messages, errors
+    basename: messages, errors, exception
 
-logging:
-  level:
-    org.hibernate.SQL: debug
+  profiles:
+    active: local
+
+#logging:
+#  level:
+#    org.hibernate.SQL: debug
 #    org.hibernate.trace: trace
 #    -> 콘솔
 

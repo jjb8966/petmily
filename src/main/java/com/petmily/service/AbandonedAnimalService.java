@@ -4,12 +4,14 @@ import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import com.petmily.repository.AbandonedAnimalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -18,7 +20,7 @@ import java.util.Optional;
 public class AbandonedAnimalService {
 
     private final AbandonedAnimalRepository animalRepository;
-    private final ApplicationService applicationService;
+    private final MessageSource ms;
 
     // 유기동물 등록
     @Transactional
@@ -47,7 +49,7 @@ public class AbandonedAnimalService {
     @Transactional
     public Long changeAnimalInfo(Long id, ChangeAnimalForm animalDto) {
         AbandonedAnimal abandonedAnimal = animalRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.animal.null")));
 
         abandonedAnimal.changeInfo(animalDto);
 
@@ -58,5 +60,9 @@ public class AbandonedAnimalService {
     @Transactional
     public void deleteAnimal(Long id) {
         animalRepository.deleteById(id);
+    }
+
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
     }
 }

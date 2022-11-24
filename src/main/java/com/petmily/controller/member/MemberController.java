@@ -11,6 +11,7 @@ import com.petmily.domain.dto_converter.MemberDtoConverter;
 import com.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -29,6 +31,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberDtoConverter memberDtoConverter;
+    private final MessageSource ms;
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -53,7 +56,7 @@ public class MemberController {
         Optional<Member> loginMember = memberService.login(loginForm);
 
         if (loginMember.isEmpty()) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            bindingResult.reject("loginFail");
             return "/view/member/login_form";
         }
 
@@ -87,7 +90,7 @@ public class MemberController {
         String passwordCheck = form.getPasswordCheck();
 
         if (hasText(password, passwordCheck) && !matchPasswordCheck(password, passwordCheck)) {
-            bindingResult.reject("passwordMismatch", null);
+            bindingResult.reject("passwordMismatch");
         }
 
         if (bindingResult.hasErrors()) {
@@ -131,10 +134,10 @@ public class MemberController {
                              Model model) {
 
         Member member = memberService.findOne(loginMember.getId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
 
         ModifyMemberForm modifyMemberForm = memberDtoConverter.entityToDto(member, ModifyMemberForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
 
         model.addAttribute("modifyMemberForm", modifyMemberForm);
 
@@ -180,11 +183,11 @@ public class MemberController {
         String passwordCheck = form.getPasswordCheck();
 
         if (hasText(password, passwordCheck) && !matchPasswordCheck(password, passwordCheck)) {
-            bindingResult.reject("passwordMismatch", null);
+            bindingResult.reject("passwordMismatch");
         }
 
         if (hasText(password, passwordCheck) && matchPasswordCheck(password, passwordCheck) && !correctPassword(password, loginMember.getPassword())) {
-            bindingResult.reject("incorrectPassword", null);
+            bindingResult.reject("incorrectPassword");
         }
 
         if (bindingResult.hasErrors()) {
@@ -204,4 +207,7 @@ public class MemberController {
         return password.equals(loginMemberPassword);
     }
 
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
+    }
 }

@@ -14,6 +14,7 @@ import com.petmily.domain.core.embeded_type.Email;
 import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Profile("local")
 public class InitDB {
 
     private final InitService initService;

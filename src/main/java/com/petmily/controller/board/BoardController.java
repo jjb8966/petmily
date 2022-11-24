@@ -18,6 +18,7 @@ import com.petmily.service.PictureService;
 import com.petmily.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,6 +46,7 @@ public class BoardController {
     private final PictureService pictureService;
     private final BoardRepository boardRepository;
     private final BoardDtoConverter boardDtoConverter;
+    private final MessageSource ms;
 
     @ResponseBody
     @GetMapping("/board/image/{fileStoreName}")
@@ -62,7 +65,7 @@ public class BoardController {
         log.info("total pages = {}", allBoards.getTotalPages());
 
         Page<BoardListForm> mapToDto = allBoards.map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))));
 
         PetmilyPage<BoardListForm> boardPage = new PetmilyPage<>(mapToDto);
 
@@ -80,10 +83,10 @@ public class BoardController {
         log.info("board type = {}, id = {}", boardType, boardId);
 
         Board board = boardService.findOne(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
 
         BoardDetailForm boardForm = boardDtoConverter.entityToDto(board, BoardDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("board", boardForm);
@@ -132,10 +135,10 @@ public class BoardController {
         log.info("board type = {}, id = {}", boardType, id);
 
         Board board = boardService.findOne(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
 
         ModifyBoardForm boardForm = boardDtoConverter.entityToDto(board, ModifyBoardForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("id", id);
@@ -162,7 +165,7 @@ public class BoardController {
         boardService.modifyBoardInfo(id, form);
 
         Board board = boardService.findOne(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
 
         log.info("게시글 수정 완료 {}", board);
 
@@ -197,15 +200,15 @@ public class BoardController {
         log.info("board type = {}, id = {}", boardType, boardId);
 
         Board board = boardService.findOne(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
 
         BoardDetailForm boardForm = boardDtoConverter.entityToDto(board, BoardDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
 
         Long replyId = replyService.reply(loginMember.getId(), boardId, form);
 
         Reply reply = replyService.findOne(replyId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.reply.null")));
 
         log.info("댓글 작성 완료 {}", reply);
 
@@ -265,11 +268,15 @@ public class BoardController {
 
         List<BoardListForm> forms = boards.stream()
                 .map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
-                        .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")))
+                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))))
                 .collect(Collectors.toList());
 
         model.addAttribute("forms", forms);
 
         return "/view/member/board_list";
+    }
+
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
     }
 }

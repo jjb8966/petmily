@@ -14,6 +14,7 @@ import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -32,6 +34,7 @@ public class ApplicationController {
     private final ApplicationService applicationService;
     private final AbandonedAnimalRepository abandonedAnimalRepository;
     private final ApplicationDtoConverter applicationDtoConverter;
+    private final MessageSource ms;
 
     @ModelAttribute("bankType")
     public BankType[] bankTypes() {
@@ -74,7 +77,7 @@ public class ApplicationController {
 
         Long donateId = applicationService.donate(loginMember.getId(), animalId, donationDto);
         Donation donation = applicationService.findOne(donateId, Donation.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         log.info("후원 신청 완료 {}", donation);
 
@@ -112,7 +115,7 @@ public class ApplicationController {
 
         Long tempProtectId = applicationService.tempProtect(loginMember.getId(), animalId, tempProtectionDto);
         TemporaryProtection temporaryProtection = applicationService.findOne(tempProtectId, TemporaryProtection.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         log.info("임시보호 신청 완료 {}", temporaryProtection);
 
@@ -150,7 +153,7 @@ public class ApplicationController {
 
         Long adoptId = applicationService.adopt(loginMember.getId(), animalId, adoptDto);
         Adopt adopt = applicationService.findOne(adoptId, Adopt.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         log.info("입양 신청 완료 {}", adopt);
 
@@ -165,7 +168,7 @@ public class ApplicationController {
 
         List<ApplicationListForm> forms = applications.stream()
                 .map(application -> applicationDtoConverter.entityToDto(application, ApplicationListForm.class)
-                        .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다.")))
+                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))))
                 .collect(Collectors.toList());
 
         model.addAttribute("forms", forms);
@@ -202,26 +205,26 @@ public class ApplicationController {
 
     private DonationDetailForm getDonationDetailForm(Long appId) {
         Donation donation = applicationService.findOne(appId, Donation.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         return applicationDtoConverter.entityToDto(donation, DonationDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
     }
 
     private TempProtectionDetailForm getTempProtectionDetailForm(Long appId) {
         TemporaryProtection temporaryProtection = applicationService.findOne(appId, TemporaryProtection.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         return applicationDtoConverter.entityToDto(temporaryProtection, TempProtectionDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
     }
 
     private AdoptDetailForm getAdoptDetailForm(Long appId) {
         Adopt adopt = applicationService.findOne(appId, Adopt.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         return applicationDtoConverter.entityToDto(adopt, AdoptDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException("변환할 수 없는 폼입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
     }
 
     @GetMapping("/member/auth/application/modify/{appType}/{appId}")
@@ -360,4 +363,7 @@ public class ApplicationController {
         return "redirect:/member/auth/application/list";
     }
 
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
+    }
 }

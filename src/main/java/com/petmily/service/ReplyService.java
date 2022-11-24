@@ -10,10 +10,12 @@ import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import com.petmily.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -24,6 +26,7 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
+    private final MessageSource ms;
 
     // 댓글 작성
     @Transactional
@@ -42,12 +45,12 @@ public class ReplyService {
 
     private Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
     }
 
     private Board getBoard(Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
     }
 
     // 댓글 조회
@@ -64,7 +67,7 @@ public class ReplyService {
     @Transactional
     public Long changeReplyInfo(Long id, ChangeReplyForm replyDto) {
         Reply reply = replyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.reply.null")));
 
         reply.changeInfo(replyDto);
 
@@ -75,5 +78,9 @@ public class ReplyService {
     @Transactional
     public void deleteReply(Long id) {
         replyRepository.deleteById(id);
+    }
+
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
     }
 }

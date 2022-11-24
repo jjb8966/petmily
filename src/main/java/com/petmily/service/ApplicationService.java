@@ -14,10 +14,12 @@ import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.repository.ApplicationRepository;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -28,6 +30,7 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final MemberRepository memberRepository;
     private final AbandonedAnimalRepository animalRepository;
+    private final MessageSource ms;
 
     // 입양하기
     @Transactional
@@ -92,11 +95,11 @@ public class ApplicationService {
     }
 
     private AbandonedAnimal getAnimal(Long animalId) {
-        return animalRepository.findById(animalId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유기동물입니다."));
+        return animalRepository.findById(animalId).orElseThrow(() -> new IllegalArgumentException(getMessage("exception.animal.null")));
     }
 
     private Member getMember(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
     }
 
     // 지원서 조회
@@ -121,7 +124,7 @@ public class ApplicationService {
     @Transactional
     public Long modifyAdopt(Long id, ModifyAdoptForm adoptDto) {
         Adopt adopt = findOne(id, Adopt.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         adopt.changeInfo(adoptDto);
 
@@ -132,7 +135,7 @@ public class ApplicationService {
     @Transactional
     public Long modifyTempProtection(Long id, ModifyTempProtectionForm tempProtectionDto) {
         TemporaryProtection temporaryProtection = findOne(id, TemporaryProtection.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         temporaryProtection.changeInfo(tempProtectionDto);
 
@@ -143,7 +146,7 @@ public class ApplicationService {
     @Transactional
     public Long modifyDonation(Long id, ModifyDonationForm donationDto) {
         Donation donation = findOne(id, Donation.class)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지원서입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
 
         donation.changeInfo(donationDto);
 
@@ -154,5 +157,9 @@ public class ApplicationService {
     @Transactional
     public void deleteApplication(Long id) {
         applicationRepository.deleteById(id);
+    }
+
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
     }
 }

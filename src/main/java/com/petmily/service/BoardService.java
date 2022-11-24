@@ -9,11 +9,13 @@ import com.petmily.domain.dto.board.WriteBoardForm;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -21,16 +23,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final ReplyService replyService;
     private final PictureService pictureService;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final MessageSource ms;
 
     // 게시글 등록
     @Transactional
     public Long write(Long memberId, BoardType boardType, WriteBoardForm form) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
 
         Board board = writeBoard(boardType, form, member);
 
@@ -78,7 +80,7 @@ public class BoardService {
     @Transactional
     public Long modifyBoardInfo(Long id, ModifyBoardForm form) {
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
 
         board.clearPicture();
 
@@ -95,5 +97,9 @@ public class BoardService {
     @Transactional
     public void deleteBoard(Long id) {
         boardRepository.deleteById(id);
+    }
+
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
     }
 }

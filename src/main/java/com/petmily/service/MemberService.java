@@ -6,10 +6,12 @@ import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -18,9 +20,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final ApplicationService applicationService;
-    private final ReplyService replyService;
-    private final BoardService boardService;
+    private final MessageSource ms;
 
     // 회원 가입
     @Transactional
@@ -46,7 +46,7 @@ public class MemberService {
                 .filter(m -> m.getLoginId().equals(loginId))
                 .findAny()
                 .ifPresent(m -> {
-                    throw new DuplicateLoginIdException("중복된 아이디입니다.");
+                    throw new DuplicateLoginIdException(getMessage("exception.duplicate.loginId"));
                 });
     }
 
@@ -64,7 +64,7 @@ public class MemberService {
     @Transactional
     public Long modify(Long id, ModifyMemberForm form) {
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
 
         member.changeInfo(form);
 
@@ -75,5 +75,9 @@ public class MemberService {
     @Transactional
     public void withdrawMember(Long id) {
         memberRepository.deleteById(id);
+    }
+
+    private String getMessage(String code) {
+        return ms.getMessage(code, null, Locale.KOREA);
     }
 }

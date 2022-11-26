@@ -13,40 +13,28 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class PhoneNumberFormatter implements Formatter<PhoneNumber> {
 
-    public static final String START_NUMBER = "010";
-    public static final int PHONE_NUMBER_LENGTH = 4;
-
     private final MessageSource ms;
 
     @Override
     public PhoneNumber parse(String text, Locale locale) throws ParseException {
-        String[] phoneNumber = text.split("-");
+        String[] expression = text.split("-");
+        PhoneNumber phoneNumber = null;
 
-        if (phoneNumber.length != 3) {
+        if (expression.length != 3) {
             throw new ParseException(getMessage("exception.parse.phoneNumber"), 0);
         }
 
-        String startNumber = phoneNumber[0];
-        String middleNumber = phoneNumber[1];
-        String endNumber = phoneNumber[2];
+        String startNumber = expression[0];
+        String middleNumber = expression[1];
+        String endNumber = expression[2];
 
-        if (!startWith010(startNumber) || lengthCheck(middleNumber, endNumber)) {
-            throw new ParseException(getMessage("exception.parse.phoneNumber"), 0);
+        try {
+            phoneNumber = new PhoneNumber(startNumber, middleNumber, endNumber);
+        } catch (IllegalArgumentException e) {
+            log.info("phone number error = {}", text);
         }
 
-        return new PhoneNumber(startNumber, middleNumber, endNumber);
-    }
-
-    private static boolean startWith010(String startNumber) {
-        return startNumber.equals(START_NUMBER);
-    }
-
-    private static boolean lengthCheck(String middleNumber, String endNumber) {
-        return isFourDigitNumber(middleNumber) || isFourDigitNumber(endNumber);
-    }
-
-    private static boolean isFourDigitNumber(String number) {
-        return number.length() != PHONE_NUMBER_LENGTH;
+        return phoneNumber;
     }
 
     @Override

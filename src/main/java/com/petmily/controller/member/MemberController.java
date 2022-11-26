@@ -1,7 +1,6 @@
 package com.petmily.controller.member;
 
 import com.petmily.controller.SessionConstant;
-import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.domain.dto.member.MemberJoinForm;
@@ -98,11 +97,7 @@ public class MemberController {
             return "/view/member/join_form";
         }
 
-        Member member = changeToMember(form);
-
-        memberService.join(member);
-
-        log.info("회원가입 완료 member = {}", member);
+        memberService.join(form);
 
         return "redirect:/login";
     }
@@ -113,15 +108,6 @@ public class MemberController {
 
     private boolean matchPasswordCheck(String password, String passwordCheck) {
         return password.equals(passwordCheck);
-    }
-
-    private static Member changeToMember(MemberJoinForm form) {
-        return new MemberBuilder(form.getLoginId(), form.getPassword())
-                .setName(form.getName())
-                .setBirth(form.getBirth())
-                .setEmail(form.getEmail())
-                .setPhoneNumber(form.getPhoneNumber())
-                .build();
     }
 
     @GetMapping("/member/auth/mypage")

@@ -1,7 +1,9 @@
 package com.petmily.service;
 
+import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.LoginForm;
+import com.petmily.domain.dto.member.MemberJoinForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.repository.MemberRepository;
@@ -24,7 +26,14 @@ public class MemberService {
 
     // 회원 가입
     @Transactional
-    public Long join(Member member) {
+    public Long join(MemberJoinForm form) {
+        Member member = new MemberBuilder(form.getLoginId(), form.getPassword())
+                .setName(form.getName())
+                .setBirth(form.getBirth())
+                .setEmail(form.getEmail())
+                .setPhoneNumber(form.getPhoneNumber())
+                .build();
+
         duplicateCheck(member.getLoginId());
         memberRepository.save(member);
 

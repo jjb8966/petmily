@@ -10,6 +10,7 @@ import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
+import com.petmily.domain.core.embeded_type.AccountNumber;
 import com.petmily.domain.core.embeded_type.Email;
 import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.*;
@@ -139,7 +140,7 @@ public class InitDB {
 
                     if (i % 3 == 0) {
                         new DonationBuilder(member, animal)
-                                .setAccountNumber("1234-1234")
+                                .setAccountNumber(new AccountNumber("1234-1234-1234"))
                                 .setBankType(BankType.KB)
                                 .setAmount(10000)
                                 .setDonator(member.getName())

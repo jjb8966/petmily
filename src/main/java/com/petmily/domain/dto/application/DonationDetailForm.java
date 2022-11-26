@@ -1,5 +1,6 @@
 package com.petmily.domain.dto.application;
 
+import com.petmily.domain.core.embeded_type.AccountNumber;
 import com.petmily.domain.core.enum_type.AnimalSpecies;
 import com.petmily.domain.core.enum_type.AnimalStatus;
 import com.petmily.domain.core.enum_type.BankType;
@@ -32,8 +33,8 @@ public class DonationDetailForm {
     @NotBlank
     private String donator;
 
-    @NotBlank
-    private String accountNumber;
+    @NotNull
+    private AccountNumber accountNumber;
 
     @NotNull
     private Integer amount;

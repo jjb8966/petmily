@@ -1,5 +1,6 @@
 package com.petmily.domain.dto.application;
 
+import com.petmily.domain.core.embeded_type.AccountNumber;
 import com.petmily.domain.core.enum_type.BankType;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ public class ModifyDonationForm {
 
     private BankType bankType;
     private String donator;
-    private String accountNumber;
+    private AccountNumber accountNumber;
     private Integer amount;
 
     public ModifyDonationForm(DonationDetailForm form) {

@@ -1,5 +1,6 @@
 package com.petmily.domain.dto.application;
 
+import com.petmily.domain.core.embeded_type.AccountNumber;
 import com.petmily.domain.core.enum_type.BankType;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +21,8 @@ public class ApplyDonationForm {
     @NotBlank
     private String donator;
 
-    @NotBlank
-    private String accountNumber;
+    @NotNull
+    private AccountNumber accountNumber;
 
     @NotNull
     @Min(10_000L)

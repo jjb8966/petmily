@@ -1,15 +1,14 @@
 package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.DonationBuilder;
+import com.petmily.domain.core.embeded_type.AccountNumber;
 import com.petmily.domain.core.enum_type.BankType;
 import com.petmily.domain.dto.application.ModifyDonationForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -18,8 +17,11 @@ public class Donation extends Application {
 
     @Enumerated(EnumType.STRING)
     private BankType bankType;
+
+    @Embedded
+    private AccountNumber accountNumber;
+
     private String donator;
-    private String accountNumber;
     private Integer amount;
 
     public Donation(DonationBuilder builder) {
@@ -30,6 +32,13 @@ public class Donation extends Application {
         this.donator = builder.getDonator();
         this.accountNumber = builder.getAccountNumber();
         this.amount = builder.getAmount();
+    }
+
+    public void changeInfo(ModifyDonationForm form) {
+        this.bankType = form.getBankType();
+        this.donator = form.getDonator();
+        this.accountNumber = form.getAccountNumber();
+        this.amount = form.getAmount();
     }
 
     @Override
@@ -43,12 +52,5 @@ public class Donation extends Application {
                 ", abandonedAnimal=" + abandonedAnimal.getName() +
                 ", applicationStatus=" + applicationStatus +
                 '}';
-    }
-
-    public void changeInfo(ModifyDonationForm form) {
-        this.bankType = form.getBankType();
-        this.donator = form.getDonator();
-        this.accountNumber = form.getAccountNumber();
-        this.amount = form.getAmount();
     }
 }

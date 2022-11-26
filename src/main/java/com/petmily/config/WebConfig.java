@@ -1,5 +1,6 @@
 package com.petmily.config;
 
+import com.petmily.config.formatter.AccountNumberFormatter;
 import com.petmily.config.formatter.BoardTypeFormatter;
 import com.petmily.config.formatter.EmailFormatter;
 import com.petmily.config.formatter.PhoneNumberFormatter;
@@ -22,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addFormatter(new BoardTypeFormatter());
         registry.addFormatter(new PhoneNumberFormatter(ms));
         registry.addFormatter(new EmailFormatter());
+        registry.addFormatter(new AccountNumberFormatter(ms));
     }
 
     @Override

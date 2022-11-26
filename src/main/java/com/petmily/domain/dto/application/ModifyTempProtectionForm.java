@@ -12,4 +12,11 @@ public class ModifyTempProtectionForm {
     private String job;
     private Boolean married;
     private Integer period;
+
+    public ModifyTempProtectionForm(TempProtectionDetailForm form) {
+        this.location = form.getLocation();
+        this.job = form.getJob();
+        this.married = form.getMarried();
+        this.period = form.getPeriod();
+    }
 }

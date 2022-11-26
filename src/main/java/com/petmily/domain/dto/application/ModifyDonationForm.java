@@ -14,4 +14,11 @@ public class ModifyDonationForm {
     private String donator;
     private String accountNumber;
     private Integer amount;
+
+    public ModifyDonationForm(DonationDetailForm form) {
+        this.bankType = form.getBankType();
+        this.donator = form.getDonator();
+        this.accountNumber = form.getAccountNumber();
+        this.amount = form.getAmount();
+    }
 }

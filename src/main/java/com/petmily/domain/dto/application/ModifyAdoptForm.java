@@ -11,4 +11,10 @@ public class ModifyAdoptForm {
     private LocationType location;
     private String job;
     private Boolean married;
+
+    public ModifyAdoptForm(AdoptDetailForm form) {
+        this.location = form.getLocation();
+        this.job = form.getJob();
+        this.married = form.getMarried();
+    }
 }

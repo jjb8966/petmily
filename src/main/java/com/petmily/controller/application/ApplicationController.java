@@ -271,21 +271,10 @@ public class ApplicationController {
             return "/view/member/application_modify_form";
         }
 
-        ModifyDonationForm modifyForm = changeToModifyDonationForm(form);
+        ModifyDonationForm modifyForm = new ModifyDonationForm(form);
         applicationService.modifyDonation(appId, modifyForm);
 
         return "redirect:/member/auth/application/detail/Donation/{appId}";
-    }
-
-    private ModifyDonationForm changeToModifyDonationForm(DonationDetailForm form) {
-        ModifyDonationForm modifyForm = new ModifyDonationForm();
-
-        modifyForm.setDonator(form.getDonator());
-        modifyForm.setBankType(form.getBankType());
-        modifyForm.setAccountNumber(form.getAccountNumber());
-        modifyForm.setAmount(form.getAmount());
-
-        return modifyForm;
     }
 
     @PostMapping("/member/auth/application/modify/TemporaryProtection/{appId}")
@@ -306,21 +295,10 @@ public class ApplicationController {
             return "/view/member/application_modify_form";
         }
 
-        ModifyTempProtectionForm modifyForm = changeToModifyTempProtectionForm(form);
+        ModifyTempProtectionForm modifyForm = new ModifyTempProtectionForm(form);
         applicationService.modifyTempProtection(appId, modifyForm);
 
         return "redirect:/member/auth/application/detail/TemporaryProtection/{appId}";
-    }
-
-    private ModifyTempProtectionForm changeToModifyTempProtectionForm(TempProtectionDetailForm form) {
-        ModifyTempProtectionForm modifyForm = new ModifyTempProtectionForm();
-
-        modifyForm.setLocation(form.getLocation());
-        modifyForm.setJob(form.getJob());
-        modifyForm.setMarried(form.getMarried());
-        modifyForm.setPeriod(form.getPeriod());
-
-        return modifyForm;
     }
 
     @PostMapping("/member/auth/application/modify/Adopt/{appId}")
@@ -341,20 +319,10 @@ public class ApplicationController {
             return "/view/member/application_modify_form";
         }
 
-        ModifyAdoptForm modifyForm = changeToModifyAdoptForm(form);
+        ModifyAdoptForm modifyForm = new ModifyAdoptForm(form);
         applicationService.modifyAdopt(appId, modifyForm);
 
         return "redirect:/member/auth/application/detail/Adopt/{appId}";
-    }
-
-    private ModifyAdoptForm changeToModifyAdoptForm(AdoptDetailForm form) {
-        ModifyAdoptForm modifyForm = new ModifyAdoptForm();
-
-        modifyForm.setLocation(form.getLocation());
-        modifyForm.setJob(form.getJob());
-        modifyForm.setMarried(form.getMarried());
-
-        return modifyForm;
     }
 
     @PostMapping("/member/auth/application/delete/{appId}")

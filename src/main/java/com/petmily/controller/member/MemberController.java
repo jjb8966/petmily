@@ -7,13 +7,15 @@ import com.petmily.domain.dto.member.MemberJoinForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto.member.WithdrawMemberForm;
 import com.petmily.domain.dto_converter.MemberDtoConverter;
+import com.petmily.exception.DuplicateLoginIdException;
+import com.petmily.exception.PasswordIncorrectException;
+import com.petmily.exception.PasswordMismatchException;
 import com.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -85,29 +87,26 @@ public class MemberController {
     public String join(@ModelAttribute("form") @Valid MemberJoinForm form, BindingResult bindingResult) {
         log.info("form = {}", form);
 
-        String password = form.getPassword();
-        String passwordCheck = form.getPasswordCheck();
-
-        if (hasText(password, passwordCheck) && !matchPasswordCheck(password, passwordCheck)) {
-            bindingResult.reject("passwordMismatch");
-        }
-
         if (bindingResult.hasErrors()) {
             log.info("회원가입 실패 {}", bindingResult.getAllErrors());
             return "/view/member/join_form";
         }
 
-        memberService.join(form);
+        try {
+            memberService.join(form);
+        } catch (PasswordMismatchException e) {
+            log.info("PasswordMismatchException 발생", e);
+            bindingResult.reject("passwordMismatch");
+
+            return "/view/member/join_form";
+        } catch (DuplicateLoginIdException e) {
+            log.info("DuplicateLoginIdException 발생", e);
+            bindingResult.reject("duplicateLoginId");
+
+            return "/view/member/join_form";
+        }
 
         return "redirect:/login";
-    }
-
-    private boolean hasText(String password, String passwordCheck) {
-        return StringUtils.hasText(password) && StringUtils.hasText(passwordCheck);
-    }
-
-    private boolean matchPasswordCheck(String password, String passwordCheck) {
-        return password.equals(passwordCheck);
     }
 
     @GetMapping("/member/auth/mypage")
@@ -163,26 +162,29 @@ public class MemberController {
                            BindingResult bindingResult,
                            HttpSession session) {
 
+        log.info("form = {}", form);
+
         Member loginMember = (Member) session.getAttribute(SessionConstant.LOGIN_MEMBER);
-
-        String password = form.getPassword();
-        String passwordCheck = form.getPasswordCheck();
-
-        if (hasText(password, passwordCheck) && !matchPasswordCheck(password, passwordCheck)) {
-            bindingResult.reject("passwordMismatch");
-        }
-
-        if (hasText(password, passwordCheck) && matchPasswordCheck(password, passwordCheck) && !correctPassword(password, loginMember.getPassword())) {
-            bindingResult.reject("incorrectPassword");
-        }
 
         if (bindingResult.hasErrors()) {
             log.info("회원 탈퇴 실패 {}", bindingResult.getAllErrors());
             return "/view/member/withdraw_form";
         }
 
-        memberService.withdrawMember(loginMember.getId());
-        session.invalidate();
+        try {
+            memberService.withdrawMember(loginMember.getId(), loginMember.getPassword(), form);
+            session.invalidate();
+        } catch (PasswordMismatchException e) {
+            log.info("PasswordMismatchException 발생", e);
+            bindingResult.reject("passwordMismatch");
+
+            return "/view/member/withdraw_form";
+        } catch (PasswordIncorrectException e) {
+            log.info("PasswordIncorrectException 발생", e);
+            bindingResult.reject("incorrectPassword");
+
+            return "/view/member/withdraw_form";
+        }
 
         log.info("회원 탈퇴 성공");
 

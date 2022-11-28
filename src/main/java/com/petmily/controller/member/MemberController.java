@@ -191,10 +191,6 @@ public class MemberController {
         return "redirect:/";
     }
 
-    private boolean correctPassword(String password, String loginMemberPassword) {
-        return password.equals(loginMemberPassword);
-    }
-
     private String getMessage(String code) {
         return ms.getMessage(code, null, Locale.KOREA);
     }

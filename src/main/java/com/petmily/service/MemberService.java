@@ -107,7 +107,6 @@ public class MemberService {
     // 회원 탈퇴
     @Transactional
     public void withdrawMember(Long memberId, String originPassword, WithdrawMemberForm form) {
-        log.info("has text? = {}", hasText(form.getPassword(), form.getPasswordCheck()));
         passwordMismatchCheck(form.getPassword(), form.getPasswordCheck());
         passwordIncorrectCheck(form.getPassword(), form.getPasswordCheck(), originPassword);
 

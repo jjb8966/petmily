@@ -27,7 +27,7 @@ public class AbandonedAnimal extends BaseEntity {
     @OneToMany(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Application> applications;
 
-    @OneToOne(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "abandonedAnimal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Picture picture;
 
     @Enumerated(EnumType.STRING)
@@ -53,7 +53,9 @@ public class AbandonedAnimal extends BaseEntity {
     }
 
     public void changeInfo(ChangeAnimalForm animalDto) {
+        this.picture = animalDto.getPicture();
         this.species = animalDto.getSpecies();
+        this.status = animalDto.getStatus();
         this.name = animalDto.getName();
         this.kind = animalDto.getKind();
         this.age = animalDto.getAge();

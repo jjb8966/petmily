@@ -13,7 +13,8 @@ spring:
         #        show_sql: true
         #        -> system.out
         format_sql: true
-
+  messages:
+    basename: errors, exception, messages
 logging:
   level:
     org.hibernate.SQL: debug

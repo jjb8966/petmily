@@ -37,12 +37,6 @@ class ApplicationServiceTest {
     EntityManager em;
 
     @Autowired
-    MemberService memberService;
-
-    @Autowired
-    AbandonedAnimalService animalService;
-
-    @Autowired
     ApplicationService applicationService;
 
     @Test

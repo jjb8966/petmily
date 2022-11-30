@@ -38,12 +38,6 @@ class AbandonedAnimalServiceTest {
     @Autowired
     AbandonedAnimalService animalService;
 
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    ApplicationService applicationService;
-
     @Test
     @DisplayName("유기동물을 등록할 수 있다.")
     void register() {

@@ -9,6 +9,7 @@ import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.application.Adopt;
+import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.embeded_type.Email;
 import com.petmily.domain.core.embeded_type.PhoneNumber;
 import com.petmily.domain.core.enum_type.BoardType;
@@ -44,18 +45,6 @@ class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
-
-    @Autowired
-    AbandonedAnimalService animalService;
-
-    @Autowired
-    BoardService boardService;
-
-    @Autowired
-    ReplyService replyService;
-
-    @Autowired
-    ApplicationService applicationService;
 
     @Test
     @DisplayName("회원 가입 및 id를 통한 조회를 할 수 있다.")
@@ -241,32 +230,22 @@ class MemberServiceTest {
 
         em.persist(member);
 
-        Optional<Member> findMember = memberService.findOne(member.getId());
-        Optional<Board> findBoard = boardService.findOne(board.getId());
-        Optional<Reply> findReply = replyService.findOne(reply.getId());
-        Optional<Adopt> findApplication = applicationService.findOne(adopt.getId(), Adopt.class);
-
-        assertThat(findMember.isPresent()).isTrue();
-        assertThat(findBoard.isPresent()).isTrue();
-        assertThat(findReply.isPresent()).isTrue();
-        assertThat(findApplication.isPresent()).isTrue();
-
         WithdrawMemberForm withdrawMemberForm = new WithdrawMemberForm();
         withdrawMemberForm.setPassword("123");
         withdrawMemberForm.setPasswordCheck("123");
 
         //when
-        memberService.withdrawMember(member.getId(), "123", withdrawMemberForm);
+        memberService.withdrawMember(member.getId(), member.getPassword(), withdrawMemberForm);
+
+        Member findMember = em.find(Member.class, member.getId());
+        Board findBoard = em.find(Board.class, board.getId());
+        Reply findReply = em.find(Reply.class, reply.getId());
+        Application findApplication = em.find(Adopt.class, adopt.getId());
 
         //then
-        findMember = memberService.findOne(member.getId());
-        findBoard = boardService.findOne(board.getId());
-        findReply = replyService.findOne(reply.getId());
-        findApplication = applicationService.findOne(adopt.getId(), Adopt.class);
-
-        assertThat(findMember.isPresent()).isFalse();
-        assertThat(findBoard.isPresent()).isFalse();
-        assertThat(findReply.isPresent()).isFalse();
-        assertThat(findApplication.isPresent()).isFalse();
+        assertThat(findMember).isNull();
+        assertThat(findBoard).isNull();
+        assertThat(findReply).isNull();
+        assertThat(findApplication).isNull();
     }
 }

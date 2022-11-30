@@ -32,13 +32,7 @@ class BoardServiceTest {
     EntityManager em;
 
     @Autowired
-    MemberService memberService;
-
-    @Autowired
     BoardService boardService;
-
-    @Autowired
-    ReplyService replyService;
 
     @Test
     @DisplayName("게시글을 등록할 수 있다.")

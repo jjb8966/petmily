@@ -4,7 +4,6 @@ import com.petmily.domain.builder.ReplyBuilder;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
-import com.petmily.domain.dto.reply.ChangeReplyForm;
 import com.petmily.domain.dto.reply.WriteReplyForm;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
@@ -14,9 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,26 +50,16 @@ public class ReplyService {
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
     }
 
-    // 댓글 조회
-    public Optional<Reply> findOne(Long id) {
-        return replyRepository.findById(id);
-    }
-
-    // 전체 댓글 조회
-    public List<Reply> findAll() {
-        return replyRepository.findAll();
-    }
-
-    // 댓글 수정
-    @Transactional
-    public Long changeReplyInfo(Long id, ChangeReplyForm replyDto) {
-        Reply reply = replyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.reply.null")));
-
-        reply.changeInfo(replyDto);
-
-        return reply.getId();
-    }
+//    // 댓글 수정
+//    @Transactional
+//    public Long changeReplyInfo(Long id, ChangeReplyForm replyDto) {
+//        Reply reply = replyRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.reply.null")));
+//
+//        reply.changeInfo(replyDto);
+//
+//        return reply.getId();
+//    }
 
     // 댓글 삭제
     @Transactional

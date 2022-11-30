@@ -3,12 +3,14 @@ package com.petmily.domain.dto.application;
 import com.petmily.domain.core.embeded_type.AccountNumber;
 import com.petmily.domain.core.enum_type.BankType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class ModifyDonationForm {
 
     private BankType bankType;

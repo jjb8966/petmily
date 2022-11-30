@@ -2,10 +2,14 @@ package com.petmily.domain.dto.application;
 
 import com.petmily.domain.core.enum_type.LocationType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
 public class ModifyTempProtectionForm {
 
     private LocationType location;

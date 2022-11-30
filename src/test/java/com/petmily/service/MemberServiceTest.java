@@ -103,10 +103,11 @@ class MemberServiceTest {
     @Test
     @DisplayName("로그인 시 비밀번호 검증을 할 수 있다.")
     void login() {
+        //given
         Member member = new MemberBuilder("m", "123").build();
+
         em.persist(member);
 
-        //given
         LoginForm rightForm = new LoginForm();
         rightForm.setLoginId("m");
         rightForm.setPassword("123");
@@ -131,6 +132,7 @@ class MemberServiceTest {
         Member m1 = new MemberBuilder("m1", "123").build();
         Member m2 = new MemberBuilder("m2", "123").build();
         Member m3 = new MemberBuilder("m3", "123").build();
+
         em.persist(m1);
         em.persist(m2);
         em.persist(m3);
@@ -177,6 +179,7 @@ class MemberServiceTest {
     void withdraw() {
         //given
         Member member = new MemberBuilder("m", "123").build();
+
         em.persist(member);
 
         WithdrawMemberForm withdrawMemberForm = new WithdrawMemberForm();
@@ -196,14 +199,14 @@ class MemberServiceTest {
     void withdraw_mismatch_fail() {
         //given
         Member member = new MemberBuilder("m", "123").build();
+
         em.persist(member);
 
-        //when
         WithdrawMemberForm withdrawMemberForm = new WithdrawMemberForm();
         withdrawMemberForm.setPassword("123");
         withdrawMemberForm.setPasswordCheck("1234");
 
-        //then
+        //when, then
         assertThatThrownBy(() -> memberService.withdrawMember(member.getId(), "123", withdrawMemberForm))
                 .isInstanceOf(PasswordMismatchException.class)
                 .hasMessage("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
@@ -214,14 +217,14 @@ class MemberServiceTest {
     void withdraw_incorrect_fail() {
         //given
         Member member = new MemberBuilder("m", "123").build();
+
         em.persist(member);
 
-        //when
         WithdrawMemberForm withdrawMemberForm = new WithdrawMemberForm();
         withdrawMemberForm.setPassword("1234");
         withdrawMemberForm.setPasswordCheck("1234");
 
-        //then
+        //when, then
         assertThatThrownBy(() -> memberService.withdrawMember(member.getId(), "123", withdrawMemberForm))
                 .isInstanceOf(PasswordIncorrectException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
@@ -248,11 +251,11 @@ class MemberServiceTest {
         assertThat(findReply.isPresent()).isTrue();
         assertThat(findApplication.isPresent()).isTrue();
 
-        //when
         WithdrawMemberForm withdrawMemberForm = new WithdrawMemberForm();
         withdrawMemberForm.setPassword("123");
         withdrawMemberForm.setPasswordCheck("123");
 
+        //when
         memberService.withdrawMember(member.getId(), "123", withdrawMemberForm);
 
         //then

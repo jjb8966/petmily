@@ -48,8 +48,10 @@ class ApplicationServiceTest {
     @Test
     @DisplayName("회원이 유기동물 후원 신청을 할 수 있다.")
     void donate() {
+        //given
         Member member = new MemberBuilder("member", "123").build();
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(member);
         em.persist(animal);
 
@@ -75,8 +77,10 @@ class ApplicationServiceTest {
     @Test
     @DisplayName("회원이 유기동물 임시보호 신청을 할 수 있다.")
     void tempProtect() {
+        //given
         Member member = new MemberBuilder("member", "123").build();
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(member);
         em.persist(animal);
 
@@ -104,6 +108,7 @@ class ApplicationServiceTest {
         //given
         Member member = new MemberBuilder("member", "123").build();
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(member);
         em.persist(animal);
 
@@ -202,6 +207,7 @@ class ApplicationServiceTest {
         //given
         Member member = new MemberBuilder("member", "123").build();
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(member);
         em.persist(animal);
 
@@ -213,13 +219,13 @@ class ApplicationServiceTest {
 
         Long donationId = applicationService.donate(member.getId(), animal.getId(), applyDonationForm);
 
-        //when
         ModifyDonationForm modifyDonationForm = new ModifyDonationForm();
         modifyDonationForm.setBankType(BankType.NH);
         modifyDonationForm.setDonator("memberB");
         modifyDonationForm.setAccountNumber(new AccountNumber("123-4567-89"));
         modifyDonationForm.setAmount(5000);
 
+        //when
         applicationService.modifyDonation(donationId, modifyDonationForm);
         Donation findDonation = em.find(Donation.class, donationId);
 
@@ -236,6 +242,7 @@ class ApplicationServiceTest {
         //given
         Member member = new MemberBuilder("member", "123").build();
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(member);
         em.persist(animal);
 
@@ -247,13 +254,13 @@ class ApplicationServiceTest {
 
         Long tempProtectionId = applicationService.tempProtect(member.getId(), animal.getId(), applyTempProtectionForm);
 
-        //when
         ModifyTempProtectionForm modifyTempProtectionForm = new ModifyTempProtectionForm();
         modifyTempProtectionForm.setLocation(LocationType.CHUNGCHEONG);
         modifyTempProtectionForm.setMarried(false);
         modifyTempProtectionForm.setJob("의사");
         modifyTempProtectionForm.setPeriod(5);
 
+        //when
         applicationService.modifyTempProtection(tempProtectionId, modifyTempProtectionForm);
         TemporaryProtection findTempProtection = em.find(TemporaryProtection.class, tempProtectionId);
 
@@ -270,6 +277,7 @@ class ApplicationServiceTest {
         //given
         Member member = new MemberBuilder("member", "123").build();
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(member);
         em.persist(animal);
 
@@ -280,12 +288,12 @@ class ApplicationServiceTest {
 
         Long adoptId = applicationService.adopt(member.getId(), animal.getId(), applyAdoptForm);
 
-        //when
         ModifyAdoptForm modifyAdoptForm = new ModifyAdoptForm();
         modifyAdoptForm.setLocation(LocationType.GANGWON);
         modifyAdoptForm.setMarried(false);
         modifyAdoptForm.setJob("개발자");
 
+        //when
         applicationService.modifyAdopt(adoptId, modifyAdoptForm);
         Adopt findAdopt = em.find(Adopt.class, adoptId);
 
@@ -301,17 +309,15 @@ class ApplicationServiceTest {
         //given
         Member member = new MemberBuilder("member", "123").build();
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(member);
         em.persist(animal);
 
         Long adoptId = applicationService.adopt(member.getId(), animal.getId(), new ApplyAdoptForm());
-        Adopt findAdopt = em.find(Adopt.class, adoptId);
-
-        assertThat(findAdopt).isNotNull();
 
         //when
         applicationService.deleteApplication(adoptId);
-        findAdopt = em.find(Adopt.class, adoptId);
+        Adopt findAdopt = em.find(Adopt.class, adoptId);
 
         //then
         assertThat(findAdopt).isNull();

@@ -45,14 +45,15 @@ class BoardServiceTest {
     void write() {
         //given
         Member member = new MemberBuilder("member", "123").build();
+
         em.persist(member);
 
-        //when
         WriteBoardForm writeBoardForm = new WriteBoardForm();
         writeBoardForm.setTitle("title");
         writeBoardForm.setContent("content");
         writeBoardForm.setShownAll(true);
 
+        //when
         Long boardId = boardService.write(member.getId(), BoardType.FREE, writeBoardForm);
         Board findBoard = em.find(Board.class, boardId);
 
@@ -68,6 +69,7 @@ class BoardServiceTest {
         //given
         Member member = new MemberBuilder("member", "123").build();
         Board board = new BoardBuilder(member, BoardType.FREE).setTitle("title").build();
+
         em.persist(member);
 
         //when
@@ -133,12 +135,12 @@ class BoardServiceTest {
 
         em.persist(member);
 
-        //when
         ModifyBoardForm modifyBoardForm = new ModifyBoardForm();
         modifyBoardForm.setTitle("titleB");
         modifyBoardForm.setContent("contentB");
         modifyBoardForm.setShownAll(false);
 
+        //when
         boardService.modifyBoardInfo(board.getId(), modifyBoardForm);
         Board findBoard = em.find(Board.class, board.getId());
 

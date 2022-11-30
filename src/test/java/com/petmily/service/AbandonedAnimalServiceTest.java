@@ -22,7 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -56,9 +55,8 @@ class AbandonedAnimalServiceTest {
                 .setWeight(3.0F)
                 .build();
 
-        animalService.register(animal);
-
         //when
+        animalService.register(animal);
         AbandonedAnimal findAnimal = em.find(AbandonedAnimal.class, animal.getId());
 
         //then
@@ -68,11 +66,15 @@ class AbandonedAnimalServiceTest {
     @Test
     @DisplayName("유기동물 id로 유기동물을 조회할 수 있다.")
     void findOne() {
+        //given
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(animal);
 
+        //when
         Optional<AbandonedAnimal> findAnimalOptional = animalService.findOne(animal.getId());
 
+        //then
         assertThat(findAnimalOptional.isPresent()).isTrue();
     }
 
@@ -83,6 +85,7 @@ class AbandonedAnimalServiceTest {
         AbandonedAnimal animalA = new AbandonedAnimalBuilder().setName("animalA").build();
         AbandonedAnimal animalB = new AbandonedAnimalBuilder().setName("animalB").build();
         AbandonedAnimal animalC = new AbandonedAnimalBuilder().setName("animalC").build();
+
         em.persist(animalA);
         em.persist(animalB);
         em.persist(animalC);
@@ -104,14 +107,16 @@ class AbandonedAnimalServiceTest {
         AbandonedAnimal animalC = new AbandonedAnimalBuilder().setAge(5).build();   // third
         AbandonedAnimal animalD = new AbandonedAnimalBuilder().setAge(7).build();
         AbandonedAnimal animalE = new AbandonedAnimalBuilder().setAge(2).build();   // first
+
         em.persist(animalA);
         em.persist(animalB);
         em.persist(animalC);
         em.persist(animalD);
         em.persist(animalE);
 
-        //when
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.by("age").ascending());
+
+        //when
         Page<AbandonedAnimal> allAnimals = animalService.findAll(pageRequest);
 
         //then
@@ -138,7 +143,6 @@ class AbandonedAnimalServiceTest {
 
         em.persist(animal);
 
-        //when
         ChangeAnimalForm changeAnimalForm = new ChangeAnimalForm();
         changeAnimalForm.setName("animalB");
         changeAnimalForm.setSpecies(AnimalSpecies.CAT);
@@ -146,6 +150,7 @@ class AbandonedAnimalServiceTest {
         changeAnimalForm.setAge(3);
         changeAnimalForm.setWeight(1.3F);
 
+        //when
         animalService.changeAnimalInfo(animal.getId(), changeAnimalForm);
         AbandonedAnimal findAnimal = em.find(AbandonedAnimal.class, animal.getId());
 
@@ -162,6 +167,7 @@ class AbandonedAnimalServiceTest {
     void deleteAnimal() {
         //given
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
+
         em.persist(animal);
 
         //when
@@ -180,6 +186,7 @@ class AbandonedAnimalServiceTest {
         AbandonedAnimal animal = new AbandonedAnimalBuilder().build();
         Donation donation = new DonationBuilder(member, animal).build();
         Adopt adopt = new AdoptBuilder(member, animal).build();
+
         em.persist(member);
 
         //when

@@ -1,6 +1,6 @@
 package com.petmily.domain.dto.application;
 
-import com.petmily.domain.core.enum_type.LocationType;
+import com.petmily.domain.enum_type.LocationType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

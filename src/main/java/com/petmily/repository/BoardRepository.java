@@ -2,7 +2,7 @@ package com.petmily.repository;
 
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.enum_type.BoardType;
+import com.petmily.domain.enum_type.BoardType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

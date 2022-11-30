@@ -9,7 +9,7 @@ import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.application.Donation;
-import com.petmily.domain.core.enum_type.AnimalSpecies;
+import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;

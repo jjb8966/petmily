@@ -1,7 +1,7 @@
 package com.petmily.domain.core;
 
 import com.petmily.domain.builder.BoardBuilder;
-import com.petmily.domain.core.enum_type.BoardType;
+import com.petmily.domain.enum_type.BoardType;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import lombok.AccessLevel;
 import lombok.Getter;

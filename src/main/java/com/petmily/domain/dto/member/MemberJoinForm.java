@@ -1,7 +1,7 @@
 package com.petmily.domain.dto.member;
 
-import com.petmily.domain.core.embeded_type.Email;
-import com.petmily.domain.core.embeded_type.PhoneNumber;
+import com.petmily.domain.embeded_type.Email;
+import com.petmily.domain.embeded_type.PhoneNumber;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,6 +1,6 @@
 package com.petmily.domain.dto.board;
 
-import com.petmily.domain.core.enum_type.BoardType;
+import com.petmily.domain.enum_type.BoardType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

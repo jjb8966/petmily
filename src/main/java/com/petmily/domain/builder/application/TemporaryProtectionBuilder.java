@@ -3,8 +3,8 @@ package com.petmily.domain.builder.application;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.TemporaryProtection;
-import com.petmily.domain.core.enum_type.ApplicationStatus;
-import com.petmily.domain.core.enum_type.LocationType;
+import com.petmily.domain.enum_type.ApplicationStatus;
+import com.petmily.domain.enum_type.LocationType;
 import lombok.Getter;
 
 @Getter

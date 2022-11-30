@@ -2,8 +2,8 @@ package com.petmily.domain.core;
 
 import com.petmily.domain.builder.AbandonedAnimalBuilder;
 import com.petmily.domain.core.application.Application;
-import com.petmily.domain.core.enum_type.AnimalSpecies;
-import com.petmily.domain.core.enum_type.AnimalStatus;
+import com.petmily.domain.enum_type.AnimalSpecies;
+import com.petmily.domain.enum_type.AnimalStatus;
 import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import lombok.AccessLevel;
 import lombok.Getter;

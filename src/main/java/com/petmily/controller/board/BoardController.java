@@ -3,7 +3,7 @@ package com.petmily.controller.board;
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.enum_type.BoardType;
+import com.petmily.domain.enum_type.BoardType;
 import com.petmily.domain.dto.PetmilyPage;
 import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;

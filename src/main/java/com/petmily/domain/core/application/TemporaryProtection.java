@@ -1,7 +1,7 @@
 package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
-import com.petmily.domain.core.enum_type.LocationType;
+import com.petmily.domain.enum_type.LocationType;
 import com.petmily.domain.dto.application.ModifyTempProtectionForm;
 import lombok.AccessLevel;
 import lombok.Getter;

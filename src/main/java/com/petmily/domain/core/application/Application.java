@@ -3,7 +3,7 @@ package com.petmily.domain.core.application;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.enum_type.ApplicationStatus;
+import com.petmily.domain.enum_type.ApplicationStatus;
 import lombok.Getter;
 
 import javax.persistence.*;

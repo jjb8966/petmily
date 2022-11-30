@@ -4,7 +4,7 @@ import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
-import com.petmily.domain.core.enum_type.BoardType;
+import com.petmily.domain.enum_type.BoardType;
 import lombok.Getter;
 
 import java.util.ArrayList;

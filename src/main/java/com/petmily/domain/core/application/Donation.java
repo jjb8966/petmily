@@ -1,8 +1,8 @@
 package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.DonationBuilder;
-import com.petmily.domain.core.embeded_type.AccountNumber;
-import com.petmily.domain.core.enum_type.BankType;
+import com.petmily.domain.embeded_type.AccountNumber;
+import com.petmily.domain.enum_type.BankType;
 import com.petmily.domain.dto.application.ModifyDonationForm;
 import lombok.AccessLevel;
 import lombok.Getter;

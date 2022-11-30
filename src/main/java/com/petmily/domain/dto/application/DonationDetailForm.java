@@ -1,9 +1,9 @@
 package com.petmily.domain.dto.application;
 
-import com.petmily.domain.core.embeded_type.AccountNumber;
-import com.petmily.domain.core.enum_type.AnimalSpecies;
-import com.petmily.domain.core.enum_type.AnimalStatus;
-import com.petmily.domain.core.enum_type.BankType;
+import com.petmily.domain.embeded_type.AccountNumber;
+import com.petmily.domain.enum_type.AnimalSpecies;
+import com.petmily.domain.enum_type.AnimalStatus;
+import com.petmily.domain.enum_type.BankType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

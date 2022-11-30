@@ -1,4 +1,4 @@
-package com.petmily.domain.core.embeded_type;
+package com.petmily.domain.embeded_type;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;

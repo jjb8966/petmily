@@ -1,4 +1,4 @@
-package com.petmily.domain.core.enum_type;
+package com.petmily.domain.enum_type;
 
 public enum BankType {
     KB("국민은행"), IBK("IBK 기업은행"), KEB("KEB 하나은행"), SHINHAN("신한은행"),

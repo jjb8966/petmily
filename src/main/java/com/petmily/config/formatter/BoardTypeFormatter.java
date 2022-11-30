@@ -1,6 +1,6 @@
 package com.petmily.config.formatter;
 
-import com.petmily.domain.core.enum_type.BoardType;
+import com.petmily.domain.enum_type.BoardType;
 import org.springframework.format.Formatter;
 
 import java.text.ParseException;

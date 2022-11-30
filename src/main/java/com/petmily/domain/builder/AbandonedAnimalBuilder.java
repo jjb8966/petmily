@@ -3,8 +3,8 @@ package com.petmily.domain.builder;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.application.Application;
-import com.petmily.domain.core.enum_type.AnimalSpecies;
-import com.petmily.domain.core.enum_type.AnimalStatus;
+import com.petmily.domain.enum_type.AnimalSpecies;
+import com.petmily.domain.enum_type.AnimalStatus;
 import lombok.Getter;
 
 import java.util.ArrayList;

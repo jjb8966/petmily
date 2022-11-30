@@ -3,9 +3,9 @@ package com.petmily.domain.builder.application;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.Donation;
-import com.petmily.domain.core.embeded_type.AccountNumber;
-import com.petmily.domain.core.enum_type.ApplicationStatus;
-import com.petmily.domain.core.enum_type.BankType;
+import com.petmily.domain.embeded_type.AccountNumber;
+import com.petmily.domain.enum_type.ApplicationStatus;
+import com.petmily.domain.enum_type.BankType;
 import lombok.Getter;
 
 @Getter

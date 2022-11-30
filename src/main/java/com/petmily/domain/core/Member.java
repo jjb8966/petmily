@@ -2,9 +2,9 @@ package com.petmily.domain.core;
 
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.application.Application;
-import com.petmily.domain.core.embeded_type.Email;
-import com.petmily.domain.core.embeded_type.PhoneNumber;
-import com.petmily.domain.core.enum_type.MemberGrade;
+import com.petmily.domain.embeded_type.Email;
+import com.petmily.domain.embeded_type.PhoneNumber;
+import com.petmily.domain.enum_type.MemberGrade;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.petmily.domain.core.enum_type;
+package com.petmily.domain.enum_type;
 
 import lombok.Getter;
 

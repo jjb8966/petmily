@@ -1,6 +1,6 @@
 package com.petmily.config.formatter;
 
-import com.petmily.domain.core.embeded_type.AccountNumber;
+import com.petmily.domain.embeded_type.AccountNumber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;

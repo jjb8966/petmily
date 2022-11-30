@@ -63,7 +63,7 @@ public class ApplicationService {
         TemporaryProtection temporaryProtection = new TemporaryProtectionBuilder(member, animal)
                 .setLocation(tempProtectionDto.getLocation())
                 .setJob(tempProtectionDto.getJob())
-                .setMarried(tempProtectionDto.isMarried())
+                .setMarried(tempProtectionDto.getMarried())
                 .setPeriod(tempProtectionDto.getPeriod())
                 .build();
 

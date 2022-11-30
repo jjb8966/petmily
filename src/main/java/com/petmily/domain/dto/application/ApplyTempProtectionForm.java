@@ -19,7 +19,7 @@ public class ApplyTempProtectionForm {
     private String job;
 
     @NotNull
-    private boolean married;
+    private Boolean married;
 
     @NotNull
     @Range(min = 1L, max = 6L)

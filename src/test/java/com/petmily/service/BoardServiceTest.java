@@ -1,174 +1,189 @@
-//package com.petmily.service;
-//
-//import com.petmily.domain.builder.BoardBuilder;
-//import com.petmily.domain.builder.MemberBuilder;
-//import com.petmily.domain.core.Board;
-//import com.petmily.domain.core.Member;
-//import com.petmily.domain.dto.board.ChangeBoardDto;
-//import com.petmily.domain.dto.board.WriteBoardDto;
-//import com.petmily.domain.dto.reply.ReplyDto;
-//import lombok.extern.slf4j.Slf4j;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import javax.persistence.EntityManager;
-//import javax.persistence.PersistenceContext;
-//import java.util.List;
-//
-//import static org.assertj.core.api.Assertions.assertThat;
-//
-//@SpringBootTest
-//@Transactional
-//@Slf4j
-//class BoardServiceTest {
-//
-//    @PersistenceContext
-//    EntityManager em;
-//
-//    @Autowired
-//    MemberService memberService;
-//
-//    @Autowired
-//    BoardService boardService;
-//
-//    @Autowired
-//    ReplyService replyService;
-//
-//    @Test
-//    @DisplayName("게시글을 등록하고 id를 통한 조회를 할 수 있다.")
-//    void write_findOne() {
-//        //given
-//        Member member = new MemberBuilder("memberA", "aaa").build();
-//        memberService.join(member);
-//
-//        WriteBoardDto boardDto = new WriteBoardDto();
-//        boardDto.setTitle("title A");
-//
-//        //when
-//        Long boardId = boardService.write(member.getId(), boardDto);
-//        Board findBoard = boardService.findOne(boardId).orElseThrow();
-//
-//        //then
-//        assertThat(findBoard.getTitle()).isEqualTo("title A");
-//        assertThat(findBoard.getMember()).isEqualTo(member);
-//    }
-//
-//    @Test
-//    @DisplayName("모든 게시글을 조회할 수 있다.")
-//    void findAll() {
-//        //given
-//        Member member = new MemberBuilder("memberA", "aaa").build();
-//        memberService.join(member);
-//
-//        Long a = boardService.write(member.getId(), new WriteBoardDto());
-//        Long b = boardService.write(member.getId(), new WriteBoardDto());
-//        Long c = boardService.write(member.getId(), new WriteBoardDto());
-//        Long d = boardService.write(member.getId(), new WriteBoardDto());
-//
-//        //when
-//        List<Board> allBoards = boardService.findAll();
-//        Board boardA = boardService.findOne(a).orElseThrow();
-//        Board boardB = boardService.findOne(b).orElseThrow();
-//        Board boardC = boardService.findOne(c).orElseThrow();
-//        Board boardD = boardService.findOne(d).orElseThrow();
-//
-//        //then
-//        assertThat(allBoards.size()).isEqualTo(4);
-//        assertThat(allBoards).containsExactly(boardA, boardB, boardC, boardD);
-//    }
-//
-//    @Test
-//    @DisplayName("게시글의 정보를 변경할 수 있다.")
-//    void changeBoardInfo() {
-//        //given
-//        Member member = new MemberBuilder("memberA", "aaa").build();
-//        memberService.join(member);
-//
-//        WriteBoardDto writeBoardDto = new WriteBoardDto();
-//        writeBoardDto.setTitle("A");
-//
-//        Long boardId = boardService.write(member.getId(), writeBoardDto);
-//
-//        ChangeBoardDto changeBoardDto = new ChangeBoardDto();
-//        changeBoardDto.setTitle("B");
-//
-//        //when
-//        boardService.changeBoardInfo(boardId, changeBoardDto);
-//        Board board = boardService.findOne(boardId).orElseThrow();
-//
-//        //then
-//        assertThat(board.getTitle()).isEqualTo("B");
-//    }
-//
-//    @Test
-//    @DisplayName("게시글을 삭제할 수 있다.")
-//    void deleteBoard() {
-//        //given
-//        Member member = new MemberBuilder("memberA", "aaa").build();
-//        memberService.join(member);
-//
-//        Long boardId = boardService.write(member.getId(), new WriteBoardDto());
-//
-//        //when
-//        boardService.deleteBoard(boardId);
-//
-//        //then
-//        assertThat(boardService.findOne(boardId).isEmpty()).isTrue();
-//    }
-//
-//    @Test
-//    @DisplayName("게시글을 삭제하면 게시글에 달린 모든 댓글은 삭제된다.")
-//    void deleteBoard2() {
-//        //given
-//        Member member1 = new MemberBuilder("aaa", "aaa").build();
-//        Member member2 = new MemberBuilder("bbb", "bbb").build();
-//        memberService.join(member1);
-//        memberService.join(member2);
-//
-//        Long boardId = boardService.write(member1.getId(), new WriteBoardDto());
-//
-//        replyService.reply(member1.getId(), boardId, new ReplyDto("1"));
-//        replyService.reply(member2.getId(), boardId, new ReplyDto("2"));
-//        replyService.reply(member1.getId(), boardId, new ReplyDto("3"));
-//
-//        assertThat(replyService.findAll().size()).isEqualTo(3);
-//        assertThat(member1.getReplies().size()).isEqualTo(2);
-//        assertThat(member2.getReplies().get(0).getContent()).isEqualTo("2");
-//
-//        //when
-//        boardService.deleteBoard(boardId);
-//
-//        //then
-//        assertThat(replyService.findAll().size()).isEqualTo(0);
-//        assertThat(replyService.findAll().isEmpty()).isTrue();
-//        assertThat(member1.getReplies().isEmpty()).isTrue();
-//        assertThat(member2.getReplies().isEmpty()).isTrue();
-//    }
-//
-//    @Test
-//    @DisplayName("게시글 작성 시간 및 수정 시간을 추적할 수 있다.")
-//    void auditing() throws InterruptedException {
-//        Member member = new MemberBuilder("memberA", "aaa").build();
-//        memberService.join(member);
-//
-//        Long boardId = boardService.write(member.getId(), new WriteBoardDto());
-//        Board board = boardService.findOne(boardId).get();
-//        log.info("board.getCreatedDate() = {}", board.getCreatedDate());
-//        log.info("board.getLastModifiedDate() = {}", board.getLastModifiedDate());
-//
-//        Thread.sleep(1000);
-//
-//        ChangeBoardDto boardDto = new ChangeBoardDto();
-//        boardDto.setTitle("change");
-//
-//        boardService.changeBoardInfo(boardId, boardDto);
-//
-//        em.flush();
-//
-//        log.info("board.getCreatedDate() = {}", board.getCreatedDate());
-//        log.info("board.getLastModifiedDate() = {}", board.getLastModifiedDate());
-//    }
-//}
+package com.petmily.service;
+
+import com.petmily.domain.builder.BoardBuilder;
+import com.petmily.domain.builder.MemberBuilder;
+import com.petmily.domain.builder.ReplyBuilder;
+import com.petmily.domain.core.Board;
+import com.petmily.domain.core.Member;
+import com.petmily.domain.core.Reply;
+import com.petmily.domain.core.enum_type.BoardType;
+import com.petmily.domain.dto.board.ModifyBoardForm;
+import com.petmily.domain.dto.board.WriteBoardForm;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@Transactional
+@Slf4j
+class BoardServiceTest {
+
+    @PersistenceContext
+    EntityManager em;
+
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    BoardService boardService;
+
+    @Autowired
+    ReplyService replyService;
+
+    @Test
+    @DisplayName("게시글을 등록하고 id를 통한 조회를 할 수 있다.")
+    void write() {
+        //given
+        Member member = new MemberBuilder("member", "123").build();
+        em.persist(member);
+
+        //when
+        WriteBoardForm writeBoardForm = new WriteBoardForm();
+        writeBoardForm.setTitle("title");
+        writeBoardForm.setContent("content");
+        writeBoardForm.setShownAll(true);
+
+        Long boardId = boardService.write(member.getId(), BoardType.FREE, writeBoardForm);
+        Board findBoard = em.find(Board.class, boardId);
+
+        //then
+        assertThat(findBoard.getTitle()).isEqualTo(writeBoardForm.getTitle());
+        assertThat(findBoard.getContent()).isEqualTo(writeBoardForm.getContent());
+        assertThat(findBoard.getShownAll()).isEqualTo(writeBoardForm.getShownAll());
+    }
+
+    @Test
+    @DisplayName("게시글을 조회할 수 있다.")
+    void findOne() {
+        //given
+        Member member = new MemberBuilder("member", "123").build();
+        Board board = new BoardBuilder(member, BoardType.FREE).setTitle("title").build();
+        em.persist(member);
+
+        //when
+        Optional<Board> findBoardOptional = boardService.findOne(board.getId());
+
+        //then
+        assertThat(findBoardOptional.isPresent()).isTrue();
+        assertThat(findBoardOptional.get().getTitle()).isEqualTo(board.getTitle());
+    }
+
+    @Test
+    @DisplayName("모든 게시글을 조회할 수 있다.")
+    void findAll() {
+        //given
+        Member memberA = new MemberBuilder("memberA", "123").build();
+        Member memberB = new MemberBuilder("memberB", "123").build();
+        Board boardA = new BoardBuilder(memberA, BoardType.FREE).setTitle("titleA").build();
+        Board boardB = new BoardBuilder(memberA, BoardType.FREE).setTitle("titleB").build();
+        Board boardC = new BoardBuilder(memberB, BoardType.FREE).setTitle("titleC").build();
+
+        em.persist(memberA);
+        em.persist(memberB);
+
+        //when
+        List<Board> allBoards = boardService.findAll();
+
+        //then
+        assertThat(allBoards).hasSize(3);
+        assertThat(allBoards).containsExactly(boardA, boardB, boardC);
+    }
+
+    @Test
+    @DisplayName("특정 회원의 전체 게시글을 조회할 수 있다.")
+    void findAll_about_member() {
+        //given
+        Member memberA = new MemberBuilder("memberA", "123").build();
+        Member memberB = new MemberBuilder("memberB", "123").build();
+        Board boardA = new BoardBuilder(memberA, BoardType.FREE).setTitle("titleA").build();
+        Board boardB = new BoardBuilder(memberA, BoardType.FREE).setTitle("titleB").build();
+        Board boardC = new BoardBuilder(memberB, BoardType.FREE).setTitle("titleC").build();
+
+        em.persist(memberA);
+        em.persist(memberB);
+
+        //when
+        List<Board> allBoardsAboutMemberA = boardService.findAll(memberA);
+
+        //then
+        assertThat(allBoardsAboutMemberA).hasSize(2);
+        assertThat(allBoardsAboutMemberA).containsExactly(boardA, boardB);
+    }
+
+    @Test
+    @DisplayName("게시글의 정보를 변경할 수 있다.")
+    void changeBoardInfo() {
+        //given
+        Member member = new MemberBuilder("member", "123").build();
+        Board board = new BoardBuilder(member, BoardType.FREE)
+                .setTitle("titleA")
+                .setContent("contentA")
+                .setShownAll(true)
+                .build();
+
+        em.persist(member);
+
+        //when
+        ModifyBoardForm modifyBoardForm = new ModifyBoardForm();
+        modifyBoardForm.setTitle("titleB");
+        modifyBoardForm.setContent("contentB");
+        modifyBoardForm.setShownAll(false);
+
+        boardService.modifyBoardInfo(board.getId(), modifyBoardForm);
+        Board findBoard = em.find(Board.class, board.getId());
+
+        //then
+        assertThat(findBoard.getTitle()).isEqualTo(modifyBoardForm.getTitle());
+        assertThat(findBoard.getContent()).isEqualTo(modifyBoardForm.getContent());
+        assertThat(findBoard.getShownAll()).isEqualTo(modifyBoardForm.getShownAll());
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제할 수 있다.")
+    void deleteBoard() {
+        //given
+        Member member = new MemberBuilder("member", "123").build();
+        Board board = new BoardBuilder(member, BoardType.FREE).build();
+
+        em.persist(member);
+
+        //when
+        boardService.deleteBoard(board.getId());
+        Board findBoard = em.find(Board.class, board.getId());
+
+        //then
+        assertThat(findBoard).isNull();
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제하면 게시글에 달린 모든 댓글은 삭제된다.")
+    void deleteBoard_with_reply() {
+        //given
+        Member memberA = new MemberBuilder("memberA", "123").build();
+        Member memberB = new MemberBuilder("memberB", "123").build();
+        Board board = new BoardBuilder(memberA, BoardType.FREE).build();
+        Reply replyA = new ReplyBuilder(memberA, board).setContent("replyA").build();
+        Reply replyB = new ReplyBuilder(memberB, board).setContent("replyB").build();
+
+        em.persist(memberA);
+
+        //when
+        boardService.deleteBoard(board.getId());
+        Reply findReplyA = em.find(Reply.class, replyA.getId());
+        Reply findReplyB = em.find(Reply.class, replyB.getId());
+
+        //then
+        assertThat(findReplyA).isNull();
+        assertThat(findReplyB).isNull();
+    }
+}

@@ -3,7 +3,6 @@ package com.petmily.controller.board;
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.enum_type.BoardType;
 import com.petmily.domain.dto.PetmilyPage;
 import com.petmily.domain.dto.board.BoardDetailForm;
@@ -188,37 +187,6 @@ public class BoardController {
         redirectAttributes.addAttribute("id", id);
 
         return "redirect:/board/{boardType}/list";
-    }
-
-    @PostMapping("/board/{boardType}/auth/reply/{id}")
-    public String reply(@PathVariable BoardType boardType,
-                        @PathVariable Long boardId,
-                        @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
-                        @ModelAttribute WriteReplyForm form,
-                        Model model) {
-
-        log.info("board type = {}, id = {}", boardType, boardId);
-
-        Board board = boardService.findOne(boardId)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
-
-        BoardDetailForm boardForm = boardDtoConverter.entityToDto(board, BoardDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
-
-        Long replyId = replyService.reply(loginMember.getId(), boardId, form);
-
-        Reply reply = replyService.findOne(replyId)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.reply.null")));
-
-        log.info("댓글 작성 완료 {}", reply);
-
-        List<Reply> replies = replyService.findAll();
-
-        model.addAttribute("boardType", boardType.name().toLowerCase());
-        model.addAttribute("board", boardForm);
-        model.addAttribute("replies", replies);
-
-        return "redirect:/board/{boardType}/detail/{id}";
     }
 
     @PostMapping("/board/{boardType}/{boardId}/auth/reply/write")

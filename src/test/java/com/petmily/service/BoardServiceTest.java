@@ -41,7 +41,7 @@ class BoardServiceTest {
     ReplyService replyService;
 
     @Test
-    @DisplayName("게시글을 등록하고 id를 통한 조회를 할 수 있다.")
+    @DisplayName("게시글을 등록할 수 있다.")
     void write() {
         //given
         Member member = new MemberBuilder("member", "123").build();

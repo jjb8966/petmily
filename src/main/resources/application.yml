@@ -1,9 +1,14 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/petmily
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/Users/joojongbum/oracle_db/Wallet_petmily/
+    username: ADMIN
+    password: PetmilyProject123!
+  #    driver-class-name: org.h2.Driver
+  #    url: jdbc:h2:tcp://localhost/~/petmily
+  #    username: sa
+  #    password:
+
 
   jpa:
     hibernate:

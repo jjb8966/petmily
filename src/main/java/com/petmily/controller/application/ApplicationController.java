@@ -56,7 +56,7 @@ public class ApplicationController {
         model.addAttribute("animalName", abandonedAnimalRepository.findName(id));
         model.addAttribute("donationDto", donationDto);
 
-        return "/view/abandoned_animal/donation_form";
+        return "view/abandoned_animal/donation_form";
     }
 
     @PostMapping("/abandoned_animal/auth/donate/{id}")
@@ -72,7 +72,7 @@ public class ApplicationController {
             log.info("error {}", bindingResult.getAllErrors());
             model.addAttribute("animalName", abandonedAnimalRepository.findName(animalId));
 
-            return "/view/abandoned_animal/donation_form";
+            return "view/abandoned_animal/donation_form";
         }
 
         Long donateId = applicationService.donate(loginMember.getId(), animalId, donationDto);
@@ -81,7 +81,7 @@ public class ApplicationController {
 
         log.info("후원 신청 완료 {}", donation);
 
-        return "/view/abandoned_animal/submit_success";
+        return "view/abandoned_animal/submit_success";
     }
 
     @GetMapping("/abandoned_animal/auth/tempProtect/{id}")
@@ -94,7 +94,7 @@ public class ApplicationController {
         model.addAttribute("animalName", abandonedAnimalRepository.findName(id));
         model.addAttribute("tempProtectionDto", tempProtectionDto);
 
-        return "/view/abandoned_animal/temp_protection_form";
+        return "view/abandoned_animal/temp_protection_form";
     }
 
     @PostMapping("/abandoned_animal/auth/tempProtect/{id}")
@@ -110,7 +110,7 @@ public class ApplicationController {
             log.info("error {}", bindingResult.getAllErrors());
             model.addAttribute("animalName", abandonedAnimalRepository.findName(animalId));
 
-            return "/view/abandoned_animal/temp_protection_form";
+            return "view/abandoned_animal/temp_protection_form";
         }
 
         Long tempProtectId = applicationService.tempProtect(loginMember.getId(), animalId, tempProtectionDto);
@@ -119,7 +119,7 @@ public class ApplicationController {
 
         log.info("임시보호 신청 완료 {}", temporaryProtection);
 
-        return "/view/abandoned_animal/submit_success";
+        return "view/abandoned_animal/submit_success";
     }
 
     @GetMapping("/abandoned_animal/auth/adopt/{id}")
@@ -132,7 +132,7 @@ public class ApplicationController {
         model.addAttribute("animalName", abandonedAnimalRepository.findName(id));
         model.addAttribute("adoptDto", adoptDto);
 
-        return "/view/abandoned_animal/adopt_form";
+        return "view/abandoned_animal/adopt_form";
     }
 
     @PostMapping("/abandoned_animal/auth/adopt/{id}")
@@ -148,7 +148,7 @@ public class ApplicationController {
             log.info("error {}", bindingResult.getAllErrors());
             model.addAttribute("animalName", abandonedAnimalRepository.findName(animalId));
 
-            return "/view/abandoned_animal/adopt_form";
+            return "view/abandoned_animal/adopt_form";
         }
 
         Long adoptId = applicationService.adopt(loginMember.getId(), animalId, adoptDto);
@@ -157,7 +157,7 @@ public class ApplicationController {
 
         log.info("입양 신청 완료 {}", adopt);
 
-        return "/view/abandoned_animal/submit_success";
+        return "view/abandoned_animal/submit_success";
     }
 
     @GetMapping("/member/auth/application/list")
@@ -173,7 +173,7 @@ public class ApplicationController {
 
         model.addAttribute("forms", forms);
 
-        return "/view/member/application_list";
+        return "view/member/application_list";
     }
 
     @GetMapping("/member/auth/application/detail/{appType}/{appId}")
@@ -200,7 +200,7 @@ public class ApplicationController {
 
         model.addAttribute("appType", appType);
 
-        return "/view/member/application_detail_form";
+        return "view/member/application_detail_form";
     }
 
     private DonationDetailForm getDonationDetailForm(Long appId) {
@@ -250,7 +250,7 @@ public class ApplicationController {
             log.info("form = {}", form);
         }
 
-        return "/view/member/application_modify_form";
+        return "view/member/application_modify_form";
     }
 
     @PostMapping("/member/auth/application/modify/Donation/{appId}")
@@ -268,7 +268,7 @@ public class ApplicationController {
             log.error("error {}", bindingResult.getAllErrors());
             model.addAttribute("appType", "Donation");
 
-            return "/view/member/application_modify_form";
+            return "view/member/application_modify_form";
         }
 
         ModifyDonationForm modifyForm = new ModifyDonationForm(form);
@@ -292,7 +292,7 @@ public class ApplicationController {
             log.error("error {}", bindingResult.getAllErrors());
             model.addAttribute("appType", "TemporaryProtection");
 
-            return "/view/member/application_modify_form";
+            return "view/member/application_modify_form";
         }
 
         ModifyTempProtectionForm modifyForm = new ModifyTempProtectionForm(form);
@@ -316,7 +316,7 @@ public class ApplicationController {
             log.error("error {}", bindingResult.getAllErrors());
             model.addAttribute("appType", "Adopt");
 
-            return "/view/member/application_modify_form";
+            return "view/member/application_modify_form";
         }
 
         ModifyAdoptForm modifyForm = new ModifyAdoptForm(form);

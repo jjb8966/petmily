@@ -71,7 +71,7 @@ public class BoardController {
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("boardPage", boardPage);
 
-        return "/view/board/board_list";
+        return "view/board/board_list";
     }
 
     @GetMapping("/board/{boardType}/detail/{boardId}")
@@ -91,7 +91,7 @@ public class BoardController {
         model.addAttribute("board", boardForm);
         model.addAttribute("writeReplyForm", new WriteReplyForm());
 
-        return "/view/board/detail_form";
+        return "view/board/detail_form";
     }
 
     @GetMapping("/board/{boardType}/auth/write")
@@ -101,7 +101,7 @@ public class BoardController {
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("form", new WriteBoardForm());
 
-        return "/view/board/write_form";
+        return "view/board/write_form";
     }
 
     @PostMapping("/board/{boardType}/auth/write")
@@ -115,7 +115,7 @@ public class BoardController {
 
         if (bindingResult.hasErrors()) {
             log.info("게시글 작성 실패 {}", bindingResult.getAllErrors());
-            return "/view/board/write_form";
+            return "view/board/write_form";
         }
 
         Long boardId = boardService.write(loginMember.getId(), boardType, form);
@@ -143,7 +143,7 @@ public class BoardController {
         model.addAttribute("id", id);
         model.addAttribute("form", boardForm);
 
-        return "/view/board/modify_form";
+        return "view/board/modify_form";
     }
 
     @PostMapping("/board/{boardType}/auth/modify/{id}")
@@ -158,7 +158,7 @@ public class BoardController {
 
         if (bindingResult.hasErrors()) {
             log.info("게시글 수정 실패 {}", bindingResult.getAllErrors());
-            return "/view/board/modify_form";
+            return "view/board/modify_form";
         }
 
         boardService.modifyBoardInfo(id, form);
@@ -241,7 +241,7 @@ public class BoardController {
 
         model.addAttribute("forms", forms);
 
-        return "/view/member/board_list";
+        return "view/member/board_list";
     }
 
     private String getMessage(String code) {

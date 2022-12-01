@@ -54,7 +54,7 @@ public class AbandonedAnimalController {
 
         model.addAttribute("animalPage", animalPage);
 
-        return "/view/abandoned_animal/animal_list";
+        return "view/abandoned_animal/animal_list";
     }
 
     @GetMapping("/detail/{id}")
@@ -69,7 +69,7 @@ public class AbandonedAnimalController {
 
         model.addAttribute("animal", animalForm);
 
-        return "/view/abandoned_animal/detail_form";
+        return "view/abandoned_animal/detail_form";
     }
 
     private String getMessage(String code) {

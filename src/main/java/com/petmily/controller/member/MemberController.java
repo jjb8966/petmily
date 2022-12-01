@@ -37,7 +37,7 @@ public class MemberController {
     @GetMapping("/login")
     public String loginForm(Model model) {
         model.addAttribute("loginForm", new LoginForm());
-        return "/view/member/login_form";
+        return "view/member/login_form";
     }
 
     @PostMapping("/login")
@@ -51,14 +51,14 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             log.info("error = {}", bindingResult.getAllErrors());
 
-            return "/view/member/login_form";
+            return "view/member/login_form";
         }
 
         Optional<Member> loginMember = memberService.login(loginForm);
 
         if (loginMember.isEmpty()) {
             bindingResult.reject("loginFail");
-            return "/view/member/login_form";
+            return "view/member/login_form";
         }
 
         session.setAttribute(SessionConstant.LOGIN_MEMBER, loginMember.get());
@@ -80,7 +80,7 @@ public class MemberController {
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("form", new MemberJoinForm());
-        return "/view/member/join_form";
+        return "view/member/join_form";
     }
 
     @PostMapping("/join")
@@ -89,7 +89,7 @@ public class MemberController {
 
         if (bindingResult.hasErrors()) {
             log.info("회원가입 실패 {}", bindingResult.getAllErrors());
-            return "/view/member/join_form";
+            return "view/member/join_form";
         }
 
         try {
@@ -98,12 +98,12 @@ public class MemberController {
             log.info("PasswordMismatchException 발생", e);
             bindingResult.reject("passwordMismatch");
 
-            return "/view/member/join_form";
+            return "view/member/join_form";
         } catch (DuplicateLoginIdException e) {
             log.info("DuplicateLoginIdException 발생", e);
             bindingResult.reject("duplicateLoginId");
 
-            return "/view/member/join_form";
+            return "view/member/join_form";
         }
 
         return "redirect:/login";
@@ -111,7 +111,7 @@ public class MemberController {
 
     @GetMapping("/member/auth/mypage")
     public String mypage() {
-        return "/view/member/mypage";
+        return "view/member/mypage";
     }
 
     @GetMapping("/member/auth/modify")
@@ -126,7 +126,7 @@ public class MemberController {
 
         model.addAttribute("modifyMemberForm", modifyMemberForm);
 
-        return "/view/member/modify_form";
+        return "view/member/modify_form";
     }
 
     @PostMapping("/member/auth/modify")
@@ -136,7 +136,7 @@ public class MemberController {
 
         if (bindingResult.hasErrors()) {
             log.info("회원정보 변경 실패 {}", bindingResult.getAllErrors());
-            return "/view/member/modify_form";
+            return "view/member/modify_form";
         }
 
         Member loginMember = (Member) session.getAttribute(SessionConstant.LOGIN_MEMBER);
@@ -154,7 +154,7 @@ public class MemberController {
     @GetMapping("/member/auth/withdraw")
     public String withdrawForm(Model model) {
         model.addAttribute("withdrawMemberForm", new WithdrawMemberForm());
-        return "/view/member/withdraw_form";
+        return "view/member/withdraw_form";
     }
 
     @PostMapping("/member/auth/withdraw")
@@ -168,7 +168,7 @@ public class MemberController {
 
         if (bindingResult.hasErrors()) {
             log.info("회원 탈퇴 실패 {}", bindingResult.getAllErrors());
-            return "/view/member/withdraw_form";
+            return "view/member/withdraw_form";
         }
 
         try {
@@ -178,12 +178,12 @@ public class MemberController {
             log.info("PasswordMismatchException 발생", e);
             bindingResult.reject("passwordMismatch");
 
-            return "/view/member/withdraw_form";
+            return "view/member/withdraw_form";
         } catch (PasswordIncorrectException e) {
             log.info("PasswordIncorrectException 발생", e);
             bindingResult.reject("incorrectPassword");
 
-            return "/view/member/withdraw_form";
+            return "view/member/withdraw_form";
         }
 
         log.info("회원 탈퇴 성공");

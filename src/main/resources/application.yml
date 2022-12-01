@@ -18,6 +18,9 @@ spring:
         #        -> system.out
         format_sql: true
 
+  thymeleaf:
+    prefix: classpath:/templates/
+
   messages:
     basename: messages, errors, exception
 

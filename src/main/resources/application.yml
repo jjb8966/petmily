@@ -37,4 +37,4 @@ server:
       timeout: 1800
 
 file:
-  dir: /Users/joojongbum/store_image/
+  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/

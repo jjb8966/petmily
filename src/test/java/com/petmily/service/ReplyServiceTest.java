@@ -1,6 +1,6 @@
 package com.petmily.service;
 
-import com.petmily.domain.builder.BoardBuilder;
+import com.petmily.domain.builder.board.BoardBuilder;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.builder.ReplyBuilder;
 import com.petmily.domain.core.Member;

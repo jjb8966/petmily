@@ -1,12 +1,14 @@
 package com.petmily.config;
 
 import com.petmily.domain.builder.AbandonedAnimalBuilder;
-import com.petmily.domain.builder.BoardBuilder;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.builder.PictureBuilder;
 import com.petmily.domain.builder.application.AdoptBuilder;
 import com.petmily.domain.builder.application.DonationBuilder;
 import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
+import com.petmily.domain.builder.board.BoardBuilder;
+import com.petmily.domain.builder.board.FindBoardBuilder;
+import com.petmily.domain.builder.board.WatchBoardBuilder;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
@@ -104,7 +106,7 @@ public class InitDB {
 
                         new BoardBuilder(member, BoardType.FREE)
                                 .setShownAll(false)
-                                .setTitle("board 비공개" + i)
+                                .setTitle("board 비공개 " + i)
                                 .setContent("content" + i)
                                 .build();
                     }
@@ -126,22 +128,26 @@ public class InitDB {
                     }
 
                     if (i % 5 == 3) {
-                        new BoardBuilder(member, BoardType.FIND)
+                        new FindBoardBuilder(member, BoardType.FIND)
                                 .setShownAll(true)
                                 .setTitle("board" + i)
                                 .setContent("content" + i)
-                                .setFindOrWatchTime(LocalDateTime.now())
+                                .setLostTime(LocalDateTime.now())
                                 .setSpecies(AnimalSpecies.CAT)
+                                .setAnimalName("야옹이")
+                                .setAnimalKind("페르시안")
+                                .setAnimalAge(i % 10)
+                                .setAnimalWeight((float) (i % 5))
                                 .build();
                     }
 
                     if (i % 5 == 4) {
-                        new BoardBuilder(member, BoardType.WATCH)
+                        new WatchBoardBuilder(member, BoardType.WATCH)
                                 .setShownAll(true)
                                 .setTitle("board" + i)
                                 .setContent("content" + i)
-                                .setFindOrWatchTime(LocalDateTime.now())
-                                .setSpecies(AnimalSpecies.CAT)
+                                .setWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.DOG)
                                 .build();
                     }
                 }

@@ -1,31 +1,25 @@
-package com.petmily.domain.builder;
+package com.petmily.domain.builder.board;
 
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.board.Board;
-import com.petmily.domain.core.board.FindBoard;
-import com.petmily.domain.core.board.WatchBoard;
-import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.BoardType;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class BoardBuilder {
 
-    private Member member;
-    private List<Reply> replies = new ArrayList<>();
-    private List<Picture> pictures = new ArrayList<>();
-    private BoardType boardType;
-    private String title;
-    private String content;
-    private boolean shownAll = true;
-    private LocalDateTime findOrWatchTime;
-    private AnimalSpecies species;
+    protected Member member;
+    protected List<Reply> replies = new ArrayList<>();
+    protected List<Picture> pictures = new ArrayList<>();
+    protected BoardType boardType;
+    protected String title;
+    protected String content;
+    protected Boolean shownAll = true;
 
     public BoardBuilder(Member member, BoardType boardType) {
         this.member = member;
@@ -33,15 +27,7 @@ public class BoardBuilder {
     }
 
     public Board build() {
-        Board board = null;
-
-        if (boardType.equals(BoardType.FIND)) {
-            board = new FindBoard(this);
-        } else if (boardType.equals(BoardType.WATCH)) {
-            board = new WatchBoard(this);
-        } else {
-            board = new Board(this);
-        }
+        Board board = new Board(this);
 
         // 연관관계 최신화
         member.getBoards().add(board);
@@ -74,13 +60,4 @@ public class BoardBuilder {
         return this;
     }
 
-    public BoardBuilder setFindOrWatchTime(LocalDateTime findOrWatchTime) {
-        this.findOrWatchTime = findOrWatchTime;
-        return this;
-    }
-
-    public BoardBuilder setSpecies(AnimalSpecies species) {
-        this.species = species;
-        return this;
-    }
 }

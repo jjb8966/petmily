@@ -1,6 +1,6 @@
 package com.petmily.domain.core.board;
 
-import com.petmily.domain.builder.BoardBuilder;
+import com.petmily.domain.builder.board.BoardBuilder;
 import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
@@ -52,7 +52,7 @@ public class Board extends BaseEntity {
         this.boardType = builder.getBoardType();
         this.title = builder.getTitle();
         this.content = builder.getContent();
-        this.shownAll = builder.isShownAll();
+        this.shownAll = builder.getShownAll();
     }
 
     public void changeInfo(ModifyBoardForm from) {

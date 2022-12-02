@@ -1,6 +1,6 @@
 package com.petmily.domain.core.board;
 
-import com.petmily.domain.builder.BoardBuilder;
+import com.petmily.domain.builder.board.FindBoardBuilder;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,12 +14,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FindBoard extends Board {
 
-    private LocalDateTime findTime;
+    private LocalDateTime lostTime;
     private AnimalSpecies species;
+    private String animalName;
+    private String animalKind;
+    private Integer animalAge;
+    private Float animalWeight;
 
-    public FindBoard(BoardBuilder builder) {
+    public FindBoard(FindBoardBuilder builder) {
         super(builder);
-        this.findTime = builder.getFindOrWatchTime();
+        this.lostTime = builder.getLostTime();
         this.species = builder.getSpecies();
+        this.animalName = builder.getAnimalName();
+        this.animalKind = builder.getAnimalKind();
+        this.animalAge = builder.getAnimalAge();
+        this.animalWeight = builder.getAnimalWeight();
     }
+
 }

@@ -1,6 +1,6 @@
 package com.petmily.domain.core.board;
 
-import com.petmily.domain.builder.BoardBuilder;
+import com.petmily.domain.builder.board.WatchBoardBuilder;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,9 +17,9 @@ public class WatchBoard extends Board {
     private LocalDateTime watchTime;
     private AnimalSpecies species;
 
-    public WatchBoard(BoardBuilder builder) {
+    public WatchBoard(WatchBoardBuilder builder) {
         super(builder);
-        this.watchTime = builder.getFindOrWatchTime();
+        this.watchTime = builder.getWatchTime();
         this.species = builder.getSpecies();
     }
 }

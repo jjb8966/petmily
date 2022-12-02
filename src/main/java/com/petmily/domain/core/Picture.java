@@ -1,6 +1,7 @@
 package com.petmily.domain.core;
 
 import com.petmily.domain.builder.PictureBuilder;
+import com.petmily.domain.core.board.Board;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

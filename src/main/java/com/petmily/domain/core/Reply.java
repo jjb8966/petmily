@@ -1,6 +1,7 @@
 package com.petmily.domain.core;
 
 import com.petmily.domain.builder.ReplyBuilder;
+import com.petmily.domain.core.board.Board;
 import com.petmily.domain.dto.reply.ChangeReplyForm;
 import lombok.AccessLevel;
 import lombok.Getter;

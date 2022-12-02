@@ -5,7 +5,7 @@ import com.petmily.domain.builder.BoardBuilder;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.builder.ReplyBuilder;
 import com.petmily.domain.builder.application.AdoptBuilder;
-import com.petmily.domain.core.Board;
+import com.petmily.domain.core.board.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.application.Adopt;

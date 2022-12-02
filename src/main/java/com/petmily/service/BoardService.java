@@ -1,11 +1,11 @@
 package com.petmily.service;
 
 import com.petmily.domain.builder.BoardBuilder;
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.enum_type.BoardType;
+import com.petmily.domain.core.board.Board;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
+import com.petmily.domain.enum_type.BoardType;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

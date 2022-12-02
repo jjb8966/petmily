@@ -1,8 +1,8 @@
 package com.petmily.domain.builder;
 
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
+import com.petmily.domain.core.board.Board;
 import lombok.Getter;
 
 @Getter

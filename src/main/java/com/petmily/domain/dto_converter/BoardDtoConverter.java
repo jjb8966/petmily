@@ -1,9 +1,9 @@
 package com.petmily.domain.dto_converter;
 
 import com.petmily.domain.core.BaseEntity;
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
+import com.petmily.domain.core.board.Board;
 import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -94,7 +95,7 @@ public class InitDB {
 
             for (Member member : allMembers) {
                 for (int i = 0; i < 6; i++) {
-                    if (i % 3 == 0) {
+                    if (i % 5 == 0) {
                         new BoardBuilder(member, BoardType.FREE)
                                 .setShownAll(true)
                                 .setTitle("board" + i)
@@ -108,7 +109,7 @@ public class InitDB {
                                 .build();
                     }
 
-                    if (i % 3 == 1) {
+                    if (i % 5 == 1) {
                         new BoardBuilder(member, BoardType.INQUIRY)
                                 .setShownAll(true)
                                 .setTitle("board" + i)
@@ -116,11 +117,31 @@ public class InitDB {
                                 .build();
                     }
 
-                    if (i % 3 == 2) {
+                    if (i % 5 == 2) {
                         new BoardBuilder(member, BoardType.ADOPT_REVIEW)
                                 .setShownAll(true)
                                 .setTitle("board" + i)
                                 .setContent("content" + i)
+                                .build();
+                    }
+
+                    if (i % 5 == 3) {
+                        new BoardBuilder(member, BoardType.FIND)
+                                .setShownAll(true)
+                                .setTitle("board" + i)
+                                .setContent("content" + i)
+                                .setFindOrWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.CAT)
+                                .build();
+                    }
+
+                    if (i % 5 == 4) {
+                        new BoardBuilder(member, BoardType.WATCH)
+                                .setShownAll(true)
+                                .setTitle("board" + i)
+                                .setContent("content" + i)
+                                .setFindOrWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.CAT)
                                 .build();
                     }
                 }

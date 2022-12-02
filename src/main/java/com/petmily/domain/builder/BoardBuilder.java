@@ -1,12 +1,16 @@
 package com.petmily.domain.builder;
 
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
+import com.petmily.domain.core.board.Board;
+import com.petmily.domain.core.board.FindBoard;
+import com.petmily.domain.core.board.WatchBoard;
+import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.BoardType;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +24,8 @@ public class BoardBuilder {
     private String title;
     private String content;
     private boolean shownAll = true;
+    private LocalDateTime findOrWatchTime;
+    private AnimalSpecies species;
 
     public BoardBuilder(Member member, BoardType boardType) {
         this.member = member;
@@ -27,7 +33,15 @@ public class BoardBuilder {
     }
 
     public Board build() {
-        Board board = new Board(this);
+        Board board = null;
+
+        if (boardType.equals(BoardType.FIND)) {
+            board = new FindBoard(this);
+        } else if (boardType.equals(BoardType.WATCH)) {
+            board = new WatchBoard(this);
+        } else {
+            board = new Board(this);
+        }
 
         // 연관관계 최신화
         member.getBoards().add(board);
@@ -57,6 +71,16 @@ public class BoardBuilder {
 
     public BoardBuilder setShownAll(boolean shownAll) {
         this.shownAll = shownAll;
+        return this;
+    }
+
+    public BoardBuilder setFindOrWatchTime(LocalDateTime findOrWatchTime) {
+        this.findOrWatchTime = findOrWatchTime;
+        return this;
+    }
+
+    public BoardBuilder setSpecies(AnimalSpecies species) {
+        this.species = species;
         return this;
     }
 }

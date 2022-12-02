@@ -1,7 +1,7 @@
 package com.petmily.repository;
 
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
+import com.petmily.domain.core.board.Board;
 import com.petmily.domain.enum_type.BoardType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,8 +1,8 @@
 package com.petmily.service;
 
 import com.petmily.domain.builder.PictureBuilder;
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Picture;
+import com.petmily.domain.core.board.Board;
 import com.petmily.repository.PictureRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

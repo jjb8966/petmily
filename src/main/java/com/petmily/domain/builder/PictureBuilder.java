@@ -1,8 +1,8 @@
 package com.petmily.domain.builder;
 
 import com.petmily.domain.core.AbandonedAnimal;
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Picture;
+import com.petmily.domain.core.board.Board;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,9 +1,8 @@
 package com.petmily.controller.board;
 
 import com.petmily.controller.SessionConstant;
-import com.petmily.domain.core.Board;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.enum_type.BoardType;
+import com.petmily.domain.core.board.Board;
 import com.petmily.domain.dto.PetmilyPage;
 import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;
@@ -11,6 +10,7 @@ import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
 import com.petmily.domain.dto.reply.WriteReplyForm;
 import com.petmily.domain.dto_converter.BoardDtoConverter;
+import com.petmily.domain.enum_type.BoardType;
 import com.petmily.repository.BoardRepository;
 import com.petmily.service.BoardService;
 import com.petmily.service.PictureService;

@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @ToString
 public class BoardListForm {
 
-    private Long id;
-    private Long memberId;
-    private String writerName;
-    private String title;
-    private LocalDateTime createdDate;
-    private Boolean shownAll;
-    private BoardType boardType;
+    protected Long id;
+    protected Long memberId;
+    protected String writerName;
+    protected String title;
+    protected LocalDateTime createdDate;
+    protected Boolean shownAll;
+    protected BoardType boardType;
 }

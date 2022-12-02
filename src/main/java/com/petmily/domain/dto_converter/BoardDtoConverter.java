@@ -4,9 +4,12 @@ import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.board.Board;
+import com.petmily.domain.core.board.FindBoard;
+import com.petmily.domain.core.board.WatchBoard;
 import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;
+import com.petmily.domain.dto.board.find_watch.FindWatchBoardListForm;
 import com.petmily.domain.dto.picutre.BoardPictureForm;
 import com.petmily.domain.dto.reply.ReplyDetailForm;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +43,46 @@ public class BoardDtoConverter implements EntityDtoConverter {
             dto = (T) convertToModifyBoardForm(board);
         }
 
+        if (dtoType.isAssignableFrom(FindWatchBoardListForm.class)) {
+            log.info("Board -> FindWatchBoardDetailForm");
+            dto = (T) convertToFindWatchBoardListForm(board);
+        }
+
         return Optional.ofNullable(dto);
+    }
+
+    private FindWatchBoardListForm convertToFindWatchBoardListForm(Board board) {
+        FindWatchBoardListForm findWatchBoardListForm = new FindWatchBoardListForm();
+
+        findWatchBoardListForm.setId(board.getId());
+        findWatchBoardListForm.setMemberId(board.getMember().getId());
+        findWatchBoardListForm.setWriterName(board.getMember().getName());
+        findWatchBoardListForm.setTitle(board.getTitle());
+        findWatchBoardListForm.setCreatedDate(board.getCreatedDate());
+        findWatchBoardListForm.setShownAll(board.getShownAll());
+        findWatchBoardListForm.setBoardType(board.getBoardType());
+
+        if (board instanceof FindBoard) {
+            FindBoard findBoard = (FindBoard) board;
+            findWatchBoardListForm.setLostOrWatchTime(findBoard.getLostTime());
+            findWatchBoardListForm.setSpecies(findBoard.getSpecies());
+
+            if (!findBoard.getPictures().isEmpty()) {
+                findWatchBoardListForm.setThumbnail(findBoard.getPictures().get(0));
+            }
+        }
+
+        if (board instanceof WatchBoard) {
+            WatchBoard watchBoard = (WatchBoard) board;
+            findWatchBoardListForm.setLostOrWatchTime(watchBoard.getWatchTime());
+            findWatchBoardListForm.setSpecies(watchBoard.getSpecies());
+
+            if (!watchBoard.getPictures().isEmpty()) {
+                findWatchBoardListForm.setThumbnail(watchBoard.getPictures().get(0));
+            }
+        }
+
+        return findWatchBoardListForm;
     }
 
     private BoardListForm convertToBoardListForm(Board board) {

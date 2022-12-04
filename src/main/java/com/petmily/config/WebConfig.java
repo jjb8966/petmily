@@ -1,9 +1,6 @@
 package com.petmily.config;
 
-import com.petmily.config.formatter.AccountNumberFormatter;
-import com.petmily.config.formatter.BoardTypeFormatter;
-import com.petmily.config.formatter.EmailFormatter;
-import com.petmily.config.formatter.PhoneNumberFormatter;
+import com.petmily.config.formatter.*;
 import com.petmily.config.interceptor.LoginInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -24,6 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addFormatter(new PhoneNumberFormatter(ms));
         registry.addFormatter(new EmailFormatter());
         registry.addFormatter(new AccountNumberFormatter(ms));
+        registry.addFormatter(new AnimalSpeciesFormatter());
     }
 
     @Override

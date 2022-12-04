@@ -11,7 +11,8 @@ import com.petmily.domain.builder.board.FindBoardBuilder;
 import com.petmily.domain.builder.board.WatchBoardBuilder;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.Picture;
+import com.petmily.domain.core.board.FindBoard;
+import com.petmily.domain.core.board.WatchBoard;
 import com.petmily.domain.embeded_type.AccountNumber;
 import com.petmily.domain.embeded_type.Email;
 import com.petmily.domain.embeded_type.PhoneNumber;
@@ -32,6 +33,19 @@ import java.util.List;
 @Profile("local")
 public class InitDB {
 
+    public static final int NUMBER_OF_MEMBER = 10;
+    public static final int NUMBER_OF_ANIMAL = 50;
+
+    public static final int FREE_BOARD = 1;
+    public static final int INQUIRY_BOARD = 2;
+    public static final int ADOPT_REVIEW_BOARD = 3;
+    public static final int FIND_BOARD = 4;
+    public static final int WATCH_BOARD = 5;
+
+    public static final int DONATION = 1;
+    public static final int TEMP_PROTECTION = 2;
+    public static final int ADOPT = 3;
+
     private final InitService initService;
 
     @PostConstruct
@@ -50,9 +64,9 @@ public class InitDB {
         private final EntityManager em;
 
         public void initMember() {
-            for (int i = 1; i <= 5; i++) {
-                Member member = new MemberBuilder("m" + i, "123")
-                        .setName("member" + i)
+            for (int index = 1; index <= NUMBER_OF_MEMBER; index++) {
+                Member member = new MemberBuilder("m" + index, "123")
+                        .setName("member" + index)
                         .setBirth(LocalDate.now())
                         .setEmail(new Email("abc", "naver", "com"))
                         .setPhoneNumber(new PhoneNumber("010", "1111", "2222"))
@@ -71,18 +85,18 @@ public class InitDB {
         }
 
         public void initAbandonedAnimal() {
-            for (int i = 1; i <= 50; i++) {
+            for (int index = 1; index <= NUMBER_OF_ANIMAL; index++) {
                 AbandonedAnimal animal = new AbandonedAnimalBuilder()
-                        .setName("멍멍이" + i)
-                        .setAge(i)
+                        .setName("멍멍이" + index)
+                        .setAge(index)
                         .setSpecies(AnimalSpecies.DOG)
                         .setKind("진돗개")
-                        .setWeight(i)
+                        .setWeight(index)
                         .build();
 
-                String imageName = "dog" + (i % 5 + 1) + ".jpeg";
+                String imageName = "dog" + (index % 5 + 1) + ".jpeg";
 
-                Picture picture = new PictureBuilder()
+                new PictureBuilder()
                         .setFileStoreName(imageName)
                         .setAbandonedAnimal(animal)
                         .build();
@@ -95,59 +109,74 @@ public class InitDB {
             List<Member> allMembers = em.createQuery("select m from Member m", Member.class)
                     .getResultList();
 
+            int imageCount = 0;
+
             for (Member member : allMembers) {
-                for (int i = 0; i < 6; i++) {
-                    if (i % 5 == 0) {
+                String catImageName = "cat" + (imageCount++ % 5 + 1) + ".jpeg";    //cat1.jpeg ~ cat5.jpeg
+                String dogImageName = "dog" + (imageCount++ % 5 + 1) + ".jpeg";    //dog1.jpeg ~ dog5.jpeg
+
+                for (int kindOfBoard = 1; kindOfBoard <= 5; kindOfBoard++) {
+                    if (kindOfBoard == FREE_BOARD) {
                         new BoardBuilder(member, BoardType.FREE)
                                 .setShownAll(true)
-                                .setTitle("board" + i)
-                                .setContent("content" + i)
+                                .setTitle("board" + kindOfBoard)
+                                .setContent("content" + kindOfBoard)
                                 .build();
 
                         new BoardBuilder(member, BoardType.FREE)
                                 .setShownAll(false)
-                                .setTitle("board 비공개 " + i)
-                                .setContent("content" + i)
+                                .setTitle("board 비공개 " + kindOfBoard)
+                                .setContent("content" + kindOfBoard)
                                 .build();
                     }
 
-                    if (i % 5 == 1) {
+                    if (kindOfBoard == INQUIRY_BOARD) {
                         new BoardBuilder(member, BoardType.INQUIRY)
                                 .setShownAll(true)
-                                .setTitle("board" + i)
-                                .setContent("content" + i)
+                                .setTitle("board" + kindOfBoard)
+                                .setContent("content" + kindOfBoard)
                                 .build();
                     }
 
-                    if (i % 5 == 2) {
+                    if (kindOfBoard == ADOPT_REVIEW_BOARD) {
                         new BoardBuilder(member, BoardType.ADOPT_REVIEW)
                                 .setShownAll(true)
-                                .setTitle("board" + i)
-                                .setContent("content" + i)
+                                .setTitle("board" + imageCount)
+                                .setContent("content" + imageCount)
                                 .build();
                     }
 
-                    if (i % 5 == 3) {
-                        new FindBoardBuilder(member, BoardType.FIND)
+                    if (kindOfBoard == FIND_BOARD) {
+                        FindBoard findBoard = new FindBoardBuilder(member, BoardType.FIND)
                                 .setShownAll(true)
-                                .setTitle("board" + i)
-                                .setContent("content" + i)
+                                .setTitle("board" + kindOfBoard)
+                                .setContent("content" + kindOfBoard)
                                 .setLostTime(LocalDateTime.now())
                                 .setSpecies(AnimalSpecies.CAT)
                                 .setAnimalName("야옹이")
                                 .setAnimalKind("페르시안")
-                                .setAnimalAge(i % 10)
-                                .setAnimalWeight((float) (i % 5))
+                                .setAnimalAge(imageCount % 10 + 1)
+                                .setAnimalWeight((float) (imageCount % 5 + 1))
+                                .build();
+
+                        new PictureBuilder()
+                                .setFileStoreName(catImageName)
+                                .setBoard(findBoard)
                                 .build();
                     }
 
-                    if (i % 5 == 4) {
-                        new WatchBoardBuilder(member, BoardType.WATCH)
+                    if (kindOfBoard == WATCH_BOARD) {
+                        WatchBoard watchBoard = new WatchBoardBuilder(member, BoardType.WATCH)
                                 .setShownAll(true)
-                                .setTitle("board" + i)
-                                .setContent("content" + i)
+                                .setTitle("board" + imageCount)
+                                .setContent("content" + imageCount)
                                 .setWatchTime(LocalDateTime.now())
                                 .setSpecies(AnimalSpecies.DOG)
+                                .build();
+
+                        new PictureBuilder()
+                                .setFileStoreName(dogImageName)
+                                .setBoard(watchBoard)
                                 .build();
                     }
                 }
@@ -162,10 +191,10 @@ public class InitDB {
                     .getResultList();
 
             for (Member member : allMembers) {
-                for (int i = 0; i < 6; i++) {
+                for (int kindOfApplication = 1; kindOfApplication <= 3; kindOfApplication++) {
                     AbandonedAnimal animal = allAnimals.remove(0);
 
-                    if (i % 3 == 0) {
+                    if (kindOfApplication == DONATION) {
                         new DonationBuilder(member, animal)
                                 .setAccountNumber(new AccountNumber("1234-1234-1234"))
                                 .setBankType(BankType.KB)
@@ -174,7 +203,7 @@ public class InitDB {
                                 .build();
                     }
 
-                    if (i % 3 == 1) {
+                    if (kindOfApplication == TEMP_PROTECTION) {
                         new TemporaryProtectionBuilder(member, animal)
                                 .setMarried(true)
                                 .setJob("student")
@@ -183,7 +212,7 @@ public class InitDB {
                                 .build();
                     }
 
-                    if (i % 3 == 2) {
+                    if (kindOfApplication == ADOPT) {
                         new AdoptBuilder(member, animal)
                                 .setMarried(true)
                                 .setJob("student")

@@ -15,7 +15,7 @@ public class FindWatchBoardListForm extends BoardListForm {
 
     private Picture thumbnail;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lostOrWatchTime;
 
     private AnimalSpecies species;

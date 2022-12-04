@@ -1,8 +1,13 @@
 package com.petmily.service;
 
-import com.petmily.domain.builder.BoardBuilder;
+import com.petmily.domain.builder.PictureBuilder;
+import com.petmily.domain.builder.board.BoardBuilder;
+import com.petmily.domain.builder.board.FindBoardBuilder;
+import com.petmily.domain.builder.board.WatchBoardBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.board.Board;
+import com.petmily.domain.core.board.FindBoard;
+import com.petmily.domain.core.board.WatchBoard;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
 import com.petmily.domain.enum_type.BoardType;
@@ -38,6 +43,11 @@ public class BoardService {
 
         if (hasPicture(form.getPictures())) {
             pictureService.store(form.getPictures(), board);
+        } else {
+            new PictureBuilder()
+                    .setBoard(board)
+                    .setFileStoreName("no_picture.jpeg")
+                    .build();
         }
 
         boardRepository.save(board);
@@ -46,11 +56,37 @@ public class BoardService {
     }
 
     private static Board writeBoard(BoardType boardType, WriteBoardForm form, Member member) {
-        return new BoardBuilder(member, boardType)
-                .setTitle(form.getTitle())
-                .setContent(form.getContent())
-                .setShownAll(form.getShownAll())
-                .build();
+        Board board;
+
+        if (boardType.equals(BoardType.FIND)) {
+            board = new FindBoardBuilder(member, boardType)
+                    .setTitle(form.getTitle())
+                    .setContent(form.getContent())
+                    .setShownAll(form.getShownAll())
+                    .setLostTime(form.getLostOrWatchTime())
+                    .setSpecies(form.getSpecies())
+                    .setAnimalName(form.getAnimalName())
+                    .setAnimalKind(form.getAnimalKind())
+                    .setAnimalAge(form.getAnimalAge())
+                    .setAnimalWeight(form.getAnimalWeight())
+                    .build();
+        } else if (boardType.equals(BoardType.WATCH)) {
+            board = new WatchBoardBuilder(member, boardType)
+                    .setTitle(form.getTitle())
+                    .setContent(form.getContent())
+                    .setShownAll(form.getShownAll())
+                    .setWatchTime(form.getLostOrWatchTime())
+                    .setSpecies(form.getSpecies())
+                    .build();
+        } else {
+            board = new BoardBuilder(member, boardType)
+                    .setTitle(form.getTitle())
+                    .setContent(form.getContent())
+                    .setShownAll(form.getShownAll())
+                    .build();
+        }
+
+        return board;
     }
 
     private static boolean hasPicture(List<MultipartFile> form) {
@@ -78,7 +114,7 @@ public class BoardService {
 
     // 게시글 수정
     @Transactional
-    public Long modifyBoardInfo(Long id, ModifyBoardForm form) {
+    public Long modifyBoardInfo(Long id, BoardType boardType, ModifyBoardForm form) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
 
@@ -88,7 +124,15 @@ public class BoardService {
             pictureService.store(form.getPictures(), board);
         }
 
-        board.changeInfo(form);
+        if (boardType.equals(BoardType.FIND)) {
+            FindBoard findBoard = (FindBoard) board;
+            findBoard.changeInfo(form);
+        } else if (boardType.equals(BoardType.WATCH)) {
+            WatchBoard watchBoard = (WatchBoard) board;
+            watchBoard.changeInfo(form);
+        } else {
+            board.changeInfo(form);
+        }
 
         return board.getId();
     }

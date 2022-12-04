@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <div th:if="${boardType.equals('find')}">
+                        <h1 class="mb-0 bread">반려동물 찾아요 게시판</h1>
+                    </div>
+                    <div th:if="${boardType.equals('watch')}">
+                        <h1 class="mb-0 bread">유기동물 봤어요 게시판</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="modal-header">
+                <div class="float-left">
+                    <a th:href="|/board/${boardType}/list?sort=createdDate,desc|"><button class="btn btn-primary" type="button">최신순</button></a> &nbsp;
+                    <a th:href="|/board/${boardType}/list?sort=createdDate,asc|"><button class="btn btn-primary" type="button">오래된순</button></a> &nbsp;
+                </div>
+            </div> &nbsp; &nbsp;
+            <br class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+
+            <div class="row d-flex">
+                <div class="col-lg-4 col-md-6 col-sm-12" th:each="board : ${boardPage.realPage.content}">
+                    <div class="blog-entry align-self-stretch">
+                        <img class="card-img-top" height="300" th:src="|/abandoned_animal/image/${board.thumbnail.fileStoreName}|">
+
+                        <div class="text p-4">
+                            <div class="meta mb-2">
+                                <div><span th:text="${board.writerName}">작성자</span></div>
+                                <div><span th:text="${board.species.description}">종</span></div><br>
+                                <div><span th:text="${{board.createdDate}}">게시글 작성 시간</span></div>
+                            </div>
+                            <h3 class="heading">
+                                <a th:href="|/board/${boardType}/detail/${board.id}|">
+                                    <span th:text="${board.title}">제목</span>
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 글쓰기 버튼  -->
+            <span class="modal-footer">
+				<a type="button" class="btn btn-primary" th:href="|/board/${boardType}/auth/write|">글쓰기</a>
+			</span>
+
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <div class="block-27">
+                        <ul>
+                            <!--이전 5개의 보여줄 페이지가 있을 경우 '<'-->
+                            <li>
+                                <p th:if="${(boardPage.realPage.number + 1) gt 5}">
+                                    <a th:href="|/board/${boardType}/list?page=${boardPage.realPage.number - 5}|">&lt;</a>
+                                </p>
+                            </li>
+
+                            <!--5의 배수로 페이지 보여줄 페이지-->
+                            <th:block th:each="pageNumber : ${#numbers.sequence(boardPage.startPage, boardPage.endPage)}">
+                                <li th:if="${pageNumberStat.current le boardPage.realPage.totalPages}"
+                                    th:classappend="${pageNumberStat.current == (boardPage.realPage.number + 1)} ? 'active' : ''">
+                                    <a th:href="|/board/${boardType}/list?page=${pageNumberStat.current - 1}|" th:text="${pageNumberStat.current}">페이지</a>
+                                </li>
+                            </th:block>
+
+                            <!--6 페이지 이상인 경우 '>'-->
+                            <li>
+                                <p th:if="${(boardPage.realPage.totalPages - boardPage.endPage) gt 0}">
+                                    <a th:href="|/board/${boardType}/list?page=${boardPage.startPage + 4}|">&gt;</a>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+</html>

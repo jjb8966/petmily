@@ -9,6 +9,7 @@ import com.petmily.domain.core.board.WatchBoard;
 import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;
+import com.petmily.domain.dto.board.find_watch.FindWatchBoardDetailForm;
 import com.petmily.domain.dto.board.find_watch.FindWatchBoardListForm;
 import com.petmily.domain.dto.picutre.BoardPictureForm;
 import com.petmily.domain.dto.reply.ReplyDetailForm;
@@ -44,50 +45,93 @@ public class BoardDtoConverter implements EntityDtoConverter {
         }
 
         if (dtoType.isAssignableFrom(FindWatchBoardListForm.class)) {
-            log.info("Board -> FindWatchBoardDetailForm");
+            log.info("Board -> FindWatchBoardListForm");
             dto = (T) convertToFindWatchBoardListForm(board);
+        }
+
+        if (dtoType.isAssignableFrom(FindWatchBoardDetailForm.class)) {
+            log.info("Board -> FindWatchBoardDetailForm");
+            dto = (T) convertToFindWatchBoardDetailForm(board);
         }
 
         return Optional.ofNullable(dto);
     }
 
-    private FindWatchBoardListForm convertToFindWatchBoardListForm(Board board) {
-        FindWatchBoardListForm findWatchBoardListForm = new FindWatchBoardListForm();
+    private FindWatchBoardDetailForm convertToFindWatchBoardDetailForm(Board board) {
+        FindWatchBoardDetailForm boardDetailForm = new FindWatchBoardDetailForm();
 
-        findWatchBoardListForm.setId(board.getId());
-        findWatchBoardListForm.setMemberId(board.getMember().getId());
-        findWatchBoardListForm.setWriterName(board.getMember().getName());
-        findWatchBoardListForm.setTitle(board.getTitle());
-        findWatchBoardListForm.setCreatedDate(board.getCreatedDate());
-        findWatchBoardListForm.setShownAll(board.getShownAll());
-        findWatchBoardListForm.setBoardType(board.getBoardType());
+        setBasicInformationForDetailForm(board, boardDetailForm);
+        setReplyForms(board.getReplies(), boardDetailForm);
+        setPictureForms(board.getPictures(), boardDetailForm);
 
         if (board instanceof FindBoard) {
-            FindBoard findBoard = (FindBoard) board;
-            findWatchBoardListForm.setLostOrWatchTime(findBoard.getLostTime());
-            findWatchBoardListForm.setSpecies(findBoard.getSpecies());
-
-            if (!findBoard.getPictures().isEmpty()) {
-                findWatchBoardListForm.setThumbnail(findBoard.getPictures().get(0));
-            }
+            setFindBoardDetailForm((FindBoard) board, boardDetailForm);
         }
 
         if (board instanceof WatchBoard) {
-            WatchBoard watchBoard = (WatchBoard) board;
-            findWatchBoardListForm.setLostOrWatchTime(watchBoard.getWatchTime());
-            findWatchBoardListForm.setSpecies(watchBoard.getSpecies());
-
-            if (!watchBoard.getPictures().isEmpty()) {
-                findWatchBoardListForm.setThumbnail(watchBoard.getPictures().get(0));
-            }
+            setWatchBoardDetailForm((WatchBoard) board, boardDetailForm);
         }
 
-        return findWatchBoardListForm;
+        return boardDetailForm;
+    }
+
+    private void setFindBoardDetailForm(FindBoard findBoard, FindWatchBoardDetailForm boardDetailForm) {
+        boardDetailForm.setLostOrWatchTime(findBoard.getLostTime());
+        boardDetailForm.setSpecies(findBoard.getSpecies());
+        boardDetailForm.setAnimalName(findBoard.getAnimalName());
+        boardDetailForm.setAnimalKind(findBoard.getAnimalKind());
+        boardDetailForm.setAnimalAge(findBoard.getAnimalAge());
+        boardDetailForm.setAnimalWeight(findBoard.getAnimalWeight());
+    }
+
+    private void setWatchBoardDetailForm(WatchBoard watchBoard, FindWatchBoardDetailForm boardDetailForm) {
+        boardDetailForm.setLostOrWatchTime(watchBoard.getWatchTime());
+        boardDetailForm.setSpecies(watchBoard.getSpecies());
+    }
+
+    private FindWatchBoardListForm convertToFindWatchBoardListForm(Board board) {
+        FindWatchBoardListForm boardListForm = new FindWatchBoardListForm();
+
+        setBasicInformationForListForm(board, boardListForm);
+
+        if (board instanceof FindBoard) {
+            setFindBoardListForm((FindBoard) board, boardListForm);
+        }
+
+        if (board instanceof WatchBoard) {
+            setWatchBoardListForm((WatchBoard) board, boardListForm);
+        }
+
+        return boardListForm;
+    }
+
+    private static void setWatchBoardListForm(WatchBoard watchBoard, FindWatchBoardListForm findWatchBoardListForm) {
+        findWatchBoardListForm.setLostOrWatchTime(watchBoard.getWatchTime());
+        findWatchBoardListForm.setSpecies(watchBoard.getSpecies());
+
+        if (!watchBoard.getPictures().isEmpty()) {
+            findWatchBoardListForm.setThumbnail(watchBoard.getPictures().get(0));
+        }
+    }
+
+    private static void setFindBoardListForm(FindBoard findBoard, FindWatchBoardListForm findWatchBoardListForm) {
+        findWatchBoardListForm.setLostOrWatchTime(findBoard.getLostTime());
+        findWatchBoardListForm.setSpecies(findBoard.getSpecies());
+
+        if (!findBoard.getPictures().isEmpty()) {
+            findWatchBoardListForm.setThumbnail(findBoard.getPictures().get(0));
+        }
     }
 
     private BoardListForm convertToBoardListForm(Board board) {
-        BoardListForm boardForm = new BoardListForm();
+        BoardListForm boardListForm = new BoardListForm();
 
+        setBasicInformationForListForm(board, boardListForm);
+
+        return boardListForm;
+    }
+
+    private static void setBasicInformationForListForm(Board board, BoardListForm boardForm) {
         boardForm.setId(board.getId());
         boardForm.setMemberId(board.getMember().getId());
         boardForm.setWriterName(board.getMember().getName());
@@ -95,13 +139,19 @@ public class BoardDtoConverter implements EntityDtoConverter {
         boardForm.setCreatedDate(board.getCreatedDate());
         boardForm.setShownAll(board.getShownAll());
         boardForm.setBoardType(board.getBoardType());
-
-        return boardForm;
     }
 
     private BoardDetailForm convertToBoardDetailForm(Board board) {
-        BoardDetailForm boardForm = new BoardDetailForm();
+        BoardDetailForm boardDetailForm = new BoardDetailForm();
 
+        setBasicInformationForDetailForm(board, boardDetailForm);
+        setReplyForms(board.getReplies(), boardDetailForm);
+        setPictureForms(board.getPictures(), boardDetailForm);
+
+        return boardDetailForm;
+    }
+
+    private static void setBasicInformationForDetailForm(Board board, BoardDetailForm boardForm) {
         boardForm.setId(board.getId());
         boardForm.setCreatedDate(board.getCreatedDate());
         boardForm.setLastModifiedDate(board.getLastModifiedDate());
@@ -109,11 +159,6 @@ public class BoardDtoConverter implements EntityDtoConverter {
         boardForm.setTitle(board.getTitle());
         boardForm.setContent(board.getContent());
         boardForm.setShownAll(board.getShownAll());
-
-        setReplyForms(board.getReplies(), boardForm);
-        setPictureForms(board.getPictures(), boardForm);
-
-        return boardForm;
     }
 
     private void setReplyForms(List<Reply> replies, BoardDetailForm boardForm) {
@@ -148,12 +193,38 @@ public class BoardDtoConverter implements EntityDtoConverter {
     }
 
     private ModifyBoardForm convertToModifyBoardForm(Board board) {
-        ModifyBoardForm boardForm = new ModifyBoardForm();
+        ModifyBoardForm modifyBoardForm = new ModifyBoardForm();
 
+        setBasicInformationForModifyForm(board, modifyBoardForm);
+
+        if (board instanceof FindBoard) {
+            setModifyFindBoardForm((FindBoard) board, modifyBoardForm);
+        }
+
+        if (board instanceof WatchBoard) {
+            setModifyWatchBoardForm((WatchBoard) board, modifyBoardForm);
+        }
+
+        return modifyBoardForm;
+    }
+
+    private void setModifyFindBoardForm(FindBoard findBoard, ModifyBoardForm modifyBoardForm) {
+        modifyBoardForm.setLostOrWatchTime(findBoard.getLostTime());
+        modifyBoardForm.setSpecies(findBoard.getSpecies());
+        modifyBoardForm.setAnimalName(findBoard.getAnimalName());
+        modifyBoardForm.setAnimalKind(findBoard.getAnimalKind());
+        modifyBoardForm.setAnimalAge(findBoard.getAnimalAge());
+        modifyBoardForm.setAnimalWeight(findBoard.getAnimalWeight());
+    }
+
+    private void setModifyWatchBoardForm(WatchBoard watchBoard, ModifyBoardForm modifyBoardForm) {
+        modifyBoardForm.setLostOrWatchTime(watchBoard.getWatchTime());
+        modifyBoardForm.setSpecies(watchBoard.getSpecies());
+    }
+
+    private static void setBasicInformationForModifyForm(Board board, ModifyBoardForm boardForm) {
         boardForm.setTitle(board.getTitle());
         boardForm.setContent(board.getContent());
         boardForm.setShownAll(board.getShownAll());
-
-        return boardForm;
     }
 }

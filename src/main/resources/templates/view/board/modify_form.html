@@ -10,9 +10,6 @@
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <p class="breadcrumbs mb-2">
-                        <span class="mr-2"><span>Inquiry Board<i class="ion-ios-arrow-forward"></i></span></span>
-                    </p>
                     <div th:if="${boardType.equals('free')}">
                         <h1 class="mb-0 bread">자유 게시판</h1>
                     </div>
@@ -21,6 +18,12 @@
                     </div>
                     <div th:if="${boardType.equals('adopt_review')}">
                         <h1 class="mb-0 bread">입양후기 게시판</h1>
+                    </div>
+                    <div th:if="${boardType.equals('find')}">
+                        <h1 class="mb-0 bread">반려동물 찾아요 게시판</h1>
+                    </div>
+                    <div th:if="${boardType.equals('watch')}">
+                        <h1 class="mb-0 bread">유기동물 봤어요 게시판</h1>
                     </div>
                 </div>
             </div>
@@ -32,38 +35,77 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="contact">
-
                         <form class="form" th:action method="post" enctype="multipart/form-data">
                             <div class="modal-body">
                                 <div class="row">
                                     <!--제목-->
-                                    <div class="form-group"><input class="form-control" th:field="${form.title}"/></div>
-
-                                    <!--내용-->
-                                    <textarea rows="20" class="form-control" th:field="${form.content}">내용</textarea>
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control" th:field="${form.title}" placeholder="제목"/>
+                                        <div class="field-error" th:errors="${form.title}"></div>
+                                    </div>
+                                    <div class="col-lg-4" th:if="${boardType.equals('find') || boardType.equals('watch')}">
+                                        <span>잃어버린 시간 : </span>
+                                        <input type="datetime-local" th:field="${form.lostOrWatchTime}">
+                                    </div>
+                                    <div class="col-lg-3" th:if="${boardType.equals('find') || boardType.equals('watch')}">
+                                        <span>
+                                            <input type="radio" th:field="${form.species}" value="DOG"/>강아지
+                                            <input type="radio" th:field="${form.species}" value="CAT"/>고양이
+                                            <input type="radio" th:field="${form.species}" value="ETC"/>기타
+                                        </span>
+                                    </div>
                                 </div>
+                                <br/>
+
+                                <div class="row" th:if="${boardType.equals('find')}">
+                                    <div class="col-lg-3">
+                                        <span>반려동물 이름</span>
+                                        <input class="form-control" type="text" th:field="${form.animalName}">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <span>반려동물 종류</span>
+                                        <input class="form-control" type="text" th:field="${form.animalKind}">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <span>반려동물 나이</span>
+                                        <input class="form-control" type="number" th:field="${form.animalAge}">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <span>반려동물 몸무게</span>
+                                        <input class="form-control" type="number" th:field="${form.animalWeight}">
+                                    </div>
+                                </div>
+                                <br/>
+                                <!--내용-->
+                                <textarea rows="20" class="form-control" th:field="${form.content}" placeholder="내용"/></textarea>
+                                <div class="field-error" th:errors="${form.content}"></div>
                             </div>
 
                             <div class="row">
                                 <!--사진 첨부-->
-                                <div class="col-lg-8">
+                                <div class="col-lg-6 col-sm-12 float-left">
                                     <div class="custom-file form-control-sm mt-3" style="max-width: 300px;">
                                         <input type="file" multiple="multiple" th:field="${form.pictures}">
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4">
-                                    <!--공개 여부-->
-                                    <input type="radio" class th:field="${form.shownAll}" value="true"/> 공개<span>&ensp;</span>
-                                    <input type="radio" th:field="${form.shownAll}" value="false"/> 비공개<span>&ensp;</span>
-
+                                <div class="col-lg-6 col-sm-12">
                                     <!--취소, 수정 버튼-->
-                                    <a type="button" class="btn btn-light" th:href="|/board/${boardType}/detail/${id}|">취소</a>
-                                    <button type="submit" class="btn btn-primary">수정</button>
+                                    <button type="submit" class="btn btn-primary float-right">글쓰기</button>
+                                    <a type="button" class="btn btn-light float-right" th:href="|/board/${boardType}/list|">취소</a>
+
+                                    <div th:if="${boardType.equals('free') || boardType.equals('inquiry') || boardType.equals('adopt_review')}">
+                                        <!--공개 여부-->
+                                        <div class="float-right">
+                                            <input type="radio" th:field="${form.shownAll}" value="false"/>비공개<span>&ensp;</span>
+                                        </div>
+                                        <div class="float-right">
+                                            <input type="radio" th:field="${form.shownAll}" value="true"/> 공개<span>&ensp;</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>

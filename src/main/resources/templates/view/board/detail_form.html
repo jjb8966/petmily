@@ -19,9 +19,6 @@
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <p class="breadcrumbs mb-2">
-                        <span class="mr-2"><span>Inquiry Board<i class="ion-ios-arrow-forward"></i></span></span>
-                    </p>
                     <div th:if="${boardType.equals('free')}">
                         <h1 class="mb-0 bread">자유 게시판</h1>
                     </div>
@@ -30,6 +27,12 @@
                     </div>
                     <div th:if="${boardType.equals('adopt_review')}">
                         <h1 class="mb-0 bread">입양후기 게시판</h1>
+                    </div>
+                    <div th:if="${boardType.equals('find')}">
+                        <h1 class="mb-0 bread">반려동물 찾아요 게시판</h1>
+                    </div>
+                    <div th:if="${boardType.equals('watch')}">
+                        <h1 class="mb-0 bread">유기동물 봤어요 게시판</h1>
                     </div>
                 </div>
             </div>
@@ -48,9 +51,47 @@
                             <h6 class="mt-1"></h6>
                             <small><span class="far fa-comment ml-2" th:text="|작성 시간 - ${{board.createdDate}}|">작성 날짜</span></small>
                             <small><span class="far fa-comment ml-2" th:text="|작성자 - ${{board.member.name}}|">작성자 이름</span></small>
-                            <small><span class="far fa-comment ml-2" th:if="${board.shownAll == true}">공개</span></small>
-                            <small><span class="far fa-comment ml-2" th:if="${board.shownAll == false}">비공개</span></small>
+                            <span th:remove="${boardType.equals('find') || boardType.equals('watch')} ? all">
+                                <small><span class="far fa-comment ml-2" th:if="${board.shownAll == true}">공개</span></small>
+                                <small><span class="far fa-comment ml-2" th:if="${board.shownAll == false}">비공개</span></small>
+                            </span>
                             <div class="modal-footer"></div>
+
+                            <div class="row">
+                                <div class="col-lg-4" th:if="${boardType.equals('find') || boardType.equals('watch')}" th:remove="${board.lostOrWatchTime == null} ? all">
+                                    <span class="badge bg-primary text-white" th:if="${boardType.equals('find')}">잃어버린 시간</span>
+                                    <span class="badge bg-primary text-white" th:if="${boardType.equals('watch')}">발견한 시간</span>
+                                    <span th:text="${{board.lostOrWatchTime}}"></span>
+                                </div>
+
+                                <div class="col-lg-3" th:if="${boardType.equals('find') || boardType.equals('watch')}">
+                                    <span class="badge bg-primary text-white">종</span>
+                                    <span th:text="${board.species.description}"></span>
+                                </div>
+                            </div>
+
+                            <div class="row" th:if="${boardType.equals('find')}">
+                                <div class="col-lg-2" th:remove="${board.animalName == null} ? all">
+                                    <span class="badge bg-primary text-white">이름</span>
+                                    <span th:text="${board.animalName}"></span>
+                                </div>
+
+                                <div class="col-lg-2" th:remove="${board.animalKind == null} ? all">
+                                    <span class="badge bg-primary text-white">종류</span>
+                                    <span th:text="${board.animalKind}"></span>
+                                </div>
+
+                                <div class="col-lg-2" th:remove="${board.animalAge == null} ? all">
+                                    <span class="badge bg-primary text-white">나이</span>
+                                    <span th:text="${{board.animalAge}}"></span>
+                                </div>
+
+                                <div class="col-lg-2" th:remove="${board.animalWeight == null} ? all">
+                                    <span class="badge bg-primary text-white">몸무게</span>
+                                    <span th:text="${{board.animalWeight}}"></span>
+                                </div>
+                            </div>
+                            <br/>
 
                             <!--이미지-->
                             <span th:each="picture : ${board.pictures}">
@@ -106,7 +147,7 @@
                             <!--수정, 삭제, 목록 버튼 -->
                             <span th:if="${session.loginMember != null && (session.loginMember.id == board.member.id || session.loginMember.grade.name() == 'ADMIN')}">
                                 <a type="button" class="btn btn-light" th:href="|/board/${boardType}/auth/modify/${board.id}|">수정</a>
-                                <a type="button" class="btn btn-light" th:href="|/board/${boardType}/auth/delete/${board.id}|">삭제</a>
+                                <a type="button" class="btn btn-danger" th:href="|/board/${boardType}/auth/delete/${board.id}|">삭제</a>
                             </span>
 
                             <a type="button" class="btn btn-primary" style="float:right;" th:href="|/board/${boardType}/list|">목록으로</a>

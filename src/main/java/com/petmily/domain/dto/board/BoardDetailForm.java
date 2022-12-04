@@ -15,13 +15,13 @@ import java.util.List;
 @ToString
 public class BoardDetailForm {
 
-    private Long id;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
-    private Member member;
-    private List<ReplyDetailForm> replies;
-    private List<BoardPictureForm> pictures;
-    private String title;
-    private String content;
-    private Boolean shownAll;
+    protected Long id;
+    protected LocalDateTime createdDate;
+    protected LocalDateTime lastModifiedDate;
+    protected Member member;
+    protected List<ReplyDetailForm> replies;
+    protected List<BoardPictureForm> pictures;
+    protected String title;
+    protected String content;
+    protected Boolean shownAll;
 }

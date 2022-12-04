@@ -1,8 +1,8 @@
 package com.petmily.service;
 
-import com.petmily.domain.builder.board.BoardBuilder;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.builder.ReplyBuilder;
+import com.petmily.domain.builder.board.BoardBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.board.Board;
@@ -135,7 +135,7 @@ class BoardServiceTest {
         modifyBoardForm.setShownAll(false);
 
         //when
-        boardService.modifyBoardInfo(board.getId(), modifyBoardForm);
+        boardService.modifyBoardInfo(board.getId(), board.getBoardType(), modifyBoardForm);
         Board findBoard = em.find(Board.class, board.getId());
 
         //then

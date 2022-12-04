@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -66,7 +65,7 @@ public class Board extends BaseEntity {
             picture.deleteBoard();
         }
 
-        this.pictures = new ArrayList<>();
+        this.pictures.clear();
     }
 
 }

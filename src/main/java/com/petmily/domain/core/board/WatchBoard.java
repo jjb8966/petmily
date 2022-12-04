@@ -1,6 +1,7 @@
 package com.petmily.domain.core.board;
 
 import com.petmily.domain.builder.board.WatchBoardBuilder;
+import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,5 +22,12 @@ public class WatchBoard extends Board {
         super(builder);
         this.watchTime = builder.getWatchTime();
         this.species = builder.getSpecies();
+    }
+
+    @Override
+    public void changeInfo(ModifyBoardForm form) {
+        super.changeInfo(form);
+        this.watchTime = form.getLostOrWatchTime();
+        this.species = form.getSpecies();
     }
 }

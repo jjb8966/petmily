@@ -1,6 +1,7 @@
 package com.petmily.domain.core.board;
 
 import com.petmily.domain.builder.board.FindBoardBuilder;
+import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,4 +32,14 @@ public class FindBoard extends Board {
         this.animalWeight = builder.getAnimalWeight();
     }
 
+    @Override
+    public void changeInfo(ModifyBoardForm form) {
+        super.changeInfo(form);
+        this.lostTime = form.getLostOrWatchTime();
+        this.species = form.getSpecies();
+        this.animalName = form.getAnimalName();
+        this.animalKind = form.getAnimalKind();
+        this.animalAge = form.getAnimalAge();
+        this.animalWeight = form.getAnimalWeight();
+    }
 }

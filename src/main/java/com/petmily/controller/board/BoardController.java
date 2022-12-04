@@ -8,6 +8,8 @@ import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
+import com.petmily.domain.dto.board.find_watch.FindWatchBoardDetailForm;
+import com.petmily.domain.dto.board.find_watch.FindWatchBoardListForm;
 import com.petmily.domain.dto.reply.WriteReplyForm;
 import com.petmily.domain.dto_converter.BoardDtoConverter;
 import com.petmily.domain.enum_type.BoardType;
@@ -58,20 +60,41 @@ public class BoardController {
                        @PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model) {
 
+        Page<BoardListForm> boardListForm;
         Page<Board> allBoards = boardRepository.findAllByBoardType(boardType, pageable);
 
-        log.info("total element = {}", allBoards.getTotalElements());
-        log.info("total pages = {}", allBoards.getTotalPages());
+        if (isFindWatchBoard(boardType)) {
+            boardListForm = convertToFindWatchBoardListForm(allBoards);
+        } else {
+            boardListForm = convertToBoardListForm(allBoards);
+        }
 
-        Page<BoardListForm> mapToDto = allBoards.map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))));
-
-        PetmilyPage<BoardListForm> boardPage = new PetmilyPage<>(mapToDto);
+        PetmilyPage<BoardListForm> boardPage = new PetmilyPage<>(boardListForm);
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("boardPage", boardPage);
 
-        return "view/board/board_list";
+        if (isFindWatchBoard(boardType)) {
+            return "view/board/find_watch/board_list";
+        } else {
+            return "view/board/board_list";
+        }
+    }
+
+    private static boolean isFindWatchBoard(BoardType boardType) {
+        return boardType.equals(BoardType.FIND) || boardType.equals(BoardType.WATCH);
+    }
+
+    private Page<BoardListForm> convertToFindWatchBoardListForm(Page<Board> allBoards) {
+        return allBoards
+                .map(board -> boardDtoConverter.entityToDto(board, FindWatchBoardListForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))));
+    }
+
+    private Page<BoardListForm> convertToBoardListForm(Page<Board> allBoards) {
+        return allBoards
+                .map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))));
     }
 
     @GetMapping("/board/{boardType}/detail/{boardId}")
@@ -81,17 +104,32 @@ public class BoardController {
 
         log.info("board type = {}, id = {}", boardType, boardId);
 
+        BoardDetailForm boardDetailForm;
+
         Board board = boardService.findOne(boardId)
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
 
-        BoardDetailForm boardForm = boardDtoConverter.entityToDto(board, BoardDetailForm.class)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
+        if (isFindWatchBoard(boardType)) {
+            boardDetailForm = convertToFindWatchBoardDetailForm(board);
+        } else {
+            boardDetailForm = convertToBoardDetailForm(board);
+        }
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
-        model.addAttribute("board", boardForm);
+        model.addAttribute("board", boardDetailForm);
         model.addAttribute("writeReplyForm", new WriteReplyForm());
 
         return "view/board/detail_form";
+    }
+
+    private BoardDetailForm convertToFindWatchBoardDetailForm(Board board) {
+        return boardDtoConverter.entityToDto(board, FindWatchBoardDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
+    }
+
+    private BoardDetailForm convertToBoardDetailForm(Board board) {
+        return boardDtoConverter.entityToDto(board, BoardDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
     }
 
     @GetMapping("/board/{boardType}/auth/write")
@@ -109,12 +147,15 @@ public class BoardController {
                         @SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
                         @ModelAttribute("form") @Valid WriteBoardForm form,
                         BindingResult bindingResult,
-                        RedirectAttributes redirectAttributes) {
+                        RedirectAttributes redirectAttributes,
+                        Model model) {
 
-        log.info("form = {}", form);
+        log.info("form class = {}", form.getClass());
 
         if (bindingResult.hasErrors()) {
             log.info("게시글 작성 실패 {}", bindingResult.getAllErrors());
+            model.addAttribute("boardType", boardType.name().toLowerCase());
+
             return "view/board/write_form";
         }
 
@@ -136,14 +177,18 @@ public class BoardController {
         Board board = boardService.findOne(id)
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
 
-        ModifyBoardForm boardForm = boardDtoConverter.entityToDto(board, ModifyBoardForm.class)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
+        ModifyBoardForm modifyBoardForm = convertToModifyBoardForm(board);
 
         model.addAttribute("boardType", boardType.name().toLowerCase());
         model.addAttribute("id", id);
-        model.addAttribute("form", boardForm);
+        model.addAttribute("form", modifyBoardForm);
 
         return "view/board/modify_form";
+    }
+
+    private ModifyBoardForm convertToModifyBoardForm(Board board) {
+        return boardDtoConverter.entityToDto(board, ModifyBoardForm.class)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
     }
 
     @PostMapping("/board/{boardType}/auth/modify/{id}")
@@ -153,15 +198,12 @@ public class BoardController {
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
 
-        log.info("board type = {}, id = {}, form = {}", boardType, id, form);
-        log.info("is empty = {}", form.getPictures().get(0).isEmpty());
-
         if (bindingResult.hasErrors()) {
             log.info("게시글 수정 실패 {}", bindingResult.getAllErrors());
             return "view/board/modify_form";
         }
 
-        boardService.modifyBoardInfo(id, form);
+        boardService.modifyBoardInfo(id, boardType, form);
 
         Board board = boardService.findOne(id)
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));

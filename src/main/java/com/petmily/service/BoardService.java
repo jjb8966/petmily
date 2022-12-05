@@ -14,9 +14,11 @@ import com.petmily.domain.enum_type.BoardType;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService {
 
     private final PictureService pictureService;
@@ -57,6 +60,16 @@ public class BoardService {
 
     private static Board writeBoard(BoardType boardType, WriteBoardForm form, Member member) {
         Board board;
+
+        if (!StringUtils.hasText(form.getAnimalKind())) {
+            form.setAnimalKind(null);
+            log.info("empty animal kind = {}", form.getAnimalKind());
+        }
+
+        if (!StringUtils.hasText(form.getAnimalName())) {
+            form.setAnimalName(null);
+            log.info("empty animal name = {}", form.getAnimalName());
+        }
 
         if (boardType.equals(BoardType.FIND)) {
             board = new FindBoardBuilder(member, boardType)
@@ -122,6 +135,14 @@ public class BoardService {
 
         if (hasPicture(form.getPictures())) {
             pictureService.store(form.getPictures(), board);
+        }
+
+        if (!StringUtils.hasText(form.getAnimalKind())) {
+            form.setAnimalKind(null);
+        }
+
+        if (!StringUtils.hasText(form.getAnimalName())) {
+            form.setAnimalName(null);
         }
 
         if (boardType.equals(BoardType.FIND)) {

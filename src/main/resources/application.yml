@@ -1,7 +1,8 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/Wallet_petmily/
+    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/home/ec2-user/petmily/src/main/resources/static/Wallet_petmily
+#    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/Wallet_petmily
     username: ADMIN
     password: PetmilyProject123!
   #    driver-class-name: org.h2.Driver
@@ -11,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         #        show_sql: true
@@ -40,4 +41,5 @@ server:
       timeout: 1800
 
 file:
-  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/
+  dir: /home/ec2-user/petmily/src/main/resources/static/picture/
+#  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/

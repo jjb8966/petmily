@@ -40,5 +40,5 @@ server:
       timeout: 1800
 
 file:
-  dir: /home/picture/
+  dir: /home/ec2-user/picture/
 #  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/

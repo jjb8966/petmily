@@ -1,9 +1,8 @@
 spring:
   datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/home/ec2-user/Wallet_petmily
-#    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/Wallet_petmily
-    username: ADMIN
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://petmily.cyttrlbc5ek1.ap-northeast-2.rds.amazonaws.com/petmily
+    username: user
     password: PetmilyProject123!
   #    driver-class-name: org.h2.Driver
   #    url: jdbc:h2:tcp://localhost/~/petmily
@@ -41,5 +40,5 @@ server:
       timeout: 1800
 
 file:
-  dir: /home/ec2-user/petmily/src/main/resources/static/picture/
+  dir: /home/picture/
 #  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/

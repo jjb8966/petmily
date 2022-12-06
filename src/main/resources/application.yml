@@ -40,5 +40,5 @@ server:
       timeout: 1800
 
 file:
-  dir: /var/jenkins_home/workspace/petmily/src/main/resources/static/picture
+  dir: /home/petmily/picture/
 #  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/

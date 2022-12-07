@@ -22,4 +22,4 @@ logging:
 #    -> 콘솔
 
 file:
-  dir: /Users/joojongbum/store_image/
+  dir: /Users/joojongbum/Desktop/work/project/petmily/src/test/resources/static/picture/

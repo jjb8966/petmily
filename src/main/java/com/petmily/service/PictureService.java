@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
 
@@ -51,5 +52,22 @@ public class PictureService {
         multipartFiles.stream()
                 .forEach(multipartFile -> store(multipartFile, board));
 
+    }
+
+    @Transactional
+    public void delete(Picture picture) {
+        String fullPath = storePath + picture.getFileStoreName();
+        File deleteFile = new File(fullPath);
+
+        log.info("full path = {}", fullPath);
+
+        if (deleteFile.exists()) {
+            deleteFile.delete();
+            log.info("사진 삭제 완료");
+        } else {
+            log.info("사진이 존재하지 않습니다.");
+        }
+
+        pictureRepository.delete(picture);
     }
 }

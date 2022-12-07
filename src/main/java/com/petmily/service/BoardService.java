@@ -161,6 +161,12 @@ public class BoardService {
     // 게시글 삭제
     @Transactional
     public void deleteBoard(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
+
+        board.getPictures().stream()
+                .forEach(pictureService::delete);
+
         boardRepository.deleteById(id);
     }
 

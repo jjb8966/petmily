@@ -1,13 +1,13 @@
 spring:
   datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://petmily.cyttrlbc5ek1.ap-northeast-2.rds.amazonaws.com/petmily
-#    username: user
-#    password: PetmilyProject123!
-      driver-class-name: org.h2.Driver
-      url: jdbc:h2:tcp://localhost/~/petmily
-      username: sa
-      password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://petmily.cyttrlbc5ek1.ap-northeast-2.rds.amazonaws.com/petmily
+    username: user
+    password: PetmilyProject123!
+#      driver-class-name: org.h2.Driver
+#      url: jdbc:h2:tcp://localhost/~/petmily
+#      username: sa
+#      password:
 
   jpa:
     hibernate:
@@ -40,5 +40,5 @@ server:
       timeout: 1800
 
 file:
-#  dir: /home/petmily/picture/
-  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/
+  dir: /home/petmily/picture/
+#  dir: /Users/joojongbum/Desktop/work/project/petmily/src/main/resources/static/picture/

@@ -1,13 +1,10 @@
 package com.petmily.service;
 
-import com.petmily.domain.builder.PictureBuilder;
 import com.petmily.domain.builder.board.BoardBuilder;
-import com.petmily.domain.builder.board.FindBoardBuilder;
-import com.petmily.domain.builder.board.WatchBoardBuilder;
+import com.petmily.domain.builder.board.FindWatchBoardBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.board.Board;
-import com.petmily.domain.core.board.FindBoard;
-import com.petmily.domain.core.board.WatchBoard;
+import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
 import com.petmily.domain.enum_type.BoardType;
@@ -46,12 +43,13 @@ public class BoardService {
 
         if (hasPicture(form.getPictures())) {
             pictureService.store(form.getPictures(), board);
-        } else {
-            new PictureBuilder()
-                    .setBoard(board)
-                    .setFileStoreName("no_picture.jpeg")
-                    .build();
         }
+//        else {
+//            new PictureBuilder()
+//                    .setBoard(board)
+//                    .setFileStoreName("no_picture.jpeg")
+//                    .build();
+//        }
 
         boardRepository.save(board);
 
@@ -71,25 +69,17 @@ public class BoardService {
             log.info("empty animal name = {}", form.getAnimalName());
         }
 
-        if (boardType.equals(BoardType.FIND)) {
-            board = new FindBoardBuilder(member, boardType)
+        if (isFindWatchBoard(boardType)) {
+            board = new FindWatchBoardBuilder(member, boardType)
                     .setTitle(form.getTitle())
                     .setContent(form.getContent())
                     .setShownAll(form.getShownAll())
-                    .setLostTime(form.getLostOrWatchTime())
+                    .setLostOrWatchTime(form.getLostOrWatchTime())
                     .setSpecies(form.getSpecies())
                     .setAnimalName(form.getAnimalName())
                     .setAnimalKind(form.getAnimalKind())
                     .setAnimalAge(form.getAnimalAge())
                     .setAnimalWeight(form.getAnimalWeight())
-                    .build();
-        } else if (boardType.equals(BoardType.WATCH)) {
-            board = new WatchBoardBuilder(member, boardType)
-                    .setTitle(form.getTitle())
-                    .setContent(form.getContent())
-                    .setShownAll(form.getShownAll())
-                    .setWatchTime(form.getLostOrWatchTime())
-                    .setSpecies(form.getSpecies())
                     .build();
         } else {
             board = new BoardBuilder(member, boardType)
@@ -100,6 +90,10 @@ public class BoardService {
         }
 
         return board;
+    }
+
+    private static boolean isFindWatchBoard(BoardType boardType) {
+        return boardType.equals(BoardType.FIND) || boardType.equals(BoardType.WATCH);
     }
 
     private static boolean hasPicture(List<MultipartFile> form) {
@@ -131,7 +125,8 @@ public class BoardService {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.board.null")));
 
-        board.clearPicture();
+        board.getPictures().stream()
+                .forEach(pictureService::delete);
 
         if (hasPicture(form.getPictures())) {
             pictureService.store(form.getPictures(), board);
@@ -145,12 +140,9 @@ public class BoardService {
             form.setAnimalName(null);
         }
 
-        if (boardType.equals(BoardType.FIND)) {
-            FindBoard findBoard = (FindBoard) board;
-            findBoard.changeInfo(form);
-        } else if (boardType.equals(BoardType.WATCH)) {
-            WatchBoard watchBoard = (WatchBoard) board;
-            watchBoard.changeInfo(form);
+        if (isFindWatchBoard(boardType)) {
+            FindWatchBoard findWatchBoard = (FindWatchBoard) board;
+            findWatchBoard.changeInfo(form);
         } else {
             board.changeInfo(form);
         }

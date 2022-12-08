@@ -1,6 +1,6 @@
 package com.petmily.domain.core.board;
 
-import com.petmily.domain.builder.board.FindBoardBuilder;
+import com.petmily.domain.builder.board.FindWatchBoardBuilder;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import lombok.AccessLevel;
@@ -13,18 +13,18 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FindBoard extends Board {
+public class FindWatchBoard extends Board {
 
-    private LocalDateTime lostTime;
+    private LocalDateTime lostOrWatchTime;
     private AnimalSpecies species;
     private String animalName;
     private String animalKind;
     private Integer animalAge;
     private Float animalWeight;
 
-    public FindBoard(FindBoardBuilder builder) {
+    public FindWatchBoard(FindWatchBoardBuilder builder) {
         super(builder);
-        this.lostTime = builder.getLostTime();
+        this.lostOrWatchTime = builder.getLostOrWatchTime();
         this.species = builder.getSpecies();
         this.animalName = builder.getAnimalName();
         this.animalKind = builder.getAnimalKind();
@@ -35,7 +35,7 @@ public class FindBoard extends Board {
     @Override
     public void changeInfo(ModifyBoardForm form) {
         super.changeInfo(form);
-        this.lostTime = form.getLostOrWatchTime();
+        this.lostOrWatchTime = form.getLostOrWatchTime();
         this.species = form.getSpecies();
         this.animalName = form.getAnimalName();
         this.animalKind = form.getAnimalKind();

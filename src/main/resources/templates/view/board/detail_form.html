@@ -64,13 +64,13 @@
                                     <span th:text="${{board.lostOrWatchTime}}"></span>
                                 </div>
 
-                                <div class="col-lg-3" th:if="${boardType.equals('find') || boardType.equals('watch')}">
+                                <div class="col-lg-3" th:if="${boardType.equals('find') || boardType.equals('watch')}" th:remove="${board.species == null} ? all">
                                     <span class="badge bg-primary text-white">종</span>
                                     <span th:text="${board.species.description}"></span>
                                 </div>
                             </div>
 
-                            <div class="row" th:if="${boardType.equals('find')}">
+                            <div class="row" th:if="${boardType.equals('find') || boardType.equals('watch')}">
                                 <div class="col-lg-2" th:remove="${board.animalName == null} ? all">
                                     <span class="badge bg-primary text-white">이름</span>
                                     <span th:text="${board.animalName}"></span>

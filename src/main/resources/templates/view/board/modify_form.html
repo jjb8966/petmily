@@ -57,7 +57,7 @@
                                 </div>
                                 <br/>
 
-                                <div class="row" th:if="${boardType.equals('find')}">
+                                <div class="row" th:if="${boardType.equals('find') || boardType.equals('watch')}">
                                     <div class="col-lg-3">
                                         <span>반려동물 이름</span>
                                         <input class="form-control" type="text" th:field="${form.animalName}">
@@ -72,7 +72,8 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <span>반려동물 몸무게</span>
-                                        <input class="form-control" type="number" th:field="${form.animalWeight}">
+                                        <input class="form-control" type="text" th:field="${form.animalWeight}">
+                                        <div class="field-error" th:errors="${form.animalWeight}"></div>
                                     </div>
                                 </div>
                                 <br/>

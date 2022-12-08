@@ -17,7 +17,7 @@ public class FindWatchBoardDetailForm extends BoardDetailForm {
     private LocalDateTime lostOrWatchTime;
 
     @Nullable
-    private AnimalSpecies species = AnimalSpecies.ETC;
+    private AnimalSpecies species;
 
     @Nullable
     private String animalName;

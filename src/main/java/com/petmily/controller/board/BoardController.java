@@ -196,10 +196,13 @@ public class BoardController {
                          @PathVariable Long id,
                          @ModelAttribute("form") @Valid ModifyBoardForm form,
                          BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes) {
+                         RedirectAttributes redirectAttributes,
+                         Model model) {
 
         if (bindingResult.hasErrors()) {
             log.info("게시글 수정 실패 {}", bindingResult.getAllErrors());
+            model.addAttribute("boardType", boardType.name().toLowerCase());
+
             return "view/board/modify_form";
         }
 

@@ -34,12 +34,25 @@
             <div class="row d-flex">
                 <div class="col-lg-4 col-md-6 col-sm-12" th:each="board : ${boardPage.realPage.content}">
                     <div class="blog-entry align-self-stretch">
-                        <img class="card-img-top" height="300" th:src="|/abandoned_animal/image/${board.thumbnail.fileStoreName}|">
+                        <span th:if="${board.thumbnail != null}">
+                            <img class="card-img-top" height="300" th:src="|/abandoned_animal/image/${board.thumbnail.fileStoreName}|">
+                        </span>
+                        <span th:if="${board.thumbnail == null}">
+                            <img class="card-img-top" height="300" src="/abandoned_animal/image/no_picture.jpeg">
+                        </span>
 
                         <div class="text p-4">
                             <div class="meta mb-2">
                                 <div><span th:text="${board.writerName}">작성자</span></div>
-                                <div><span th:text="${board.species.description}">종</span></div><br>
+
+                                <span th:if="${board.species != null}">
+                                    <div><span th:text="${board.species.description}">종</span></div><br>
+                                </span>
+
+                                <span th:if="${board.species == null}">
+                                    <div>&nbsp;</div><br>
+                                </span>
+
                                 <div><span th:text="${{board.createdDate}}">게시글 작성 시간</span></div>
                             </div>
                             <h3 class="heading">

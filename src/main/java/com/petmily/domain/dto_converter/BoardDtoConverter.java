@@ -4,8 +4,7 @@ import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.board.Board;
-import com.petmily.domain.core.board.FindBoard;
-import com.petmily.domain.core.board.WatchBoard;
+import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.dto.board.BoardListForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;
@@ -63,63 +62,35 @@ public class BoardDtoConverter implements EntityDtoConverter {
         setBasicInformationForDetailForm(board, boardDetailForm);
         setReplyForms(board.getReplies(), boardDetailForm);
         setPictureForms(board.getPictures(), boardDetailForm);
-
-        if (board instanceof FindBoard) {
-            setFindBoardDetailForm((FindBoard) board, boardDetailForm);
-        }
-
-        if (board instanceof WatchBoard) {
-            setWatchBoardDetailForm((WatchBoard) board, boardDetailForm);
-        }
+        setFindWatchBoardDetailForm((FindWatchBoard) board, boardDetailForm);
 
         return boardDetailForm;
     }
 
-    private void setFindBoardDetailForm(FindBoard findBoard, FindWatchBoardDetailForm boardDetailForm) {
-        boardDetailForm.setLostOrWatchTime(findBoard.getLostTime());
-        boardDetailForm.setSpecies(findBoard.getSpecies());
-        boardDetailForm.setAnimalName(findBoard.getAnimalName());
-        boardDetailForm.setAnimalKind(findBoard.getAnimalKind());
-        boardDetailForm.setAnimalAge(findBoard.getAnimalAge());
-        boardDetailForm.setAnimalWeight(findBoard.getAnimalWeight());
-    }
-
-    private void setWatchBoardDetailForm(WatchBoard watchBoard, FindWatchBoardDetailForm boardDetailForm) {
-        boardDetailForm.setLostOrWatchTime(watchBoard.getWatchTime());
-        boardDetailForm.setSpecies(watchBoard.getSpecies());
+    private void setFindWatchBoardDetailForm(FindWatchBoard findWatchBoard, FindWatchBoardDetailForm boardDetailForm) {
+        boardDetailForm.setLostOrWatchTime(findWatchBoard.getLostOrWatchTime());
+        boardDetailForm.setSpecies(findWatchBoard.getSpecies());
+        boardDetailForm.setAnimalName(findWatchBoard.getAnimalName());
+        boardDetailForm.setAnimalKind(findWatchBoard.getAnimalKind());
+        boardDetailForm.setAnimalAge(findWatchBoard.getAnimalAge());
+        boardDetailForm.setAnimalWeight(findWatchBoard.getAnimalWeight());
     }
 
     private FindWatchBoardListForm convertToFindWatchBoardListForm(Board board) {
         FindWatchBoardListForm boardListForm = new FindWatchBoardListForm();
 
         setBasicInformationForListForm(board, boardListForm);
-
-        if (board instanceof FindBoard) {
-            setFindBoardListForm((FindBoard) board, boardListForm);
-        }
-
-        if (board instanceof WatchBoard) {
-            setWatchBoardListForm((WatchBoard) board, boardListForm);
-        }
+        setFindWatchBoardListForm((FindWatchBoard) board, boardListForm);
 
         return boardListForm;
     }
 
-    private static void setWatchBoardListForm(WatchBoard watchBoard, FindWatchBoardListForm findWatchBoardListForm) {
-        findWatchBoardListForm.setLostOrWatchTime(watchBoard.getWatchTime());
-        findWatchBoardListForm.setSpecies(watchBoard.getSpecies());
+    private static void setFindWatchBoardListForm(FindWatchBoard findWatchBoard, FindWatchBoardListForm findWatchBoardListForm) {
+        findWatchBoardListForm.setLostOrWatchTime(findWatchBoard.getLostOrWatchTime());
+        findWatchBoardListForm.setSpecies(findWatchBoard.getSpecies());
 
-        if (!watchBoard.getPictures().isEmpty()) {
-            findWatchBoardListForm.setThumbnail(watchBoard.getPictures().get(0));
-        }
-    }
-
-    private static void setFindBoardListForm(FindBoard findBoard, FindWatchBoardListForm findWatchBoardListForm) {
-        findWatchBoardListForm.setLostOrWatchTime(findBoard.getLostTime());
-        findWatchBoardListForm.setSpecies(findBoard.getSpecies());
-
-        if (!findBoard.getPictures().isEmpty()) {
-            findWatchBoardListForm.setThumbnail(findBoard.getPictures().get(0));
+        if (!findWatchBoard.getPictures().isEmpty()) {
+            findWatchBoardListForm.setThumbnail(findWatchBoard.getPictures().get(0));
         }
     }
 
@@ -197,29 +168,20 @@ public class BoardDtoConverter implements EntityDtoConverter {
 
         setBasicInformationForModifyForm(board, modifyBoardForm);
 
-        if (board instanceof FindBoard) {
-            setModifyFindBoardForm((FindBoard) board, modifyBoardForm);
-        }
-
-        if (board instanceof WatchBoard) {
-            setModifyWatchBoardForm((WatchBoard) board, modifyBoardForm);
+        if (board instanceof FindWatchBoard) {
+            setModifyFindWatchBoardForm((FindWatchBoard) board, modifyBoardForm);
         }
 
         return modifyBoardForm;
     }
 
-    private void setModifyFindBoardForm(FindBoard findBoard, ModifyBoardForm modifyBoardForm) {
-        modifyBoardForm.setLostOrWatchTime(findBoard.getLostTime());
-        modifyBoardForm.setSpecies(findBoard.getSpecies());
-        modifyBoardForm.setAnimalName(findBoard.getAnimalName());
-        modifyBoardForm.setAnimalKind(findBoard.getAnimalKind());
-        modifyBoardForm.setAnimalAge(findBoard.getAnimalAge());
-        modifyBoardForm.setAnimalWeight(findBoard.getAnimalWeight());
-    }
-
-    private void setModifyWatchBoardForm(WatchBoard watchBoard, ModifyBoardForm modifyBoardForm) {
-        modifyBoardForm.setLostOrWatchTime(watchBoard.getWatchTime());
-        modifyBoardForm.setSpecies(watchBoard.getSpecies());
+    private void setModifyFindWatchBoardForm(FindWatchBoard findWatchBoard, ModifyBoardForm modifyBoardForm) {
+        modifyBoardForm.setLostOrWatchTime(findWatchBoard.getLostOrWatchTime());
+        modifyBoardForm.setSpecies(findWatchBoard.getSpecies());
+        modifyBoardForm.setAnimalName(findWatchBoard.getAnimalName());
+        modifyBoardForm.setAnimalKind(findWatchBoard.getAnimalKind());
+        modifyBoardForm.setAnimalAge(findWatchBoard.getAnimalAge());
+        modifyBoardForm.setAnimalWeight(findWatchBoard.getAnimalWeight());
     }
 
     private static void setBasicInformationForModifyForm(Board board, ModifyBoardForm boardForm) {

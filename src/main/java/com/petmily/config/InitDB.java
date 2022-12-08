@@ -28,9 +28,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//@Component
+@Component
 @RequiredArgsConstructor
-@Profile("local")
+@Profile("dev")
 public class InitDB {
 
     public static final int NUMBER_OF_MEMBER = 10;

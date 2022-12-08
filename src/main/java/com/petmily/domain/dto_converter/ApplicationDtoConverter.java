@@ -24,22 +24,22 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         Application application = (Application) entity;
         T dto = null;
 
-        if (dtoType.isAssignableFrom(ApplicationListForm.class)) {
+        if (ApplicationListForm.class.isAssignableFrom(dtoType)) {
             log.info("Application -> ApplicationListForm");
             dto = (T) convertApplicationListForm(application);
         }
 
-        if (dtoType.isAssignableFrom(DonationDetailForm.class)) {
+        if (DonationDetailForm.class.isAssignableFrom(dtoType)) {
             log.info("Application -> DonationDetailForm");
             dto = (T) convertToDonationDetailForm(application);
         }
 
-        if (dtoType.isAssignableFrom(TempProtectionDetailForm.class)) {
+        if (TempProtectionDetailForm.class.isAssignableFrom(dtoType)) {
             log.info("Application -> TempProtectionDetailForm");
             dto = (T) convertToTempProtectionDetailForm(application);
         }
 
-        if (dtoType.isAssignableFrom(AdoptDetailForm.class)) {
+        if (AdoptDetailForm.class.isAssignableFrom(dtoType)) {
             log.info("Application -> AdoptDetailForm");
             dto = (T) convertToAdoptDetailForm(application);
         }

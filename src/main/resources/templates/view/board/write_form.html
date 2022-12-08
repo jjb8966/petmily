@@ -67,7 +67,7 @@
                                 </div>
                                 <br/>
 
-                                <div class="row" th:if="${boardType.equals('find')}">
+                                <div class="row" th:if="${boardType.equals('find') || boardType.equals('watch')}">
                                     <div class="col-lg-3">
                                         <span>반려동물 이름</span>
                                         <input class="form-control" type="text" th:field="${form.animalName}">

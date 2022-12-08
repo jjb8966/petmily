@@ -1,11 +1,9 @@
 package com.petmily.domain.builder;
 
-import com.petmily.domain.builder.board.FindBoardBuilder;
-import com.petmily.domain.builder.board.WatchBoardBuilder;
+import com.petmily.domain.builder.board.FindWatchBoardBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.board.Board;
-import com.petmily.domain.core.board.FindBoard;
-import com.petmily.domain.core.board.WatchBoard;
+import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.BoardType;
 import org.junit.jupiter.api.DisplayName;
@@ -33,10 +31,10 @@ class BoardBuilderTest {
         Member member = new MemberBuilder("member", "123").build();
 
         //when
-        FindBoard createFindBoard = new FindBoardBuilder(member, BoardType.FIND)
+        FindWatchBoard createFindWatchBoard = new FindWatchBoardBuilder(member, BoardType.FIND)
                 .setTitle("title")
                 .setContent("content")
-                .setLostTime(LocalDateTime.now())
+                .setLostOrWatchTime(LocalDateTime.now())
                 .setSpecies(AnimalSpecies.CAT)
                 .setAnimalName("야옹이")
                 .setAnimalKind("페르시안")
@@ -44,10 +42,10 @@ class BoardBuilderTest {
                 .setAnimalWeight(5.0F)
                 .build();
 
-        WatchBoard createWatchBoard = new WatchBoardBuilder(member, BoardType.WATCH)
+        FindWatchBoard createWatchBoard = new FindWatchBoardBuilder(member, BoardType.WATCH)
                 .setTitle("title")
                 .setContent("content")
-                .setWatchTime(LocalDateTime.now())
+                .setLostOrWatchTime(LocalDateTime.now())
                 .setSpecies(AnimalSpecies.DOG)
                 .build();
 
@@ -56,19 +54,19 @@ class BoardBuilderTest {
         em.flush();
         em.clear();
 
-        Board findFindBoard = em.find(Board.class, createFindBoard.getId());
+        Board findFindBoard = em.find(Board.class, createFindWatchBoard.getId());
         Board findWatchBoard = em.find(Board.class, createWatchBoard.getId());
-        FindBoard findBoard = (FindBoard) findFindBoard;
-        WatchBoard watchBoard = (WatchBoard) findWatchBoard;
+        FindWatchBoard findBoard = (FindWatchBoard) findFindBoard;
+        FindWatchBoard watchBoard = (FindWatchBoard) findWatchBoard;
 
         //then
-        assertThat(findFindBoard).isInstanceOf(FindBoard.class);
-        assertThat(findWatchBoard).isInstanceOf(WatchBoard.class);
+        assertThat(findFindBoard).isInstanceOf(FindWatchBoard.class);
+        assertThat(findWatchBoard).isInstanceOf(FindWatchBoard.class);
 
-        assertThat(findBoard.getLostTime()).isEqualTo(createFindBoard.getLostTime());
-        assertThat(findBoard.getSpecies()).isEqualTo(createFindBoard.getSpecies());
+        assertThat(findBoard.getLostOrWatchTime()).isEqualTo(createFindWatchBoard.getLostOrWatchTime());
+        assertThat(findBoard.getSpecies()).isEqualTo(createFindWatchBoard.getSpecies());
 
-        assertThat(watchBoard.getWatchTime()).isEqualTo(createWatchBoard.getWatchTime());
+        assertThat(watchBoard.getLostOrWatchTime()).isEqualTo(createWatchBoard.getLostOrWatchTime());
         assertThat(watchBoard.getSpecies()).isEqualTo(createWatchBoard.getSpecies());
     }
 

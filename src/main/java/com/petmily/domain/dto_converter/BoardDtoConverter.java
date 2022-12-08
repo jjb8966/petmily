@@ -28,27 +28,27 @@ public class BoardDtoConverter implements EntityDtoConverter {
         Board board = (Board) entity;
         T dto = null;
 
-        if (dtoType.isAssignableFrom(BoardListForm.class)) {
+        if (BoardListForm.class.isAssignableFrom(dtoType)) {
             log.info("Board -> BoardListForm");
             dto = (T) convertToBoardListForm(board);
         }
 
-        if (dtoType.isAssignableFrom(BoardDetailForm.class)) {
+        if (BoardDetailForm.class.isAssignableFrom(dtoType)) {
             log.info("Board -> BoardDetailForm");
             dto = (T) convertToBoardDetailForm(board);
         }
 
-        if (dtoType.isAssignableFrom(ModifyBoardForm.class)) {
+        if (ModifyBoardForm.class.isAssignableFrom(dtoType)) {
             log.info("Board -> ModifyBoardForm");
             dto = (T) convertToModifyBoardForm(board);
         }
 
-        if (dtoType.isAssignableFrom(FindWatchBoardListForm.class)) {
+        if (FindWatchBoardListForm.class.isAssignableFrom(dtoType)) {
             log.info("Board -> FindWatchBoardListForm");
             dto = (T) convertToFindWatchBoardListForm(board);
         }
 
-        if (dtoType.isAssignableFrom(FindWatchBoardDetailForm.class)) {
+        if (FindWatchBoardDetailForm.class.isAssignableFrom(dtoType)) {
             log.info("Board -> FindWatchBoardDetailForm");
             dto = (T) convertToFindWatchBoardDetailForm(board);
         }

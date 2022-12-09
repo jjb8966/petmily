@@ -10,9 +10,6 @@
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <p class="breadcrumbs mb-2">
-                        <span class="mr-2"><span>Member - Mypage <i class="ion-ios-arrow-forward"></i></span></span>
-                    </p>
                     <h1 class="mb-0 bread">마이페이지</h1>
                 </div>
             </div>
@@ -34,7 +31,7 @@
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <span class="fa fa-map-marker"></span>
+                                        <span class="fa fa-birthday-cake" aria-hidden="true"></span>
                                     </div>
                                     <div class="text">
                                         <p><span>생년월일 : </span><span th:text="${session.loginMember.birth}">0000-00-00</span></p>
@@ -46,7 +43,7 @@
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <span class="fa fa-phone"></span>
+                                        <span class="fa fa-envelope-o" aria-hidden="true"></span>
                                     </div>
                                     <div class="text">
                                         <p><span>이메일 : </span><span th:text="${{session.loginMember.email}}">~~@~~</span></p>
@@ -58,7 +55,7 @@
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <span class="fa fa-paper-plane"></span>
+                                        <span class="fa fa-phone"></span>
                                     </div>
                                     <div class="text">
                                         <p><span>전화번호 : </span><span th:text="${{session.loginMember.phoneNumber}}">010-1111-1111</span></p>
@@ -70,7 +67,7 @@
                             <div class="col-md-3">
                                 <div class="dbox w-100 text-center">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <span class="fa fa-globe"></span>
+                                        <span class="fa fa-user-o" aria-hidden="true"></span>
                                     </div>
                                     <div class="text">
                                         <p><span>회원 등급 : </span><span th:text="${session.loginMember.grade.description}">회원 등급</span></p>
@@ -123,8 +120,10 @@
                                     <div class="d-block services text-center">
                                         <div class="media-body p-4">
                                             <h3 class="heading">회원 탈퇴</h3>
-                                            <a href="/member/auth/withdraw" class="btn-custom d-flex align-items-center justify-content-center">
+                                            <a href="/member/auth/withdraw"
+                                               class="btn-custom d-flex align-items-center justify-content-center">
                                                 <span class="fa fa-chevron-right"></span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

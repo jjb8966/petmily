@@ -10,7 +10,15 @@
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <h1 class="mb-0 bread">신청서 상세보기</h1>
+                    <div th:if="${appType.equals('Donation')}">
+                        <h1 class="mb-0 bread">후원 신청서</h1>
+                    </div>
+                    <div th:if="${appType.equals('TemporaryProtection')}">
+                        <h1 class="mb-0 bread">임시보호 신청서</h1>
+                    </div>
+                    <div th:if="${appType.equals('Adopt')}">
+                        <h1 class="mb-0 bread">입양 신청서</h1>
+                    </div>
                 </div>
             </div>
         </div>

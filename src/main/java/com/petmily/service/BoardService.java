@@ -7,12 +7,15 @@ import com.petmily.domain.core.board.Board;
 import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
+import com.petmily.domain.dto.board.find_watch.SearchCondition;
 import com.petmily.domain.enum_type.BoardType;
 import com.petmily.repository.BoardRepository;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -44,12 +47,6 @@ public class BoardService {
         if (hasPicture(form.getPictures())) {
             pictureService.store(form.getPictures(), board);
         }
-//        else {
-//            new PictureBuilder()
-//                    .setBoard(board)
-//                    .setFileStoreName("no_picture.jpeg")
-//                    .build();
-//        }
 
         boardRepository.save(board);
 
@@ -165,4 +162,13 @@ public class BoardService {
     private String getMessage(String code) {
         return ms.getMessage(code, null, Locale.KOREA);
     }
+
+    public Page<Board> findAllByBoardType(BoardType boardType, SearchCondition searchCondition, Pageable pageable) {
+        if (isFindWatchBoard(boardType)) {
+            return boardRepository.findAllByBoardType(boardType, searchCondition, pageable);
+        } else {
+            return boardRepository.findAllByBoardType(boardType, pageable);
+        }
+    }
+
 }

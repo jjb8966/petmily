@@ -131,8 +131,8 @@ public class InitDB {
                     if (kindOfBoard == INQUIRY_BOARD) {
                         new BoardBuilder(member, BoardType.INQUIRY)
                                 .setShownAll(true)
-                                .setTitle("board" + kindOfBoard)
-                                .setContent("content" + kindOfBoard)
+                                .setTitle("board" + imageCount)
+                                .setContent("content" + imageCount)
                                 .build();
                     }
 
@@ -145,10 +145,10 @@ public class InitDB {
                     }
 
                     if (kindOfBoard == FIND_BOARD) {
-                        FindWatchBoard findWatchBoard = new FindWatchBoardBuilder(member, BoardType.FIND)
+                        FindWatchBoard findWatchBoard1 = new FindWatchBoardBuilder(member, BoardType.FIND)
                                 .setShownAll(true)
-                                .setTitle("board" + kindOfBoard)
-                                .setContent("content" + kindOfBoard)
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
                                 .setLostOrWatchTime(LocalDateTime.now())
                                 .setSpecies(AnimalSpecies.CAT)
                                 .setAnimalName("야옹이")
@@ -157,24 +157,62 @@ public class InitDB {
                                 .setAnimalWeight((float) (imageCount % 5 + 1))
                                 .build();
 
-                        new PictureBuilder()
-                                .setFileStoreName(catImageName)
-                                .setBoard(findWatchBoard)
-                                .build();
-                    }
-
-                    if (kindOfBoard == WATCH_BOARD) {
-                        FindWatchBoard watchBoard = new FindWatchBoardBuilder(member, BoardType.WATCH)
+                        FindWatchBoard findWatchBoard2 = new FindWatchBoardBuilder(member, BoardType.FIND)
                                 .setShownAll(true)
-                                .setTitle("board" + imageCount)
-                                .setContent("content" + imageCount)
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
                                 .setLostOrWatchTime(LocalDateTime.now())
                                 .setSpecies(AnimalSpecies.DOG)
+                                .setAnimalName("멍멍이")
+                                .setAnimalKind("불독")
+                                .setAnimalAge(imageCount % 10 + 1)
+                                .setAnimalWeight((float) (imageCount % 5 + 1))
+                                .build();
+
+                        new PictureBuilder()
+                                .setFileStoreName(catImageName)
+                                .setBoard(findWatchBoard1)
                                 .build();
 
                         new PictureBuilder()
                                 .setFileStoreName(dogImageName)
-                                .setBoard(watchBoard)
+                                .setBoard(findWatchBoard2)
+                                .build();
+                    }
+
+                    if (kindOfBoard == WATCH_BOARD) {
+                        FindWatchBoard watchBoard1 = new FindWatchBoardBuilder(member, BoardType.WATCH)
+                                .setShownAll(true)
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
+                                .setLostOrWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.CAT)
+                                .setAnimalName("야옹이")
+                                .setAnimalKind("페르시안")
+                                .setAnimalAge(imageCount % 10 + 1)
+                                .setAnimalWeight((float) (imageCount % 5 + 1))
+                                .build();
+
+                        FindWatchBoard watchBoard2 = new FindWatchBoardBuilder(member, BoardType.WATCH)
+                                .setShownAll(true)
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
+                                .setLostOrWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.DOG)
+                                .setAnimalName("멍멍이")
+                                .setAnimalKind("불독")
+                                .setAnimalAge(imageCount % 10 + 1)
+                                .setAnimalWeight((float) (imageCount % 5 + 1))
+                                .build();
+
+                        new PictureBuilder()
+                                .setFileStoreName(catImageName)
+                                .setBoard(watchBoard1)
+                                .build();
+
+                        new PictureBuilder()
+                                .setFileStoreName(dogImageName)
+                                .setBoard(watchBoard2)
                                 .build();
                     }
                 }

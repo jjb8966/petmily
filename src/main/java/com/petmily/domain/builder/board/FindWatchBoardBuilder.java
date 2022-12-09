@@ -6,6 +6,7 @@ import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.BoardType;
+import com.petmily.domain.enum_type.FindWatchBoardStatus;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class FindWatchBoardBuilder extends BoardBuilder {
 
     private LocalDateTime lostOrWatchTime;
     private AnimalSpecies species;
+    private FindWatchBoardStatus boardStatus = FindWatchBoardStatus.LOST;
     private String animalName;
     private String animalKind;
     private Integer animalAge;
@@ -71,6 +73,11 @@ public class FindWatchBoardBuilder extends BoardBuilder {
 
     public FindWatchBoardBuilder setSpecies(AnimalSpecies species) {
         this.species = species;
+        return this;
+    }
+
+    public FindWatchBoardBuilder setBoardStatus(FindWatchBoardStatus boardStatus) {
+        this.boardStatus = boardStatus;
         return this;
     }
 

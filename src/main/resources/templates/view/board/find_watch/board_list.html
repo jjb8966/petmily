@@ -24,6 +24,36 @@
     <section class="ftco-section bg-light">
         <div class="container">
             <div class="modal-header">
+                <form th:action="|/board/${boardType}/list|" th:object="${searchForm}" method="get">
+                    <div class="form-group row">
+                        <div class="col">
+                            <select class="form-control" th:field="*{species}">
+                                <option value="" selected>모든 동물</option>
+                                <option th:each="species : ${animalSpecies}"
+                                        th:value="${species}" th:text="${{species}}">
+                                    동물 종류
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <select class="form-control" th:field="*{boardStatus}">
+                                <option value="" selected>모든 상태</option>
+                                <option th:each="status : ${boardStatus}"
+                                        th:value="${status}" th:text="${status.description}">
+                                    동물 상태
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <input type="text" class="form-control" th:field="*{keyword}" placeholder="검색어">
+                        </div>
+                        <div class="col">
+                            <input type="submit" class="btn btn-primary" value="검색">
+                        </div>
+                    </div>
+                </form>
                 <div class="float-left">
                     <a th:href="|/board/${boardType}/list?sort=createdDate,desc|"><button class="btn btn-primary" type="button">최신순</button></a> &nbsp;
                     <a th:href="|/board/${boardType}/list?sort=createdDate,asc|"><button class="btn btn-primary" type="button">오래된순</button></a> &nbsp;

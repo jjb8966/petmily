@@ -68,6 +68,7 @@ public class PictureService {
             log.info("사진이 존재하지 않습니다.");
         }
 
+        picture.deleteBoard();
         pictureRepository.delete(picture);
     }
 }

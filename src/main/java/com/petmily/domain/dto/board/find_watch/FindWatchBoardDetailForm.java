@@ -2,6 +2,7 @@ package com.petmily.domain.dto.board.find_watch;
 
 import com.petmily.domain.dto.board.BoardDetailForm;
 import com.petmily.domain.enum_type.AnimalSpecies;
+import com.petmily.domain.enum_type.FindWatchBoardStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.NumberFormat;
@@ -17,7 +18,9 @@ public class FindWatchBoardDetailForm extends BoardDetailForm {
     private LocalDateTime lostOrWatchTime;
 
     @Nullable
-    private AnimalSpecies species = AnimalSpecies.ETC;
+    private AnimalSpecies species;
+
+    private FindWatchBoardStatus boardStatus;
 
     @Nullable
     private String animalName;

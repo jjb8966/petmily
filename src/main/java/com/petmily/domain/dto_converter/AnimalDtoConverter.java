@@ -18,12 +18,12 @@ public class AnimalDtoConverter implements EntityDtoConverter {
         AbandonedAnimal animal = (AbandonedAnimal) entity;
         T dto = null;
 
-        if (dtoType.isAssignableFrom(AnimalDetailForm.class)) {
+        if (AnimalDetailForm.class.isAssignableFrom(dtoType)) {
             log.info("AnimalDetailForm 변환");
             dto = (T) convertToAnimalDetailForm(animal);
         }
 
-        if (dtoType.isAssignableFrom(ChangeAnimalForm.class)) {
+        if (ChangeAnimalForm.class.isAssignableFrom(dtoType)) {
             log.info("ChangeAnimalForm 변환");
             dto = (T) convertToChangeAnimalForm(animal);
         }

@@ -17,7 +17,7 @@ public class MemberDtoConverter implements EntityDtoConverter {
         Member member = (Member) entity;
         T dto = null;
 
-        if (dtoType.isAssignableFrom(ModifyMemberForm.class)) {
+        if (ModifyMemberForm.class.isAssignableFrom(dtoType)) {
             log.info("Member -> ModifyMemberForm");
             dto = (T) convertToModifyMemberForm(member);
         }

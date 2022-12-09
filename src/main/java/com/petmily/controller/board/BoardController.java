@@ -10,10 +10,12 @@ import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
 import com.petmily.domain.dto.board.find_watch.FindWatchBoardDetailForm;
 import com.petmily.domain.dto.board.find_watch.FindWatchBoardListForm;
+import com.petmily.domain.dto.board.find_watch.SearchCondition;
 import com.petmily.domain.dto.reply.WriteReplyForm;
 import com.petmily.domain.dto_converter.BoardDtoConverter;
+import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.BoardType;
-import com.petmily.repository.BoardRepository;
+import com.petmily.domain.enum_type.FindWatchBoardStatus;
 import com.petmily.service.BoardService;
 import com.petmily.service.PictureService;
 import com.petmily.service.ReplyService;
@@ -27,12 +29,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -45,7 +52,6 @@ public class BoardController {
     private final BoardService boardService;
     private final ReplyService replyService;
     private final PictureService pictureService;
-    private final BoardRepository boardRepository;
     private final BoardDtoConverter boardDtoConverter;
     private final MessageSource ms;
 
@@ -55,13 +61,33 @@ public class BoardController {
         return pictureService.findOne(fileStoreName);
     }
 
+    @ModelAttribute("animalSpecies")
+    public AnimalSpecies[] animalSpecies() {
+        return AnimalSpecies.values();
+    }
+
+    @ModelAttribute("boardStatus")
+    public FindWatchBoardStatus[] findWatchBoardStatuses() {
+        return FindWatchBoardStatus.values();
+    }
+
     @GetMapping("/board/{boardType}/list")
     public String list(@PathVariable BoardType boardType,
                        @PageableDefault(size = 9, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+                       @ModelAttribute("searchForm") SearchCondition searchCondition,
+                       @RequestParam(required = false) Integer page,
+                       @CookieValue(value = "species", required = false) String cookieSpecies,
+                       @CookieValue(name = "boardStatus", required = false) String cookieBoardStatus,
+                       @CookieValue(name = "keyword", required = false) String cookieKeyword,
+                       HttpServletResponse response,
                        Model model) {
 
+        if (page != null || hasCondition(searchCondition)) {
+            checkSearchCondition(searchCondition, cookieSpecies, cookieBoardStatus, cookieKeyword, response);
+        }
+
         Page<BoardListForm> boardListForm;
-        Page<Board> allBoards = boardRepository.findAllByBoardType(boardType, pageable);
+        Page<Board> allBoards = boardService.findAllByBoardType(boardType, searchCondition, pageable);
 
         if (isFindWatchBoard(boardType)) {
             boardListForm = convertToFindWatchBoardListForm(allBoards);
@@ -79,6 +105,69 @@ public class BoardController {
         } else {
             return "view/board/board_list";
         }
+    }
+
+    private void checkSearchCondition(SearchCondition searchCondition, String cookieSpecies, String cookieBoardStatus, String cookieKeyword, HttpServletResponse response) {
+        if (!hasCondition(searchCondition)) {
+            updateSearchCondition(searchCondition, cookieSpecies, cookieBoardStatus, cookieKeyword);
+        } else {
+            updateCookies(searchCondition, response);
+        }
+    }
+
+    private boolean hasCondition(SearchCondition searchCondition) {
+        return searchCondition.getSpecies() != null || searchCondition.getBoardStatus() != null || StringUtils.hasText(searchCondition.getKeyword());
+    }
+
+    private void updateSearchCondition(SearchCondition searchCondition, String cookieSpecies, String cookieBoardStatus, String cookieKeyword) {
+        if (cookieSpecies != null) {
+            searchCondition.setSpecies(AnimalSpecies.valueOf(cookieSpecies));
+        }
+
+        if (cookieBoardStatus != null) {
+            searchCondition.setBoardStatus(FindWatchBoardStatus.valueOf(cookieBoardStatus));
+        }
+
+        searchCondition.setKeyword(cookieKeyword);
+    }
+
+    private void updateCookies(SearchCondition searchCondition, HttpServletResponse response) {
+        Cookie speciesCookie;
+        Cookie boardStatusCookie;
+        Cookie keywordCookie;
+
+        if (searchCondition.getSpecies() != null) {
+            speciesCookie = new Cookie("species", searchCondition.getSpecies().name());
+        } else {
+            speciesCookie = removeCookie("species");
+        }
+
+        if (searchCondition.getBoardStatus() != null) {
+            boardStatusCookie = new Cookie("boardStatus", searchCondition.getBoardStatus().name());
+        } else {
+            boardStatusCookie = removeCookie("boardStatus");
+        }
+
+        if (StringUtils.hasText(searchCondition.getKeyword())) {
+            keywordCookie = new Cookie("keyword", searchCondition.getKeyword());
+        } else {
+            keywordCookie = removeCookie("keyword");
+        }
+
+        ArrayList<Cookie> cookies = new ArrayList<>(Arrays.asList(speciesCookie, boardStatusCookie, keywordCookie));
+
+        cookies.stream()
+                .forEach(cookie -> {
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                });
+    }
+
+    private static Cookie removeCookie(String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+
+        return cookie;
     }
 
     private static boolean isFindWatchBoard(BoardType boardType) {
@@ -150,7 +239,7 @@ public class BoardController {
                         RedirectAttributes redirectAttributes,
                         Model model) {
 
-        log.info("form class = {}", form.getClass());
+        log.info("write form data = {}", form);
 
         if (bindingResult.hasErrors()) {
             log.info("게시글 작성 실패 {}", bindingResult.getAllErrors());
@@ -196,10 +285,13 @@ public class BoardController {
                          @PathVariable Long id,
                          @ModelAttribute("form") @Valid ModifyBoardForm form,
                          BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes) {
+                         RedirectAttributes redirectAttributes,
+                         Model model) {
 
         if (bindingResult.hasErrors()) {
             log.info("게시글 수정 실패 {}", bindingResult.getAllErrors());
+            model.addAttribute("boardType", boardType.name().toLowerCase());
+
             return "view/board/modify_form";
         }
 

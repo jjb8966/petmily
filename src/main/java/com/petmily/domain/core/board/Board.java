@@ -60,12 +60,4 @@ public class Board extends BaseEntity {
         this.shownAll = from.getShownAll();
     }
 
-    public void clearPicture() {
-        for (Picture picture : pictures) {
-            picture.deleteBoard();
-        }
-
-        this.pictures.clear();
-    }
-
 }

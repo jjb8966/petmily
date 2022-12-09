@@ -7,12 +7,10 @@ import com.petmily.domain.builder.application.AdoptBuilder;
 import com.petmily.domain.builder.application.DonationBuilder;
 import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
 import com.petmily.domain.builder.board.BoardBuilder;
-import com.petmily.domain.builder.board.FindBoardBuilder;
-import com.petmily.domain.builder.board.WatchBoardBuilder;
+import com.petmily.domain.builder.board.FindWatchBoardBuilder;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.board.FindBoard;
-import com.petmily.domain.core.board.WatchBoard;
+import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.embeded_type.AccountNumber;
 import com.petmily.domain.embeded_type.Email;
 import com.petmily.domain.embeded_type.PhoneNumber;
@@ -133,8 +131,8 @@ public class InitDB {
                     if (kindOfBoard == INQUIRY_BOARD) {
                         new BoardBuilder(member, BoardType.INQUIRY)
                                 .setShownAll(true)
-                                .setTitle("board" + kindOfBoard)
-                                .setContent("content" + kindOfBoard)
+                                .setTitle("board" + imageCount)
+                                .setContent("content" + imageCount)
                                 .build();
                     }
 
@@ -147,11 +145,11 @@ public class InitDB {
                     }
 
                     if (kindOfBoard == FIND_BOARD) {
-                        FindBoard findBoard = new FindBoardBuilder(member, BoardType.FIND)
+                        FindWatchBoard findWatchBoard1 = new FindWatchBoardBuilder(member, BoardType.FIND)
                                 .setShownAll(true)
-                                .setTitle("board" + kindOfBoard)
-                                .setContent("content" + kindOfBoard)
-                                .setLostTime(LocalDateTime.now())
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
+                                .setLostOrWatchTime(LocalDateTime.now())
                                 .setSpecies(AnimalSpecies.CAT)
                                 .setAnimalName("야옹이")
                                 .setAnimalKind("페르시안")
@@ -159,24 +157,62 @@ public class InitDB {
                                 .setAnimalWeight((float) (imageCount % 5 + 1))
                                 .build();
 
+                        FindWatchBoard findWatchBoard2 = new FindWatchBoardBuilder(member, BoardType.FIND)
+                                .setShownAll(true)
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
+                                .setLostOrWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.DOG)
+                                .setAnimalName("멍멍이")
+                                .setAnimalKind("불독")
+                                .setAnimalAge(imageCount % 10 + 1)
+                                .setAnimalWeight((float) (imageCount % 5 + 1))
+                                .build();
+
                         new PictureBuilder()
                                 .setFileStoreName(catImageName)
-                                .setBoard(findBoard)
-                                .build();
-                    }
-
-                    if (kindOfBoard == WATCH_BOARD) {
-                        WatchBoard watchBoard = new WatchBoardBuilder(member, BoardType.WATCH)
-                                .setShownAll(true)
-                                .setTitle("board" + imageCount)
-                                .setContent("content" + imageCount)
-                                .setWatchTime(LocalDateTime.now())
-                                .setSpecies(AnimalSpecies.DOG)
+                                .setBoard(findWatchBoard1)
                                 .build();
 
                         new PictureBuilder()
                                 .setFileStoreName(dogImageName)
-                                .setBoard(watchBoard)
+                                .setBoard(findWatchBoard2)
+                                .build();
+                    }
+
+                    if (kindOfBoard == WATCH_BOARD) {
+                        FindWatchBoard watchBoard1 = new FindWatchBoardBuilder(member, BoardType.WATCH)
+                                .setShownAll(true)
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
+                                .setLostOrWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.CAT)
+                                .setAnimalName("야옹이")
+                                .setAnimalKind("페르시안")
+                                .setAnimalAge(imageCount % 10 + 1)
+                                .setAnimalWeight((float) (imageCount % 5 + 1))
+                                .build();
+
+                        FindWatchBoard watchBoard2 = new FindWatchBoardBuilder(member, BoardType.WATCH)
+                                .setShownAll(true)
+                                .setTitle("find board" + imageCount)
+                                .setContent("find content" + imageCount)
+                                .setLostOrWatchTime(LocalDateTime.now())
+                                .setSpecies(AnimalSpecies.DOG)
+                                .setAnimalName("멍멍이")
+                                .setAnimalKind("불독")
+                                .setAnimalAge(imageCount % 10 + 1)
+                                .setAnimalWeight((float) (imageCount % 5 + 1))
+                                .build();
+
+                        new PictureBuilder()
+                                .setFileStoreName(catImageName)
+                                .setBoard(watchBoard1)
+                                .build();
+
+                        new PictureBuilder()
+                                .setFileStoreName(dogImageName)
+                                .setBoard(watchBoard2)
                                 .build();
                     }
                 }

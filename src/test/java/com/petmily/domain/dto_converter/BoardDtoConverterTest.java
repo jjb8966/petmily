@@ -1,9 +1,9 @@
 package com.petmily.domain.dto_converter;
 
 import com.petmily.domain.builder.MemberBuilder;
-import com.petmily.domain.builder.board.FindBoardBuilder;
+import com.petmily.domain.builder.board.FindWatchBoardBuilder;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.core.board.FindBoard;
+import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.dto.board.find_watch.FindWatchBoardDetailForm;
 import com.petmily.domain.dto.board.find_watch.FindWatchBoardListForm;
 import com.petmily.domain.enum_type.AnimalSpecies;
@@ -36,23 +36,23 @@ class BoardDtoConverterTest {
                 .setName("memberA")
                 .build();
 
-        FindBoard findBoard = new FindBoardBuilder(member, BoardType.FIND)
+        FindWatchBoard findWatchBoard = new FindWatchBoardBuilder(member, BoardType.FIND)
                 .setTitle("title")
-                .setLostTime(LocalDateTime.now())
+                .setLostOrWatchTime(LocalDateTime.now())
                 .setSpecies(AnimalSpecies.CAT)
                 .build();
 
         em.persist(member);
 
-        FindWatchBoardListForm findWatchBoardListForm = boardDtoConverter.entityToDto(findBoard, FindWatchBoardListForm.class).orElseThrow();
+        FindWatchBoardListForm findWatchBoardListForm = boardDtoConverter.entityToDto(findWatchBoard, FindWatchBoardListForm.class).orElseThrow();
 
-        assertThat(findWatchBoardListForm.getId()).isEqualTo(findBoard.getId());
+        assertThat(findWatchBoardListForm.getId()).isEqualTo(findWatchBoard.getId());
         assertThat(findWatchBoardListForm.getMemberId()).isEqualTo(member.getId());
 
         assertThat(findWatchBoardListForm.getWriterName()).isEqualTo(member.getName());
-        assertThat(findWatchBoardListForm.getTitle()).isEqualTo(findBoard.getTitle());
-        assertThat(findWatchBoardListForm.getLostOrWatchTime()).isEqualTo(findBoard.getLostTime());
-        assertThat(findWatchBoardListForm.getSpecies()).isEqualTo(findBoard.getSpecies());
+        assertThat(findWatchBoardListForm.getTitle()).isEqualTo(findWatchBoard.getTitle());
+        assertThat(findWatchBoardListForm.getLostOrWatchTime()).isEqualTo(findWatchBoard.getLostOrWatchTime());
+        assertThat(findWatchBoardListForm.getSpecies()).isEqualTo(findWatchBoard.getSpecies());
     }
 
     @Test
@@ -62,23 +62,23 @@ class BoardDtoConverterTest {
                 .setName("memberA")
                 .build();
 
-        FindBoard findBoard = new FindBoardBuilder(member, BoardType.FIND)
+        FindWatchBoard findWatchBoard = new FindWatchBoardBuilder(member, BoardType.FIND)
                 .setTitle("title")
-                .setLostTime(LocalDateTime.now())
+                .setLostOrWatchTime(LocalDateTime.now())
                 .setSpecies(AnimalSpecies.CAT)
                 .build();
 
         em.persist(member);
 
-        FindWatchBoardDetailForm findWatchBoardDetailForm = boardDtoConverter.entityToDto(findBoard, FindWatchBoardDetailForm.class).orElseThrow();
+        FindWatchBoardDetailForm findWatchBoardDetailForm = boardDtoConverter.entityToDto(findWatchBoard, FindWatchBoardDetailForm.class).orElseThrow();
 
-        assertThat(findWatchBoardDetailForm.getId()).isEqualTo(findBoard.getId());
+        assertThat(findWatchBoardDetailForm.getId()).isEqualTo(findWatchBoard.getId());
         assertThat(findWatchBoardDetailForm.getMember().getId()).isEqualTo(member.getId());
 
         assertThat(findWatchBoardDetailForm.getMember().getName()).isEqualTo(member.getName());
-        assertThat(findWatchBoardDetailForm.getTitle()).isEqualTo(findBoard.getTitle());
-        assertThat(findWatchBoardDetailForm.getLostOrWatchTime()).isEqualTo(findBoard.getLostTime());
-        assertThat(findWatchBoardDetailForm.getSpecies()).isEqualTo(findBoard.getSpecies());
+        assertThat(findWatchBoardDetailForm.getTitle()).isEqualTo(findWatchBoard.getTitle());
+        assertThat(findWatchBoardDetailForm.getLostOrWatchTime()).isEqualTo(findWatchBoard.getLostOrWatchTime());
+        assertThat(findWatchBoardDetailForm.getSpecies()).isEqualTo(findWatchBoard.getSpecies());
     }
 
 }

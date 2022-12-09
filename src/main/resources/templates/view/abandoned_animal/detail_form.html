@@ -10,10 +10,7 @@
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <p class="breadcrumbs mb-2">
-                        <span class="mr-2"><span>Abandoned Animal - Detail<i class="ion-ios-arrow-forward"></i></span></span>
-                    </p>
-                    <h1 class="mb-0 bread">유기동물 - 상세보기</h1>
+                    <h1 class="mb-0 bread">유기동물 상세보기</h1>
                 </div>
             </div>
         </div>
@@ -33,7 +30,7 @@
                     <div class="row">
                         <div class="col-md-6 services-2 w-100 d-flex">
                             <div class="icon d-flex align-items-center justify-content-center">
-                                <span class="flaticon-stethoscope"></span></div>
+                                <span class="fa fa-info-circle" aria-hidden="true"></span></div>
                             <div class="text pl-3">
                                 <h4>종</h4>
                                 <p th:text="${animal.species}">유기동물 종</p>
@@ -41,8 +38,8 @@
                         </div>
 
                         <div class="col-md-6 services-2 w-100 d-flex">
-                            <div class="icon d-flex align-items-center justify-content-center"><span
-                                    class="flaticon-customer-service"></span></div>
+                            <div class="icon d-flex align-items-center justify-content-center">
+                                <span class="fa fa-info-circle" aria-hidden="true"></span></div>
                             <div class="text pl-3">
                                 <h4>나이</h4>
                                 <p th:text="|${animal.age}살|">몇 살</p>
@@ -50,8 +47,8 @@
                         </div>
 
                         <div class="col-md-6 services-2 w-100 d-flex">
-                            <div class="icon d-flex align-items-center justify-content-center"><span
-                                    class="flaticon-emergency-call"></span></div>
+                            <div class="icon d-flex align-items-center justify-content-center">
+                                <span class="fa fa-info-circle" aria-hidden="true"></span></div>
                             <div class="text pl-3">
                                 <h4>몸무게</h4>
                                 <p th:text="|${animal.weight}Kg|"> 몇 Kg</p>
@@ -59,30 +56,13 @@
                         </div>
 
                         <div class="col-md-6 services-2 w-100 d-flex">
-                            <div class="icon d-flex align-items-center justify-content-center"><span
-                                    class="flaticon-veterinarian"></span></div>
+                            <div class="icon d-flex align-items-center justify-content-center">
+                                <span class="fa fa-info-circle" aria-hidden="true"></span></div>
                             <div class="text pl-3">
                                 <h4>상태</h4>
                                 <p th:text="${animal.status}">유기동물 상태</p>
                             </div>
                         </div>
-
-<!--                        <div class="col-md-6 services-2 w-100 d-flex">-->
-<!--                            <div class="icon d-flex align-items-center justify-content-center"><span-->
-<!--                                    class="flaticon-veterinarian"></span></div>-->
-<!--                            <div class="text pl-3">-->
-<!--                                <h4>발견 장소</h4>-->
-<!--                                <p>${detailForm.location}</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="col-md-6 services-2 w-100 d-flex">-->
-<!--                            <div class="icon d-flex align-items-center justify-content-center"><span-->
-<!--                                    class="flaticon-veterinarian"></span></div>-->
-<!--                            <div class="text pl-3">-->
-<!--                                <h4>보호중인 보호소</h4>-->
-<!--                                <p>${detailForm.getSNumber()}</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -91,52 +71,11 @@
 
     <section class="ftco-section bg-light">
         <div class="container">
-<!--            <div class="row mb-5 pb-5">-->
-<!--                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">-->
-<!--                    <div class="d-block services text-center">-->
-<!--                        <%&#45;&#45;                    <div class="icon d-flex align-items-center justify-content-center">&#45;&#45;%>-->
-<!--                        <%&#45;&#45;                        <span class="flaticon-blind"></span>&#45;&#45;%>-->
-<!--                        <%&#45;&#45;                    </div>&#45;&#45;%>-->
-<!--                        <div class="media-body p-4">-->
-<!--                            <h3 class="heading">특이사항</h3>-->
-<!--                            <p>${detailForm.uniqueness}</p>-->
-<!--                            <%&#45;&#45;                        <a href="#" class="btn-custom d-flex align-items-center justify-content-center">&#45;&#45;%>-->
-<!--                            <%&#45;&#45;                            <span class="fa fa-chevron-right"></span>&#45;&#45;%>-->
-<!--                            <%&#45;&#45;                            <i class="sr-only">Read more</i></a>&#45;&#45;%>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">-->
-<!--                    <div class="d-block services text-center">-->
-<!--                        <%&#45;&#45;                    <div class="icon d-flex align-items-center justify-content-center">&#45;&#45;%>-->
-<!--                        <%&#45;&#45;                        <span class="flaticon-dog-eating"></span>&#45;&#45;%>-->
-<!--                        <%&#45;&#45;                    </div>&#45;&#45;%>-->
-<!--                        <div class="media-body p-4">-->
-<!--                            <h3 class="heading">소개글</h3>-->
-<!--                            <p>${detailForm.description}</p>-->
-<!--                            <%&#45;&#45;                        <a href="#" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>&#45;&#45;%>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">-->
-<!--                    <div class="d-block services text-center">-->
-<!--                        <%&#45;&#45;                    <div class="icon d-flex align-items-center justify-content-center">&#45;&#45;%>-->
-<!--                        <%&#45;&#45;                        <span class="flaticon-grooming"></span>&#45;&#45;%>-->
-<!--                        <%&#45;&#45;                    </div>&#45;&#45;%>-->
-<!--                        <div class="media-body p-4">-->
-<!--                            <h3 class="heading">입소 날짜</h3>-->
-<!--                            <p>${detailForm.admissionDate}</p>-->
-<!--                            <%&#45;&#45;                        <a href="#" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>&#45;&#45;%>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
             <div class="row mt-5 pt-4">
                 <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
                     <div class="d-block services text-center">
                         <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="flaticon-blind"></span>
+                            <span class="fa fa-credit-card-alt" aria-hidden="true"></span>
                         </div>
                         <div class="media-body p-4">
                             <h3 class="heading">후원하기</h3>
@@ -150,7 +89,7 @@
                 <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
                     <div class="d-block services text-center">
                         <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="flaticon-dog-eating"></span>
+                            <span class="fa fa-shield" aria-hidden="true"></span>
                         </div>
                         <div class="media-body p-4">
                             <h3 class="heading">임시보호하기</h3>
@@ -164,7 +103,7 @@
                 <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
                     <div class="d-block services text-center">
                         <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="flaticon-grooming"></span>
+                            <span class="fa fa-user-plus" aria-hidden="true"></span>
                         </div>
                         <div class="media-body p-4">
                             <h3 class="heading">입양하기</h3>

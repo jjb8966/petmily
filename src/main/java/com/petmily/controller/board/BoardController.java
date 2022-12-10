@@ -38,7 +38,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -82,8 +81,16 @@ public class BoardController {
                        HttpServletResponse response,
                        Model model) {
 
-        if (page != null || hasCondition(searchCondition)) {
-            checkSearchCondition(searchCondition, cookieSpecies, cookieBoardStatus, cookieKeyword, response);
+        if (clickMenu(searchCondition, page)) {
+            clearCookie(response);
+        }
+
+        if (hasCondition(searchCondition)) {
+            updateCookies(searchCondition, response);
+        }
+
+        if (clickPageButton(searchCondition, page)) {
+            updateSearchCondition(searchCondition, cookieSpecies, cookieBoardStatus, cookieKeyword);
         }
 
         Page<BoardListForm> boardListForm;
@@ -107,12 +114,25 @@ public class BoardController {
         }
     }
 
-    private void checkSearchCondition(SearchCondition searchCondition, String cookieSpecies, String cookieBoardStatus, String cookieKeyword, HttpServletResponse response) {
-        if (!hasCondition(searchCondition)) {
-            updateSearchCondition(searchCondition, cookieSpecies, cookieBoardStatus, cookieKeyword);
-        } else {
-            updateCookies(searchCondition, response);
-        }
+    private void clearCookie(HttpServletResponse response) {
+        Cookie species = new Cookie("species", null);
+        Cookie boardStatus = new Cookie("boardStatus", null);
+        Cookie keyword = new Cookie("keyword", null);
+
+        List<Cookie> cookies = Arrays.asList(species, boardStatus, keyword);
+        cookies.forEach(cookie -> {
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                });
+    }
+
+    private boolean clickMenu(SearchCondition searchCondition, Integer page) {
+        return page == null && !hasCondition(searchCondition);
+    }
+
+    private boolean clickPageButton(SearchCondition searchCondition, Integer page) {
+        return page != null && !hasCondition(searchCondition);
     }
 
     private boolean hasCondition(SearchCondition searchCondition) {
@@ -154,23 +174,22 @@ public class BoardController {
             keywordCookie = removeCookie("keyword");
         }
 
-        ArrayList<Cookie> cookies = new ArrayList<>(Arrays.asList(speciesCookie, boardStatusCookie, keywordCookie));
+        List<Cookie> cookies = Arrays.asList(speciesCookie, boardStatusCookie, keywordCookie);
 
-        cookies.stream()
-                .forEach(cookie -> {
+        cookies.forEach(cookie -> {
                     cookie.setPath("/");
                     response.addCookie(cookie);
                 });
     }
 
-    private static Cookie removeCookie(String cookieName) {
+    private Cookie removeCookie(String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
 
         return cookie;
     }
 
-    private static boolean isFindWatchBoard(BoardType boardType) {
+    private boolean isFindWatchBoard(BoardType boardType) {
         return boardType.equals(BoardType.FIND) || boardType.equals(BoardType.WATCH);
     }
 

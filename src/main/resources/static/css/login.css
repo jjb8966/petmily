@@ -30,7 +30,7 @@
 }
 
 .section .container .left-side {
-    width: 45%;
+    width: 40%;
     background-color: #fff;
     height: 100%;
     padding-right: 70px;
@@ -158,8 +158,8 @@
     width: 60%;
     height: 100%;
     position: relative;
-    background: url(/resources/petsitting-master/images/img.jpg);
-        background-size:cover;
+    background: url(/petsitting-master/images/img.jpg);
+    background-size:cover;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -243,41 +243,41 @@
 }
 
 #login{
-	padding-left: 30%;
-	font-weight: bold;
-	text-align: center;
-	padding-top: 25px;
+    padding-left: 30%;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 25px;
 }
 
 .login .btn {
-	font-weight: bold;
-	width: 140%;
-	letter-spacing: 2px;
-	font-size: 15px;
-	padding: 14px;
-	background-color: #00B72E;
+    font-weight: bold;
+    width: 140%;
+    letter-spacing: 2px;
+    font-size: 15px;
+    padding: 14px;
+    background-color: #00B72E;
 }
 .form-check {
-justify-content: right;
-	text-align: right;
-	padding-top: 25px
+    justify-content: right;
+    text-align: right;
+    padding-top: 25px
 }
 
 .form-check label {
     text-align: right;
-	font-size: 13px;
-	color: #000;
-	padding-bottom:10px
+    font-size: 13px;
+    color: #000;
+    padding-bottom:10px
 }
 
 .login .join a {
-	font-size: 13px;
-	font-weight: bold;
-	color: #000;
-	text-decoration:none !important
+    font-size: 13px;
+    font-weight: bold;
+    color: #000;
+    text-decoration:none !important
 }
 
 .login .join a:hover {
     color: #000;
-	opacity: 0.8
+    opacity: 0.8
 }

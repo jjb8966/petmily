@@ -30,7 +30,7 @@
 }
 
 .section .container .left-side {
-    width: 45%;
+    width: 50%;
     background-color: #fff;
     height: 100%;
     padding-right: 5px;
@@ -165,10 +165,10 @@
 }
 
 .section .container .right-side {
-    width: 60%;
+    width: 50%;
     height: 100%;
     position: relative;
-    background: url(/resources/petsitting-master/images/img.jpg);
+    background: url(/petsitting-master/images/img.jpg);
     background-size:cover;
     display: flex;
     justify-content: center;

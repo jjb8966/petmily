@@ -23,9 +23,9 @@ spring:
       on-profile: prod
 
   datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/home/petmily/Wallet_petmily
-    username: ADMIN
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://petmily-db.cyttrlbc5ek1.ap-northeast-2.rds.amazonaws.com/petmily
+    username: admin
     password: PetmilyProject123!
 
   jpa:
@@ -45,10 +45,10 @@ spring:
       on-profile: dev
 
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/petmily
-    username: sa
-    password:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@petmily_medium?TNS_ADMIN=/Users/joojongbum/oracle_db/Wallet_petmily
+    username: ADMIN
+    password: PetmilyProject123!
 
   jpa:
     hibernate:

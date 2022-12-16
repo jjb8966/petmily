@@ -3,11 +3,14 @@ package com.petmily.service;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.builder.ReplyBuilder;
 import com.petmily.domain.builder.board.BoardBuilder;
+import com.petmily.domain.builder.board.FindWatchBoardBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Reply;
 import com.petmily.domain.core.board.Board;
+import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
+import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.BoardType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -182,4 +185,116 @@ class BoardServiceTest {
         assertThat(findReplyA).isNull();
         assertThat(findReplyB).isNull();
     }
+
+    @Test
+    @DisplayName("찾아요/봤어요 게시글 등록 시 정보가 일치하는 게시글과 매칭된다.")
+    void updateMatchInfo() {
+        //given
+        Member memberA = new MemberBuilder("memberA", "123").build();
+        Member memberB = new MemberBuilder("memberB", "123").build();
+
+        FindWatchBoard find1 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard1")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard find2 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard2")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard find3 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard3")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard watch = new FindWatchBoardBuilder(memberB, BoardType.WATCH)
+                .setTitle("watchBoard")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        em.persist(memberA);
+        em.persist(memberB);
+
+        //when
+        boardService.updateMatchInfo(watch.getId());
+
+        FindWatchBoard find4 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard4")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        em.persist(find4);
+
+        // findBoard4 -> watchBoard
+        boardService.updateMatchInfo(find4.getId());
+
+        em.flush();
+        em.clear();
+
+        FindWatchBoard findBoard1 = em.find(FindWatchBoard.class, find1.getId());
+        FindWatchBoard findBoard2 = em.find(FindWatchBoard.class, find2.getId());
+        FindWatchBoard findBoard3 = em.find(FindWatchBoard.class, find3.getId());
+        FindWatchBoard findBoard4 = em.find(FindWatchBoard.class, find4.getId());
+        FindWatchBoard watchBoard = em.find(FindWatchBoard.class, watch.getId());
+
+        //then
+        assertThat(watchBoard.getMatchBoards()).hasSize(4);
+        assertThat(watchBoard.getMatchBoards()).contains(findBoard1, findBoard2, findBoard3, findBoard4);
+
+        assertThat(findBoard1.getMatchBoards()).containsExactly(watchBoard);
+        assertThat(findBoard2.getMatchBoards()).containsExactly(watchBoard);
+        assertThat(findBoard3.getMatchBoards()).containsExactly(watchBoard);
+        assertThat(findBoard4.getMatchBoards()).containsExactly(watchBoard);
+    }
+
+    @Test
+    @DisplayName("사용자가 작성한 찾아요/봤어요 게시글 중 매칭된 게시글을 조회할 수 있다.")
+    void findBoardStatusMatch() {
+        //given
+        Member memberA = new MemberBuilder("memberA", "123").build();
+        Member memberB = new MemberBuilder("memberB", "123").build();
+
+        FindWatchBoard find1 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard1")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard find2 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard2")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard find3 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard3")
+                .setSpecies(AnimalSpecies.DOG)
+                .build();
+
+        FindWatchBoard watch1 = new FindWatchBoardBuilder(memberB, BoardType.WATCH)
+                .setTitle("watchBoard1")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard watch2 = new FindWatchBoardBuilder(memberB, BoardType.WATCH)
+                .setTitle("watchBoard2")
+                .setSpecies(AnimalSpecies.DOG)
+                .build();
+
+        em.persist(memberA);
+        em.persist(memberB);
+
+        // 벌크성 쿼리
+        boardService.updateMatchInfo(watch1.getId());
+        boardService.updateMatchInfo(watch2.getId());
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<FindWatchBoard> matchBoards = boardService.findBoardStatusMatch(memberA.getId());
+
+        //then
+        assertThat(matchBoards).hasSize(3);
+    }
+
 }

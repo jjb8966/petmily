@@ -25,24 +25,24 @@ public class Board extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "board_id")
-    private Long id;
+    protected Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    protected Member member;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reply> replies;
+    protected List<Reply> replies;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Picture> pictures;
+    protected List<Picture> pictures;
 
     @Enumerated(EnumType.STRING)
-    private BoardType boardType;
+    protected BoardType boardType;
 
-    private String title;
-    private String content;
-    private Boolean shownAll;
+    protected String title;
+    protected String content;
+    protected Boolean shownAll;
 
     public Board(BoardBuilder builder) {
         this.member = builder.getMember();

@@ -6,6 +6,7 @@ import com.petmily.domain.dto.board.find_watch.SearchCondition;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.BoardType;
 import com.petmily.domain.enum_type.FindWatchBoardStatus;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -95,7 +96,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     }
 
     private OrderSpecifier[] getOrderSpecifiers(Pageable pageable) {
-        return getOrders(pageable).stream()
+        return getOrders(pageable)
                 .toArray(value -> new OrderSpecifier[value]);
     }
 
@@ -114,5 +115,69 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
         }
 
         return result;
+    }
+
+    @Override
+    public List<Long> matchWithFindWatchBoard(FindWatchBoard board) {
+        List<Long> result = query.select(findWatchBoard.id)
+                .from(findWatchBoard)
+                .where(
+                        findWatchBoard.member.ne(board.getMember()),
+                        againstBoardType(board.getBoardType()),
+                        matchInformation(board)
+                )
+                .fetch();
+
+        return result;
+    }
+
+    private BooleanExpression againstBoardType(BoardType boardType) {
+        if (boardType.equals(BoardType.FIND)) {
+            return findWatchBoard.boardType.eq(BoardType.WATCH);
+        } else {
+            return findWatchBoard.boardType.eq(BoardType.FIND);
+        }
+    }
+
+    private BooleanBuilder matchInformation(FindWatchBoard board) {
+        BooleanBuilder builder = new BooleanBuilder();
+        boolean hasCondition = false;
+
+        if (board.getSpecies() != null) {
+            builder.or(findWatchBoard.species.eq(board.getSpecies()));
+            hasCondition = true;
+        }
+
+        if (board.getAnimalName() != null) {
+            builder.or(findWatchBoard.animalName.eq(board.getAnimalName()));
+            hasCondition = true;
+        }
+
+        if (board.getAnimalKind() != null) {
+            builder.or(findWatchBoard.animalKind.eq(board.getAnimalKind()));
+            hasCondition = true;
+        }
+
+        if (board.getAnimalAge() != null) {
+            builder.or(findWatchBoard.animalAge.eq(board.getAnimalAge()));
+            hasCondition = true;
+        }
+
+        if (board.getAnimalWeight() != null) {
+            builder.or(findWatchBoard.animalWeight.eq(board.getAnimalWeight()));
+            hasCondition = true;
+        }
+
+        return hasCondition ? builder : builder.and(findWatchBoard.id.eq(-1L));
+    }
+
+    @Override
+    public Long updateBoardStatusMatch(ArrayList<Long> needUpdateIds) {
+        long countUpdatedBoard = query.update(findWatchBoard)
+                .set(findWatchBoard.boardStatus, FindWatchBoardStatus.MATCH)
+                .where(findWatchBoard.id.in(needUpdateIds))
+                .execute();
+
+        return countUpdatedBoard;
     }
 }

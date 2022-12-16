@@ -70,6 +70,7 @@ public class BoardDtoConverter implements EntityDtoConverter {
     private void setFindWatchBoardDetailForm(FindWatchBoard findWatchBoard, FindWatchBoardDetailForm boardDetailForm) {
         boardDetailForm.setLostOrWatchTime(findWatchBoard.getLostOrWatchTime());
         boardDetailForm.setSpecies(findWatchBoard.getSpecies());
+        boardDetailForm.setBoardStatus(findWatchBoard.getBoardStatus());
         boardDetailForm.setAnimalName(findWatchBoard.getAnimalName());
         boardDetailForm.setAnimalKind(findWatchBoard.getAnimalKind());
         boardDetailForm.setAnimalAge(findWatchBoard.getAnimalAge());
@@ -88,6 +89,7 @@ public class BoardDtoConverter implements EntityDtoConverter {
     private static void setFindWatchBoardListForm(FindWatchBoard findWatchBoard, FindWatchBoardListForm findWatchBoardListForm) {
         findWatchBoardListForm.setLostOrWatchTime(findWatchBoard.getLostOrWatchTime());
         findWatchBoardListForm.setSpecies(findWatchBoard.getSpecies());
+        findWatchBoardListForm.setBoardStatus(findWatchBoard.getBoardStatus());
 
         if (!findWatchBoard.getPictures().isEmpty()) {
             findWatchBoardListForm.setThumbnail(findWatchBoard.getPictures().get(0));

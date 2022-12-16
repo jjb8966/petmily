@@ -2,14 +2,21 @@ package com.petmily.controller.member;
 
 import com.petmily.controller.SessionConstant;
 import com.petmily.domain.core.Member;
+import com.petmily.domain.core.board.Board;
+import com.petmily.domain.core.board.FindWatchBoard;
+import com.petmily.domain.dto.board.BoardListForm;
+import com.petmily.domain.dto.board.find_watch.FindWatchBoardListForm;
+import com.petmily.domain.dto.board.find_watch.MatchInfoForm;
 import com.petmily.domain.dto.member.LoginForm;
 import com.petmily.domain.dto.member.MemberJoinForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto.member.WithdrawMemberForm;
+import com.petmily.domain.dto_converter.BoardDtoConverter;
 import com.petmily.domain.dto_converter.MemberDtoConverter;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.exception.PasswordIncorrectException;
 import com.petmily.exception.PasswordMismatchException;
+import com.petmily.service.BoardService;
 import com.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +29,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +41,8 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
+    private final BoardService boardService;
+    private final BoardDtoConverter boardDtoConverter;
     private final MemberDtoConverter memberDtoConverter;
     private final MessageSource ms;
 
@@ -189,6 +201,63 @@ public class MemberController {
         log.info("회원 탈퇴 성공");
 
         return "redirect:/";
+    }
+
+    @GetMapping("/member/auth/board/list")
+    public String memberBoardList(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
+                                  Model model) {
+
+        List<Board> boards = boardService.findAll(loginMember);
+
+        List<BoardListForm> forms = boards.stream()
+                .map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))))
+                .collect(Collectors.toList());
+
+        model.addAttribute("forms", forms);
+
+        return "view/member/board_list";
+    }
+
+    @GetMapping("/member/auth/board/match")
+    public String matchBoardList(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
+                                 Model model) {
+
+        List<FindWatchBoard> myBoards = boardService.findBoardStatusMatch(loginMember.getId());
+        List<MatchInfoForm> matchInfos = convertToMatchBoardForm(myBoards);
+
+        model.addAttribute("matchInfos", matchInfos);
+
+        return "view/member/match_board_list";
+    }
+
+    private List<MatchInfoForm> convertToMatchBoardForm(List<FindWatchBoard> myBoards) {
+        List<MatchInfoForm> matchInfoForms = new ArrayList<>();
+
+        myBoards.forEach(myBoard -> matchInfoForms.add(findMatchInfoForm(myBoard)));
+
+        return matchInfoForms;
+    }
+
+    private MatchInfoForm findMatchInfoForm(FindWatchBoard myBoard) {
+        MatchInfoForm matchInfoForm = new MatchInfoForm();
+
+        List<FindWatchBoard> matchBoards = myBoard.getMatchBoards();
+        List<FindWatchBoardListForm> boardListForm = convertToFindWatchBoardListForm(matchBoards);
+
+        matchInfoForm.setMyBoardId(myBoard.getId());
+        matchInfoForm.setBoardType(myBoard.getBoardType());
+        matchInfoForm.setMyBoardTitle(myBoard.getTitle());
+        matchInfoForm.setBoardListForm(boardListForm);
+
+        return matchInfoForm;
+    }
+
+    private List<FindWatchBoardListForm> convertToFindWatchBoardListForm(List<FindWatchBoard> matchBoards) {
+        return matchBoards.stream()
+                .map(board -> boardDtoConverter.entityToDto(board, FindWatchBoardListForm.class)
+                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))))
+                .collect(Collectors.toList());
     }
 
     private String getMessage(String code) {

@@ -47,8 +47,16 @@
 
                         <!--제목, 작성일, 작성자-->
                         <div class="media-body ml-3">
-                            <b> <span style="font-size: 2em;" th:text="${board.title}">게시글 제목</span> </b>
+                            <b><span style="font-size: 2em; margin: 20px" th:text="${board.title}">게시글 제목</span></b>
+
+                            <h3 style="display: inline" th:if="${boardType.equals('find') || boardType.equals('watch')}">
+                                <span class="badge text-white rounded-pill" th:text="${board.boardStatus.description}"
+                                      th:classappend="|${board.boardStatus.name().equals('LOST') ? 'bg-danger' : 'bg-info'}|">
+                                        매칭 유무
+                                </span>
+                            </h3>
                             <h6 class="mt-1"></h6>
+
                             <small><span class="far fa-comment ml-2" th:text="|작성 시간 - ${{board.createdDate}}|">작성 날짜</span></small>
                             <small><span class="far fa-comment ml-2" th:text="|작성자 - ${{board.member.name}}|">작성자 이름</span></small>
                             <span th:remove="${boardType.equals('find') || boardType.equals('watch')} ? all">

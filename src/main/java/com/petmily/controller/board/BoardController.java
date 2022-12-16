@@ -41,7 +41,6 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -93,8 +92,8 @@ public class BoardController {
             updateSearchCondition(searchCondition, cookieSpecies, cookieBoardStatus, cookieKeyword);
         }
 
-        Page<BoardListForm> boardListForm;
         Page<Board> allBoards = boardService.findAllByBoardType(boardType, searchCondition, pageable);
+        Page<BoardListForm> boardListForm;
 
         if (isFindWatchBoard(boardType)) {
             boardListForm = convertToFindWatchBoardListForm(allBoards);
@@ -121,10 +120,10 @@ public class BoardController {
 
         List<Cookie> cookies = Arrays.asList(species, boardStatus, keyword);
         cookies.forEach(cookie -> {
-                    cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-                });
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        });
     }
 
     private boolean clickMenu(SearchCondition searchCondition, Integer page) {
@@ -177,9 +176,9 @@ public class BoardController {
         List<Cookie> cookies = Arrays.asList(speciesCookie, boardStatusCookie, keywordCookie);
 
         cookies.forEach(cookie -> {
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-                });
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        });
     }
 
     private Cookie removeCookie(String cookieName) {
@@ -379,22 +378,6 @@ public class BoardController {
         redirectAttributes.addAttribute("id", boardId);
 
         return "redirect:/board/{boardType}/detail/{id}";
-    }
-
-    @GetMapping("/member/auth/board/list")
-    public String memberBoardList(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER) Member loginMember,
-                                  Model model) {
-
-        List<Board> boards = boardService.findAll(loginMember);
-
-        List<BoardListForm> forms = boards.stream()
-                .map(board -> boardDtoConverter.entityToDto(board, BoardListForm.class)
-                        .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert"))))
-                .collect(Collectors.toList());
-
-        model.addAttribute("forms", forms);
-
-        return "view/member/board_list";
     }
 
     private String getMessage(String code) {

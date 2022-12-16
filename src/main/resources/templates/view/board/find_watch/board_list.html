@@ -73,23 +73,27 @@
 
                         <div class="text p-4">
                             <div class="meta mb-2">
-                                <div><span th:text="${board.writerName}">작성자</span></div>
+                                <span th:text="${board.writerName}">작성자</span>
+
+                                <h3 class="heading">
+                                    <a th:href="|/board/${boardType}/detail/${board.id}|">
+                                        <span th:text="${board.title}">제목</span>
+                                    </a>
+                                </h3>
 
                                 <span th:if="${board.species != null}">
-                                    <div><span th:text="${board.species.description}">종</span></div><br>
+                                    <span th:text="${board.species.description}">종</span>
                                 </span>
 
-                                <span th:if="${board.species == null}">
-                                    <div>&nbsp;</div><br>
+                                <span class="badge text-white rounded-pill" th:text="${board.boardStatus.description}"
+                                      th:classappend="|${board.boardStatus.name().equals('LOST') ? 'bg-danger' : 'bg-info'}|">
+                                    매칭 유무
                                 </span>
 
-                                <div><span th:text="${{board.createdDate}}">게시글 작성 시간</span></div>
+                                <div>
+                                    <span th:text="|작성 시간 [${{board.createdDate}}]|">게시글 작성 시간</span>
+                                </div>
                             </div>
-                            <h3 class="heading">
-                                <a th:href="|/board/${boardType}/detail/${board.id}|">
-                                    <span th:text="${board.title}">제목</span>
-                                </a>
-                            </h3>
                         </div>
                     </div>
                 </div>

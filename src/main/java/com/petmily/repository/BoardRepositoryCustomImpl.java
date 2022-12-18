@@ -134,9 +134,9 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     private BooleanExpression againstBoardType(BoardType boardType) {
         if (boardType.equals(BoardType.FIND)) {
             return findWatchBoard.boardType.eq(BoardType.WATCH);
-        } else {
-            return findWatchBoard.boardType.eq(BoardType.FIND);
         }
+
+        return findWatchBoard.boardType.eq(BoardType.FIND);
     }
 
     private BooleanBuilder matchInformation(FindWatchBoard board) {
@@ -172,9 +172,9 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public Long updateBoardStatusMatch(ArrayList<Long> needUpdateIds) {
+    public Long updateBoardStatus(List<Long> needUpdateIds, FindWatchBoardStatus boardStatus) {
         long countUpdatedBoard = query.update(findWatchBoard)
-                .set(findWatchBoard.boardStatus, FindWatchBoardStatus.MATCH)
+                .set(findWatchBoard.boardStatus, boardStatus)
                 .where(findWatchBoard.id.in(needUpdateIds))
                 .execute();
 

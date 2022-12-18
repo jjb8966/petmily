@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
@@ -23,6 +22,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FindWatchBoard extends Board {
 
+    @OneToMany(mappedBy = "targetBoard", orphanRemoval = true)
+    private List<MatchInfo> whenThisBoardEqTargetBoardInfos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "matchedBoard", orphanRemoval = true)
+    private List<MatchInfo> whenThisBoardEqMatchedBoardInfos = new ArrayList<>();
+
     private LocalDateTime lostOrWatchTime;
     private AnimalSpecies species;
     private FindWatchBoardStatus boardStatus;
@@ -30,12 +35,6 @@ public class FindWatchBoard extends Board {
     private String animalKind;
     private Integer animalAge;
     private Float animalWeight;
-
-    @OneToMany(mappedBy = "targetBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MatchInfo> matchedBoardInfos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "matchedBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MatchInfo> targetBoardInfos = new ArrayList<>();
 
     public FindWatchBoard(FindWatchBoardBuilder builder) {
         super(builder);
@@ -60,14 +59,14 @@ public class FindWatchBoard extends Board {
     }
 
     public void addTargetBoardInfo(MatchInfo matchInfo) {
-        targetBoardInfos.add(matchInfo);
+        whenThisBoardEqMatchedBoardInfos.add(matchInfo);
     }
 
     public void addMatchedBoardInfo(MatchInfo matchInfo) {
-        matchedBoardInfos.add(matchInfo);
+        whenThisBoardEqTargetBoardInfos.add(matchInfo);
     }
 
-    public List<FindWatchBoard> getMatchBoards() {
+    public List<FindWatchBoard> getAllMatchBoards() {
         List<FindWatchBoard> result = new ArrayList<>();
 
         List<FindWatchBoard> matchedBoardList = getMatchedBoards();
@@ -80,13 +79,13 @@ public class FindWatchBoard extends Board {
     }
 
     private List<FindWatchBoard> getTargetBoards() {
-        return targetBoardInfos.stream()
+        return whenThisBoardEqMatchedBoardInfos.stream()
                 .map(MatchInfo::getTargetBoard)
                 .collect(Collectors.toList());
     }
 
     private List<FindWatchBoard> getMatchedBoards() {
-        return matchedBoardInfos.stream()
+        return whenThisBoardEqTargetBoardInfos.stream()
                 .map(MatchInfo::getMatchedBoard)
                 .collect(Collectors.toList());
     }
@@ -101,8 +100,8 @@ public class FindWatchBoard extends Board {
                 ", animalKind='" + animalKind + '\'' +
                 ", animalAge=" + animalAge +
                 ", animalWeight=" + animalWeight +
-                ", matchedBoardInfos=" + matchedBoardInfos.size() +
-                ", targetBoardInfos=" + targetBoardInfos.size() +
+                ", matchedBoardInfos=" + whenThisBoardEqTargetBoardInfos.size() +
+                ", targetBoardInfos=" + whenThisBoardEqMatchedBoardInfos.size() +
                 ", id=" + id +
                 ", member=" + member.getName() +
                 ", replies=" + replies.size() +
@@ -112,5 +111,30 @@ public class FindWatchBoard extends Board {
                 ", content='" + content + '\'' +
                 ", shownAll=" + shownAll +
                 '}';
+    }
+
+
+    public List<Long> getAllMatchInfoIds() {
+        List<Long> result = new ArrayList<>();
+
+        whenThisBoardEqTargetBoardInfos.forEach(matchInfo -> result.add(matchInfo.getId()));
+        whenThisBoardEqMatchedBoardInfos.forEach(matchInfo -> result.add(matchInfo.getId()));
+
+        return result;
+    }
+
+    public void deleteMatchInfo(FindWatchBoard findWatchBoard) {
+        checkTargetBoardInfo(findWatchBoard);
+        checkMatchedBoardInfo(findWatchBoard);
+    }
+
+    private void checkTargetBoardInfo(FindWatchBoard findWatchBoard) {
+        whenThisBoardEqTargetBoardInfos
+                .removeIf(matchInfo -> matchInfo.getMatchedBoard().equals(findWatchBoard));
+    }
+
+    private void checkMatchedBoardInfo(FindWatchBoard findWatchBoard) {
+        whenThisBoardEqMatchedBoardInfos
+                .removeIf(matchInfo -> matchInfo.getTargetBoard().equals(findWatchBoard));
     }
 }

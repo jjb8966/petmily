@@ -217,7 +217,7 @@ class BoardServiceTest {
         em.persist(memberB);
 
         //when
-        boardService.updateMatchInfo(watch.getId());
+        boardService.createMatchInfo(watch);
 
         FindWatchBoard find4 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
                 .setTitle("findBoard4")
@@ -227,7 +227,7 @@ class BoardServiceTest {
         em.persist(find4);
 
         // findBoard4 -> watchBoard
-        boardService.updateMatchInfo(find4.getId());
+        boardService.createMatchInfo(find4);
 
         em.flush();
         em.clear();
@@ -239,13 +239,13 @@ class BoardServiceTest {
         FindWatchBoard watchBoard = em.find(FindWatchBoard.class, watch.getId());
 
         //then
-        assertThat(watchBoard.getMatchBoards()).hasSize(4);
-        assertThat(watchBoard.getMatchBoards()).contains(findBoard1, findBoard2, findBoard3, findBoard4);
+        assertThat(watchBoard.getAllMatchBoards()).hasSize(4);
+        assertThat(watchBoard.getAllMatchBoards()).contains(findBoard1, findBoard2, findBoard3, findBoard4);
 
-        assertThat(findBoard1.getMatchBoards()).containsExactly(watchBoard);
-        assertThat(findBoard2.getMatchBoards()).containsExactly(watchBoard);
-        assertThat(findBoard3.getMatchBoards()).containsExactly(watchBoard);
-        assertThat(findBoard4.getMatchBoards()).containsExactly(watchBoard);
+        assertThat(findBoard1.getAllMatchBoards()).containsExactly(watchBoard);
+        assertThat(findBoard2.getAllMatchBoards()).containsExactly(watchBoard);
+        assertThat(findBoard3.getAllMatchBoards()).containsExactly(watchBoard);
+        assertThat(findBoard4.getAllMatchBoards()).containsExactly(watchBoard);
     }
 
     @Test
@@ -284,8 +284,8 @@ class BoardServiceTest {
         em.persist(memberB);
 
         // 벌크성 쿼리
-        boardService.updateMatchInfo(watch1.getId());
-        boardService.updateMatchInfo(watch2.getId());
+        boardService.createMatchInfo(watch1);
+        boardService.createMatchInfo(watch2);
 
         em.flush();
         em.clear();
@@ -295,6 +295,67 @@ class BoardServiceTest {
 
         //then
         assertThat(matchBoards).hasSize(3);
+    }
+
+    @Test
+    @DisplayName("찾아요/봤어요 게시글을 수정하면 매칭 게시글 정보도 수정된다.")
+    void modifyBoardInfo() {
+        //given
+        Member memberA = new MemberBuilder("memberA", "123").build();
+        Member memberB = new MemberBuilder("memberB", "123").build();
+
+        FindWatchBoard find1 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard1")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard find2 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard2")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard find3 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard3")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard watch = new FindWatchBoardBuilder(memberB, BoardType.WATCH)
+                .setTitle("watchBoard")
+                .setSpecies(AnimalSpecies.CAT)
+                .build();
+
+        FindWatchBoard find4 = new FindWatchBoardBuilder(memberA, BoardType.FIND)
+                .setTitle("findBoard4")
+                .setAnimalAge(3)
+                .build();
+
+        em.persist(memberA);
+        em.persist(memberB);
+
+        boardService.createMatchInfo(watch);
+
+        em.flush();
+        em.clear();
+
+        FindWatchBoard watchBoard = em.find(FindWatchBoard.class, watch.getId());
+
+        //when
+        ModifyBoardForm modifyBoardForm = new ModifyBoardForm();
+        modifyBoardForm.setTitle("new title");
+        modifyBoardForm.setContent("new content");
+        modifyBoardForm.setAnimalAge(3);
+
+        boardService.modifyBoardInfo(watchBoard.getId(), BoardType.WATCH, modifyBoardForm);
+
+        em.flush();
+        em.clear();
+
+        FindWatchBoard modifiedWatchBoard = em.find(FindWatchBoard.class, watch.getId());
+        FindWatchBoard findBoard4 = em.find(FindWatchBoard.class, find4.getId());
+
+        //then
+        assertThat(modifiedWatchBoard.getAllMatchBoards()).hasSize(1);
+        assertThat(modifiedWatchBoard.getAllMatchBoards()).containsExactly(findBoard4);
     }
 
 }

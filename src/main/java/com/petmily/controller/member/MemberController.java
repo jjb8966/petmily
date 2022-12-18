@@ -242,7 +242,7 @@ public class MemberController {
     private MatchInfoForm findMatchInfoForm(FindWatchBoard myBoard) {
         MatchInfoForm matchInfoForm = new MatchInfoForm();
 
-        List<FindWatchBoard> matchBoards = myBoard.getMatchBoards();
+        List<FindWatchBoard> matchBoards = myBoard.getAllMatchBoards();
         List<FindWatchBoardListForm> boardListForm = convertToFindWatchBoardListForm(matchBoards);
 
         matchInfoForm.setMyBoardId(myBoard.getId());

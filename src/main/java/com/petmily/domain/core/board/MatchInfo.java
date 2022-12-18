@@ -30,4 +30,5 @@ public class MatchInfo {
         targetBoard = builder.getTargetBoard();
         matchedBoard = builder.getMatchedBoard();
     }
+
 }

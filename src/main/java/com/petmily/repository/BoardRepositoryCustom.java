@@ -4,10 +4,10 @@ import com.petmily.domain.core.board.Board;
 import com.petmily.domain.core.board.FindWatchBoard;
 import com.petmily.domain.dto.board.find_watch.SearchCondition;
 import com.petmily.domain.enum_type.BoardType;
+import com.petmily.domain.enum_type.FindWatchBoardStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface BoardRepositoryCustom {
@@ -16,5 +16,5 @@ public interface BoardRepositoryCustom {
 
     List<Long> matchWithFindWatchBoard(FindWatchBoard board);
 
-    Long updateBoardStatusMatch(ArrayList<Long> needUpdateIds);
+    Long updateBoardStatus(List<Long> needUpdateIds, FindWatchBoardStatus boardStatus);
 }

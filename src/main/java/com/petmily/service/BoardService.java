@@ -12,6 +12,7 @@ import com.petmily.domain.dto.board.find_watch.SearchCondition;
 import com.petmily.domain.enum_type.BoardType;
 import com.petmily.domain.enum_type.FindWatchBoardStatus;
 import com.petmily.repository.BoardRepository;
+import com.petmily.repository.MatchInfoRepository;
 import com.petmily.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ public class BoardService {
     private final PictureService pictureService;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final MatchInfoRepository matchInfoRepository;
     private final MessageSource ms;
 
     // 게시글 등록
@@ -52,11 +54,19 @@ public class BoardService {
 
         boardRepository.save(board);
 
-        if (isFindWatchBoard(boardType)) {
-            updateMatchInfo(board.getId());
+        if (isFindWatchBoard(boardType) && hasMatchBoard(board)) {
+            createMatchInfo((FindWatchBoard) board);
         }
 
         return board.getId();
+    }
+
+    private boolean hasMatchBoard(Board board) {
+        FindWatchBoard findWatchBoard = (FindWatchBoard) board;
+
+        List<Long> matchedBoardIds = boardRepository.matchWithFindWatchBoard(findWatchBoard);
+
+        return !matchedBoardIds.isEmpty();
     }
 
     private Member getMember(Long memberId) {
@@ -64,7 +74,7 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
     }
 
-    private static Board writeBoard(BoardType boardType, WriteBoardForm form, Member member) {
+    private Board writeBoard(BoardType boardType, WriteBoardForm form, Member member) {
         Board board;
 
         if (!StringUtils.hasText(form.getAnimalKind())) {
@@ -86,7 +96,7 @@ public class BoardService {
         return board;
     }
 
-    private static Board makeBoard(BoardType boardType, WriteBoardForm form, Member member) {
+    private Board makeBoard(BoardType boardType, WriteBoardForm form, Member member) {
         return new BoardBuilder(member, boardType)
                 .setTitle(form.getTitle())
                 .setContent(form.getContent())
@@ -94,7 +104,7 @@ public class BoardService {
                 .build();
     }
 
-    private static FindWatchBoard makeFindWatchBoard(BoardType boardType, WriteBoardForm form, Member member) {
+    private FindWatchBoard makeFindWatchBoard(BoardType boardType, WriteBoardForm form, Member member) {
         return new FindWatchBoardBuilder(member, boardType)
                 .setTitle(form.getTitle())
                 .setContent(form.getContent())
@@ -108,11 +118,11 @@ public class BoardService {
                 .build();
     }
 
-    private static boolean isFindWatchBoard(BoardType boardType) {
+    private boolean isFindWatchBoard(BoardType boardType) {
         return boardType.equals(BoardType.FIND) || boardType.equals(BoardType.WATCH);
     }
 
-    private static boolean hasPicture(List<MultipartFile> form) {
+    private boolean hasPicture(List<MultipartFile> form) {
         if (form == null) {
             return false;
         }
@@ -157,7 +167,9 @@ public class BoardService {
 
         if (isFindWatchBoard(boardType)) {
             FindWatchBoard findWatchBoard = (FindWatchBoard) board;
+
             findWatchBoard.changeInfo(form);
+            updateMatchInfo(findWatchBoard);
         } else {
             board.changeInfo(form);
         }
@@ -165,15 +177,48 @@ public class BoardService {
         return board.getId();
     }
 
+    private void updateMatchInfo(FindWatchBoard findWatchBoard) {
+        removeMatchInfo(findWatchBoard);
+
+        if (hasMatchBoard(findWatchBoard)) {
+            createMatchInfo(findWatchBoard);
+        }
+    }
+
+    private void removeMatchInfo(FindWatchBoard findWatchBoard) {
+        deleteMatchInfo(findWatchBoard);
+
+        List<FindWatchBoard> matchBoards = findWatchBoard.getAllMatchBoards();
+        List<Long> needUpdateIds = matchBoards.stream()
+                .filter(board -> board.getAllMatchBoards().isEmpty())
+                .map(Board::getId)
+                .collect(Collectors.toList());
+
+        needUpdateIds.add(findWatchBoard.getId());
+
+        boardRepository.updateBoardStatus(needUpdateIds, FindWatchBoardStatus.LOST);
+    }
+
+    private void deleteMatchInfo(FindWatchBoard findWatchBoard) {
+        List<FindWatchBoard> allMatchBoards = findWatchBoard.getAllMatchBoards();
+        allMatchBoards.forEach(matchBoard -> matchBoard.deleteMatchInfo(findWatchBoard));
+
+        List<Long> allMatchInfoIds = findWatchBoard.getAllMatchInfoIds();
+        allMatchInfoIds.forEach(matchInfoRepository::deleteById);
+    }
+
     // 게시글 삭제
     @Transactional
-    public void deleteBoard(Long id) {
-        Board board = getBoard(id);
+    public void deleteBoard(Long boardId) {
+        Board board = getBoard(boardId);
 
-        board.getPictures()
-                .forEach(pictureService::delete);
+        board.getPictures().forEach(pictureService::delete);
 
-        boardRepository.deleteById(id);
+        if (isFindWatchBoard(board.getBoardType()) && hasMatchBoard(board)) {
+            removeMatchInfo((FindWatchBoard) board);
+        }
+
+        boardRepository.deleteById(boardId);
     }
 
     private String getMessage(String code) {
@@ -189,40 +234,38 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateMatchInfo(Long id) {
-        FindWatchBoard targetBoard = (FindWatchBoard) getBoard(id);
+    public void createMatchInfo(FindWatchBoard findWatchBoard) {
+        List<Long> matchedBoardIds = boardRepository.matchWithFindWatchBoard(findWatchBoard);
+        List<FindWatchBoard> matchBoards = getMatchBoards(matchedBoardIds);
 
-        List<Long> matchedBoardIds = boardRepository.matchWithFindWatchBoard(targetBoard);
+        match(findWatchBoard, matchBoards);
 
-        createMatchInfo(targetBoard, matchedBoardIds);
-        Long countUpdatedBoard = updateBoardStatusToMatch(id, matchedBoardIds);
+        List<Long> needUpdateIds = makeNeedUpdatedIds(findWatchBoard, matchedBoardIds);
+        Long countUpdatedBoard = boardRepository.updateBoardStatus(needUpdateIds, FindWatchBoardStatus.MATCH);
 
         log.info("number of update board = {}", countUpdatedBoard);
     }
 
-    private void createMatchInfo(FindWatchBoard targetBoard, List<Long> matchedBoardIds) {
-        if (matchedBoardIds.isEmpty()) {
-            return;
-        }
-
-        matchedBoardIds.stream()
-                .map(matchedBoardId -> (FindWatchBoard) getBoard(matchedBoardId))
-                .forEach(matchedBoard -> new MatchInfoBuilder(targetBoard, matchedBoard).build());
+    private List<FindWatchBoard> getMatchBoards(List<Long> matchedBoardIds) {
+        List<FindWatchBoard> matchBoards = matchedBoardIds.stream()
+                .map(boardId -> (FindWatchBoard) getBoard(boardId))
+                .collect(Collectors.toList());
+        return matchBoards;
     }
 
-    private Long updateBoardStatusToMatch(Long targetBoardId, List<Long> matchedBoardIds) {
-        if (matchedBoardIds.isEmpty()) {
-            return 0L;
-        }
+    private List<Long> makeNeedUpdatedIds(FindWatchBoard targetBoard, List<Long> matchedBoardIds) {
+        List<Long> needUpdateIds = new ArrayList<>();
 
-        ArrayList<Long> needUpdateIds = new ArrayList<>();
-
-        needUpdateIds.add(targetBoardId);
+        needUpdateIds.add(targetBoard.getId());
         needUpdateIds.addAll(matchedBoardIds);
 
-        Long countUpdatedBoard = boardRepository.updateBoardStatusMatch(needUpdateIds);
+        return needUpdateIds;
+    }
 
-        return countUpdatedBoard;
+    private void match(FindWatchBoard targetBoard, List<FindWatchBoard> matchedBoards) {
+        matchedBoards.stream()
+                .map(matchedBoard -> new MatchInfoBuilder(targetBoard, matchedBoard).build())
+                .forEach(matchInfo -> matchInfoRepository.save(matchInfo));
     }
 
     private Board getBoard(Long id) {
@@ -240,7 +283,7 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
-    private static boolean isBoardStatusMatch(FindWatchBoard findWatchBoard) {
+    private boolean isBoardStatusMatch(FindWatchBoard findWatchBoard) {
         return findWatchBoard.getBoardStatus().equals(FindWatchBoardStatus.MATCH);
     }
 }

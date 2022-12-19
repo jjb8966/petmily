@@ -23,4 +23,4 @@
 
 ## ERD
 
-![image](https://user-images.githubusercontent.com/87421893/208323270-3a2b3441-a36c-40cb-b3e0-cf83a2f7ac51.png)
+<img width="1053" alt="스크린샷 2022-12-19 오전 9 42 49" src="https://user-images.githubusercontent.com/87421893/208328339-241eb94e-b011-4118-86a1-11d2ae957e81.png">

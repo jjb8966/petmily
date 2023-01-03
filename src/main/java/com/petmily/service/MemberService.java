@@ -113,6 +113,11 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
+    @Transactional
+    public void withdrawMember(Long memberId) {
+        memberRepository.deleteById(memberId);
+    }
+
     private void passwordIncorrectCheck(String password, String passwordCheck, String originPassword) {
         if (hasText(password, passwordCheck) && matchPasswordCheck(password, passwordCheck) && !correctPassword(password, originPassword)) {
             throw new PasswordIncorrectException(getMessage("exception.password.incorrect"));

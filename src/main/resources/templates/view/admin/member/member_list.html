@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">회원 리스트</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="forms"></div>
+        </div>
+        </div>
+    </section>
+
+    <script>
+        window.onload = showMemberList();
+        let forms = document.getElementsByClassName("forms");
+
+        function showMemberList() {
+            fetch("http://localhost:8080/api/members")
+                .then(response => response.json())
+                .then(result => {
+                    result.data.forEach(member => {
+                        let grade;
+
+                        if (member.grade == "NORMAL") {
+                            grade = "일반 회원"
+                        }
+
+                        if (member.grade == "ADMIN") {
+                            grade = "관리자"
+                        }
+
+                        forms[0].innerHTML += `
+                        <div class="card mb-2">
+                                <div class="card-body p-2 p-sm-3">
+                                    <div class="media forum-item">
+                                        <div class="media-body">
+                                            <!-- 회원 번호 -->
+                                            <div class="text-muted">
+                                                <small>
+                                                    <span>회원 번호 : ${member.id}</span>
+                                                </small>
+                                            </div>
+
+                                            <!-- 회원 이름 -->
+                                            <h4 class="text-secondary">
+                                                <a href="/auth/admin/member/${member.id}">${member.name}</a>
+                                            </h4>
+
+                                            <small>ID : <span>${member.loginId}</span></small>
+                                        </div>
+
+                                        <!-- list 공개 / 비공개 -->
+                                        <div class="text-muted small text-center align-self-center">
+                                            <div>
+                                                <span><i class="far fa-comment ml-2"></i></span>
+                                                <span class="text-body" style="font-size: 1.3em;">${grade}</span>
+                                            </div>
+                                        </div>
+                                        &nbsp&nbsp
+                                        <a type="button" class="btn btn-danger text-white align-self-center" onclick="deleteMember(${member.id})">삭제</a>
+                                    </div>
+                                </div>
+                            </div>
+                    `;
+                    });
+                })
+        }
+
+        function deleteMember(memberId) {
+            fetch("http://localhost:8080/api/members/" + memberId, {
+                method: "DELETE"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message)
+                    forms[0].innerHTML = "";
+                    showMemberList();
+                })
+                .catch(error => console.log(error));
+        }
+
+    </script>
+</th:block>
+</html>

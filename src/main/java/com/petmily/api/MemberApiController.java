@@ -42,7 +42,7 @@ public class MemberApiController {
     }
 
     @DeleteMapping("/members/{memberId}")
-    public Map<String, String> deleteMember(@PathVariable Long memberId) {
+    public Map<String, String> withdrawMember(@PathVariable Long memberId) {
         memberService.withdrawMember(memberId);
 
         return Map.of("message", "회원이 탈퇴되었습니다.");

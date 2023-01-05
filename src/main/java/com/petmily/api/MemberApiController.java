@@ -1,6 +1,7 @@
 package com.petmily.api;
 
 import com.petmily.domain.core.Member;
+import com.petmily.domain.dto.member.MemberDetailForm;
 import com.petmily.domain.dto.member.MemberListForm;
 import com.petmily.domain.dto_converter.MemberDtoConverter;
 import com.petmily.service.MemberService;
@@ -39,6 +40,18 @@ public class MemberApiController {
         result.setCount(memberListForms.size());
 
         return result;
+    }
+
+    @GetMapping("/members/{memberId}")
+    public MemberDetailForm memberDetail(@PathVariable Long memberId) {
+        Member member = getMember(memberId);
+
+        return memberDtoConverter.entityToDto(member, MemberDetailForm.class)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.convert")));
+    }
+
+    private Member getMember(Long memberId) {
+        return memberService.findOne(memberId).orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
     }
 
     @DeleteMapping("/members/{memberId}")

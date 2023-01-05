@@ -2,6 +2,7 @@ package com.petmily.domain.dto_converter;
 
 import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.core.Member;
+import com.petmily.domain.dto.member.MemberDetailForm;
 import com.petmily.domain.dto.member.MemberListForm;
 import com.petmily.domain.dto.member.ModifyMemberForm;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,10 @@ public class MemberDtoConverter implements EntityDtoConverter {
 
         if (MemberListForm.class.isAssignableFrom(dtoType)) {
             dto = (T) convertToMemberListForm(member);
+        }
+
+        if (MemberDetailForm.class.isAssignableFrom(dtoType)) {
+            dto = (T) convertToMemberDetailForm(member);
         }
 
         return Optional.ofNullable(dto);
@@ -51,5 +56,19 @@ public class MemberDtoConverter implements EntityDtoConverter {
         memberListForm.setName(member.getName());
 
         return memberListForm;
+    }
+
+    private MemberDetailForm convertToMemberDetailForm(Member member) {
+        MemberDetailForm memberDetailForm = new MemberDetailForm();
+
+        memberDetailForm.setLoginId(member.getLoginId());
+        memberDetailForm.setPassword(member.getPassword());
+        memberDetailForm.setName(member.getName());
+        memberDetailForm.setBirth(member.getBirth());
+        memberDetailForm.setGrade(member.getGrade().getDescription());
+        memberDetailForm.setPhoneNumber(member.getPhoneNumber().fullNumber());
+        memberDetailForm.setEmail(member.getEmail().fullName());
+
+        return memberDetailForm;
     }
 }

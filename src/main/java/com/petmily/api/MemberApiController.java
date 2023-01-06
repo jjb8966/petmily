@@ -3,6 +3,7 @@ package com.petmily.api;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.MemberDetailForm;
 import com.petmily.domain.dto.member.MemberListForm;
+import com.petmily.domain.dto.member.ModifyMemberForm;
 import com.petmily.domain.dto_converter.MemberDtoConverter;
 import com.petmily.service.MemberService;
 import lombok.Getter;
@@ -59,6 +60,15 @@ public class MemberApiController {
         memberService.withdrawMember(memberId);
 
         return Map.of("message", "회원이 탈퇴되었습니다.");
+    }
+
+    @PatchMapping("/members/{memberId}")
+    public void modifyMember(@PathVariable Long memberId,
+                             @RequestBody ModifyMemberForm form) {
+
+        log.info("modify member form = {}", form);
+
+        memberService.modify(memberId, form);
     }
 
     @Getter

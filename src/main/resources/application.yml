@@ -25,7 +25,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://3.35.94.222:3306/petmily
-    username: admin
+    username: ADMIN
     password: PetmilyProject123!
 
   jpa:

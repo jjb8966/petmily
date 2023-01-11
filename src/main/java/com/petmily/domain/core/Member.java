@@ -63,14 +63,12 @@ public class Member extends BaseEntity {
         this.phoneNumber = builder.getPhoneNumber();
     }
 
-    public void changeInfo(ModifyMemberForm memberDto) {
-        this.password = memberDto.getPassword();
-        this.name = memberDto.getName();
-        this.email = memberDto.getEmail();
-        this.phoneNumber = memberDto.getPhoneNumber();
+    public void changeInfo(ModifyMemberForm form) {
+        this.loginId = form.getLoginId();
+        this.password = form.getPassword();
+        this.name = form.getName();
+        this.email = form.getEmail();
+        this.phoneNumber = form.getPhoneNumber();
     }
 
-    public void deleteBoard(Board board) {
-        boards.remove(board);
-    }
 }

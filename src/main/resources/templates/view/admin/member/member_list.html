@@ -56,7 +56,7 @@
 
                                             <!-- 회원 이름 -->
                                             <h4 class="text-secondary">
-                                                <a href="/auth/admin/members/${member.id}">${member.name}</a>
+                                                <span>${member.name}</span>
                                             </h4>
 
                                             <small>ID : <span>${member.loginId}</span></small>
@@ -70,6 +70,7 @@
                                         </div>
                                         &nbsp&nbsp
                                         <a type="button" class="btn btn-danger text-white align-self-center" onclick="deleteMember(${member.id})">삭제</a>
+                                        <a type="button" class="btn btn-primary text-white align-self-center" href="/auth/admin/members/${member.id}">수정</a>
                                     </div>
                                 </div>
                             </div>

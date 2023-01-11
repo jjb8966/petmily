@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+  <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+           data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-end">
+        <div class="col-md-9 ftco-animate pb-5">
+          <h1 class="mb-0 bread">회원 상세보기</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ftco-section bg-light">
+    <div class="container">
+      <div class="form"></div>
+    </div>
+    </div>
+  </section>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    let memberId = [[${memberId}]];
+    let form = document.getElementsByClassName("form");
+
+    window.onload = function getMemberDetail() {
+      fetch("http://localhost:8080/api/members/" + memberId)
+              .then(response => response.json())
+              .then(member => {
+                console.log(member);
+
+                form[0].innerHTML = `
+                <form id="form">
+                  <div class="label" style="font-size: 1.2rem">회원 아이디</div>
+                  <input id="loginId" style="font-size: 1.3rem" value="${member.loginId}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">비밀번호</div>
+                  <input id="password" style="font-size: 1.3rem" value="${member.password}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">회원 이름</div>
+                  <input id="name" style="font-size: 1.3rem" value="${member.name}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">회원 등급</div>
+                  <input id="grade" style="font-size: 1.3rem" value="${member.grade}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">연락처</div>
+                  <input id="phoneNumber" style="font-size: 1.3rem" value="${member.phoneNumber}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">이메일</div>
+                  <input id="email" style="font-size: 1.3rem" value="${member.email}"><br/><br/>
+                </form>
+
+                <div class="btn btn-primary" onclick="modifyMember()">수정</div>
+                <a class="btn btn-danger" href="/auth/admin/members">취소</a>
+                `
+              });
+    }
+
+    function modifyMember() {
+      let form = document.getElementById("form");
+
+      let modifyForm = new Object();
+
+      modifyForm.loginId = form.loginId.value;
+      modifyForm.password = form.password.value;
+      modifyForm.name = form.name.value;
+      modifyForm.email = form.email.value;
+      modifyForm.phoneNumber = form.phoneNumber.value;
+
+      let jsonData = JSON.stringify(modifyForm);
+
+      console.log(jsonData);
+
+      fetch("http://localhost:8080/api/members/" + memberId, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: jsonData
+      })
+              .then(response => response.json())
+              .then(data => {
+                alert(data.message);
+              })
+              .catch(error => console.log(error));
+    }
+    /*]]>*/
+  </script>
+</th:block>
+</html>

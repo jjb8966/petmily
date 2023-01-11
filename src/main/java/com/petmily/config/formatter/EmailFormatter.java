@@ -3,11 +3,13 @@ package com.petmily.config.formatter;
 import com.petmily.domain.embeded_type.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.Formatter;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Locale;
 
 @Slf4j
+@Component
 public class EmailFormatter implements Formatter<Email> {
 
     @Override

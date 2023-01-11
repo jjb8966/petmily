@@ -3,7 +3,7 @@ package com.petmily.api;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.MemberDetailForm;
 import com.petmily.domain.dto.member.MemberListForm;
-import com.petmily.domain.dto.member.ModifyMemberForm;
+import com.petmily.domain.dto.member.ModifyMemberApiForm;
 import com.petmily.domain.dto_converter.MemberDtoConverter;
 import com.petmily.service.MemberService;
 import lombok.Getter;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,12 +64,14 @@ public class MemberApiController {
     }
 
     @PatchMapping("/members/{memberId}")
-    public void modifyMember(@PathVariable Long memberId,
-                             @RequestBody ModifyMemberForm form) {
+    public Map<String, String> modifyMember(@PathVariable Long memberId,
+                                            @RequestBody ModifyMemberApiForm form) throws ParseException {
 
         log.info("modify member form = {}", form);
 
         memberService.modify(memberId, form);
+
+        return Map.of("message", "회원이 정보가 변경되었습니다.");
     }
 
     @Getter

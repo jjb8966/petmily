@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.format.Formatter;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class PhoneNumberFormatter implements Formatter<PhoneNumber> {
 
     private final MessageSource ms;

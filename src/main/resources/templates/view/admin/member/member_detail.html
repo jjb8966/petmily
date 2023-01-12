@@ -29,7 +29,7 @@
     let form = document.getElementsByClassName("form");
 
     window.onload = function getMemberDetail() {
-      fetch("http://localhost:8080/api/members/" + memberId)
+      fetch("http://petmily.cf/api/members/" + memberId)
               .then(response => response.json())
               .then(member => {
                 console.log(member);
@@ -76,7 +76,7 @@
 
       console.log(jsonData);
 
-      fetch("http://localhost:8080/api/members/" + memberId, {
+      fetch("http://petmily.cf/api/members/" + memberId, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json"

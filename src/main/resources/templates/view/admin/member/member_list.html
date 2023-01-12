@@ -28,7 +28,7 @@
         let forms = document.getElementsByClassName("forms");
 
         function showMemberList() {
-            fetch("http://localhost:8080/api/members")
+            fetch("http://petmily.cf/api/members")
                 .then(response => response.json())
                 .then(result => {
                     result.data.forEach(member => {
@@ -80,7 +80,7 @@
         }
 
         function deleteMember(memberId) {
-            fetch("http://localhost:8080/api/members/" + memberId, {
+            fetch("http://petmily.cf/api/members/" + memberId, {
                 method: "DELETE"
             })
                 .then(response => response.json())

@@ -27,13 +27,20 @@
                             <span class="text-white">
                              <b th:text="${session.loginMember.name}"></b><small> 님 환영합니다!</small>
                             </span>
-                        &emsp;
+                            &emsp;
+
                             <span>
                              <a class="text-white" href="/member/auth/mypage">마이페이지</a>
                             </span>
-                        &emsp;
+                            &emsp;
+
                             <span>
                              <a class="text-white" href="/logout">로그아웃</a>
+                            </span>
+                            &emsp;
+
+                            <span th:if="${session.loginMember.grade.description.equals('관리자')}">
+                                <a class="text-white" href="/auth/admin">관리자 페이지</a>
                             </span>
                         </span>
                     </div>

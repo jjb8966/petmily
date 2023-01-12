@@ -1,11 +1,10 @@
 package com.petmily.service;
 
+import com.petmily.config.formatter.EmailFormatter;
+import com.petmily.config.formatter.PhoneNumberFormatter;
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;
-import com.petmily.domain.dto.member.LoginForm;
-import com.petmily.domain.dto.member.MemberJoinForm;
-import com.petmily.domain.dto.member.ModifyMemberForm;
-import com.petmily.domain.dto.member.WithdrawMemberForm;
+import com.petmily.domain.dto.member.*;
 import com.petmily.exception.DuplicateLoginIdException;
 import com.petmily.exception.PasswordIncorrectException;
 import com.petmily.exception.PasswordMismatchException;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -29,6 +29,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MessageSource ms;
+    private final EmailFormatter emailFormatter;
+    private final PhoneNumberFormatter phoneNumberFormatter;
 
     // 회원 가입
     @Transactional
@@ -104,12 +106,34 @@ public class MemberService {
         return member.getId();
     }
 
+    @Transactional
+    public Long modify(Long id, ModifyMemberApiForm apiForm) throws ParseException {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
+
+        ModifyMemberForm form = new ModifyMemberForm();
+        form.setLoginId(apiForm.getLoginId());
+        form.setPassword(apiForm.getPassword());
+        form.setName(apiForm.getName());
+        form.setEmail(emailFormatter.parse(apiForm.getEmail(), Locale.KOREA));
+        form.setPhoneNumber(phoneNumberFormatter.parse(apiForm.getPhoneNumber(), Locale.KOREA));
+
+        member.changeInfo(form);
+
+        return member.getId();
+    }
+
     // 회원 탈퇴
     @Transactional
     public void withdrawMember(Long memberId, String originPassword, WithdrawMemberForm form) {
         passwordMismatchCheck(form.getPassword(), form.getPasswordCheck());
         passwordIncorrectCheck(form.getPassword(), form.getPasswordCheck(), originPassword);
 
+        memberRepository.deleteById(memberId);
+    }
+
+    @Transactional
+    public void withdrawMember(Long memberId) {
         memberRepository.deleteById(memberId);
     }
 

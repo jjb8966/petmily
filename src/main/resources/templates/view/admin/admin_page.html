@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">관리자 페이지</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="wrapper">
+                        <div class="container">
+                            <div class="row mb-5 pb-5">
+                                <div class="col-lg-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">회원 관리</h3>
+                                            <a href="/auth/admin/members" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">유기동물 관리</h3>
+                                            <a href="/auth/admin/abandoned_animals" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">게시글 관리</h3>
+                                            <a href="/auth/admin/boards" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5 pt-4">
+                                <div class="col-lg-6 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">입양/임보 관리</h3>
+                                            <a href="/auth/admin/adopt_temps" class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 d-flex align-self-stretch px-4 ftco-animate">
+                                    <div class="d-block services text-center">
+                                        <div class="media-body p-4">
+                                            <h3 class="heading">후원 관리</h3>
+                                            <a href="/auth/admin/donations"
+                                               class="btn-custom d-flex align-items-center justify-content-center">
+                                                <span class="fa fa-chevron-right"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+</html>

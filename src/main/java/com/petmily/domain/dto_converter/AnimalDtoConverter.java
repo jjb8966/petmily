@@ -3,6 +3,7 @@ package com.petmily.domain.dto_converter;
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.dto.abandoned_animal.AnimalDetailForm;
+import com.petmily.domain.dto.abandoned_animal.AnimalListForm;
 import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,10 @@ public class AnimalDtoConverter implements EntityDtoConverter {
         if (ChangeAnimalForm.class.isAssignableFrom(dtoType)) {
             log.info("ChangeAnimalForm 변환");
             dto = (T) convertToChangeAnimalForm(animal);
+        }
+
+        if (AnimalListForm.class.isAssignableFrom(dtoType)) {
+            dto = (T) convertToAnimalListForm(animal);
         }
 
         return Optional.ofNullable(dto);
@@ -57,4 +62,16 @@ public class AnimalDtoConverter implements EntityDtoConverter {
 
         return animalDetailForm;
     }
+
+    private AnimalListForm convertToAnimalListForm(AbandonedAnimal animal) {
+        AnimalListForm animalListForm = new AnimalListForm();
+
+        animalListForm.setId(animal.getId());
+        animalListForm.setName(animal.getName());
+        animalListForm.setSpecies(animal.getSpecies());
+        animalListForm.setStatus(animal.getStatus());
+
+        return animalListForm;
+    }
+
 }

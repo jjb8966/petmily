@@ -1,5 +1,6 @@
-package com.petmily.api;
+package com.petmily.api.controller;
 
+import com.petmily.api.ApiResult;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.dto.member.MemberDetailForm;
 import com.petmily.domain.dto.member.MemberListForm;
@@ -72,18 +73,6 @@ public class MemberApiController {
         memberService.modify(memberId, form);
 
         return Map.of("message", "회원이 정보가 변경되었습니다.");
-    }
-
-    @Getter
-    @Setter
-    static class ApiResult<T> {
-
-        private Integer count;
-        private T data;
-
-        public ApiResult(T data) {
-            this.data = data;
-        }
     }
 
     private String getMessage(String code) {

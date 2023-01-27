@@ -2,6 +2,7 @@ package com.petmily.service;
 
 import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
+import com.petmily.domain.dto.abandoned_animal.ModifyAnimalApiForm;
 import com.petmily.repository.AbandonedAnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -64,5 +65,9 @@ public class AbandonedAnimalService {
 
     private String getMessage(String code) {
         return ms.getMessage(code, null, Locale.KOREA);
+    }
+
+    public void modify(Long animalId, ModifyAnimalApiForm form) {
+
     }
 }

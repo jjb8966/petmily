@@ -52,7 +52,7 @@ public class AnimalDtoConverter implements EntityDtoConverter {
         AnimalDetailForm animalDetailForm = new AnimalDetailForm();
 
         animalDetailForm.setId(animal.getId());
-        animalDetailForm.setPicture(animal.getPicture());
+        animalDetailForm.setPictureStoreName(animal.getPicture().getFileStoreName());
         animalDetailForm.setSpecies(animal.getSpecies());
         animalDetailForm.setStatus(animal.getStatus());
         animalDetailForm.setName(animal.getName());

@@ -1,8 +1,8 @@
 package com.petmily.service;
 
 import com.petmily.domain.core.AbandonedAnimal;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import com.petmily.domain.dto.abandoned_animal.ModifyAnimalApiForm;
+import com.petmily.domain.dto.abandoned_animal.ModifyAnimalForm;
 import com.petmily.repository.AbandonedAnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -48,13 +48,23 @@ public class AbandonedAnimalService {
 
     // 유기동물 정보 변경
     @Transactional
-    public Long changeAnimalInfo(Long id, ChangeAnimalForm animalDto) {
+    public Long modify(Long id, ModifyAnimalForm form) {
         AbandonedAnimal abandonedAnimal = animalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.animal.null")));
 
-        abandonedAnimal.changeInfo(animalDto);
+        abandonedAnimal.changeInfo(form);
 
         return abandonedAnimal.getId();
+    }
+
+    @Transactional
+    public Long modify(Long animalId, ModifyAnimalApiForm apiForm) {
+        AbandonedAnimal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
+
+        animal.changeInfo(apiForm);
+
+        return animal.getId();
     }
 
     // 유기동물 삭제
@@ -65,9 +75,5 @@ public class AbandonedAnimalService {
 
     private String getMessage(String code) {
         return ms.getMessage(code, null, Locale.KOREA);
-    }
-
-    public void modify(Long animalId, ModifyAnimalApiForm form) {
-
     }
 }

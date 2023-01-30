@@ -39,26 +39,23 @@
                     form[0].innerHTML = `
                 <form id="form">
                 <img class="bd-placeholder-img" style="float: right" height="300" width="auto" src="/abandoned_animal/image/${animal.pictureStoreName}">
-                  <div class="label" style="font-size: 1.2rem">유기동물 아이디</div>
-                  <input id="loginId" style="font-size: 1.3rem" value="${animal.id}"><br/><br/>
-
                   <div class="label" style="font-size: 1.2rem">종</div>
-                  <input id="password" style="font-size: 1.3rem" value="${animal.species}"><br/><br/>
+                  <input id="species" style="font-size: 1.3rem" value="${animal.species}"><br/><br/>
 
                   <div class="label" style="font-size: 1.2rem">상태</div>
-                  <input id="name" style="font-size: 1.3rem" value="${animal.status}"><br/><br/>
+                  <input id="status" style="font-size: 1.3rem" value="${animal.status}"><br/><br/>
 
                   <div class="label" style="font-size: 1.2rem">이름</div>
-                  <input id="grade" style="font-size: 1.3rem" value="${animal.name}"><br/><br/>
+                  <input id="name" style="font-size: 1.3rem" value="${animal.name}"><br/><br/>
 
                   <div class="label" style="font-size: 1.2rem">종류</div>
-                  <input id="phoneNumber" style="font-size: 1.3rem" value="${animal.kind}"><br/><br/>
+                  <input id="kind" style="font-size: 1.3rem" value="${animal.kind}"><br/><br/>
 
                   <div class="label" style="font-size: 1.2rem">나이</div>
-                  <input id="email" style="font-size: 1.3rem" value="${animal.age}"><br/><br/>
+                  <input id="age" style="font-size: 1.3rem" value="${animal.age}"><br/><br/>
 
                   <div class="label" style="font-size: 1.2rem">몸무게</div>
-                  <input id="email" style="font-size: 1.3rem" value="${animal.weight}"><br/><br/>
+                  <input id="weight" style="font-size: 1.3rem" value="${animal.weight}"><br/><br/>
                 </form>
 
                 <div class="btn btn-primary" onclick="modifyAnimal()">수정</div>
@@ -72,17 +69,18 @@
 
             let modifyForm = new Object();
 
-            modifyForm.loginId = form.loginId.value;
-            modifyForm.password = form.password.value;
+            modifyForm.species = form.species.value;
+            modifyForm.status = form.status.value;
             modifyForm.name = form.name.value;
-            modifyForm.email = form.email.value;
-            modifyForm.phoneNumber = form.phoneNumber.value;
+            modifyForm.kind = form.kind.value;
+            modifyForm.age = form.age.value;
+            modifyForm.weight = form.weight.value;
 
             let jsonData = JSON.stringify(modifyForm);
 
             console.log(jsonData);
 
-            fetch("http://petmily.cf/api/animals/" + animalId, {
+            fetch("http://localhost:8080/api/animals/" + animalId, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"

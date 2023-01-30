@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChangeAnimalForm {
+public class ModifyAnimalForm {
 
     private Picture picture;
     private AnimalSpecies species;

@@ -2,9 +2,10 @@ package com.petmily.domain.core;
 
 import com.petmily.domain.builder.AbandonedAnimalBuilder;
 import com.petmily.domain.core.application.Application;
+import com.petmily.domain.dto.abandoned_animal.ModifyAnimalApiForm;
+import com.petmily.domain.dto.abandoned_animal.ModifyAnimalForm;
 import com.petmily.domain.enum_type.AnimalSpecies;
 import com.petmily.domain.enum_type.AnimalStatus;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,7 @@ public class AbandonedAnimal extends BaseEntity {
         this.weight = builder.getWeight();
     }
 
-    public void changeInfo(ChangeAnimalForm animalDto) {
+    public void changeInfo(ModifyAnimalForm animalDto) {
         this.picture = animalDto.getPicture();
         this.species = animalDto.getSpecies();
         this.status = animalDto.getStatus();
@@ -60,6 +61,15 @@ public class AbandonedAnimal extends BaseEntity {
         this.kind = animalDto.getKind();
         this.age = animalDto.getAge();
         this.weight = animalDto.getWeight();
+    }
+
+    public void changeInfo(ModifyAnimalApiForm apiForm) {
+        this.species = AnimalSpecies.valueOf(apiForm.getSpecies());
+        this.status = AnimalStatus.valueOf(apiForm.getStatus());
+        this.name = apiForm.getName();
+        this.kind = apiForm.getKind();
+        this.age = apiForm.getAge();
+        this.weight = apiForm.getWeight();
     }
 
     public void setPicture(Picture picture) {

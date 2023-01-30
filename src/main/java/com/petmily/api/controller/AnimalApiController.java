@@ -59,7 +59,7 @@ public class AnimalApiController {
     }
 
     @DeleteMapping("/animals/{animalId}")
-    public Map<String, String> deleteMember(@PathVariable Long animalId) {
+    public Map<String, String> deleteAnimal(@PathVariable Long animalId) {
         animalService.deleteAnimal(animalId);
 
         return Map.of("message", "유기동물이 삭제되었습니다.");

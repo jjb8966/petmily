@@ -31,9 +31,16 @@ public class AdminController {
         return "view/admin/member/member_detail";
     }
 
-    @GetMapping("/abandoned_animals")
+    @GetMapping("/animals")
     public String animalList() {
         return "view/admin/animal/animal_list";
+    }
+
+    @GetMapping("/animals/{animalId}")
+    public String animalDetailPage(@PathVariable Long animalId, Model model) {
+        model.addAttribute("animalId", animalId);
+
+        return "view/admin/animal/animal_detail";
     }
 
     @GetMapping("/boards")

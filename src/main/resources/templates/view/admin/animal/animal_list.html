@@ -57,8 +57,8 @@
                                             </div>
                                         </div>
                                         &nbsp&nbsp
-                                        <a type="button" class="btn btn-danger text-white align-self-center" onclick="deleteMember(${animal.id})">삭제</a>
-                                        <a type="button" class="btn btn-primary text-white align-self-center" href="/auth/admin/members/${animal.id}">수정</a>
+                                        <a type="button" class="btn btn-danger text-white align-self-center" onclick="deleteAnimal(${animal.id})">삭제</a>
+                                        <a type="button" class="btn btn-primary text-white align-self-center" href="/auth/admin/animals/${animal.id}">수정</a>
                                     </div>
                                 </div>
                             </div>
@@ -67,15 +67,15 @@
                 })
         }
 
-        function deleteMember(memberId) {
-            fetch("http://localhost:8080/api/members/" + memberId, {
+        function deleteAnimal(animalId) {
+            fetch("http://localhost:8080/api/animals/" + animalId, {
                 method: "DELETE"
             })
                 .then(response => response.json())
                 .then(result => {
                     alert(result.message)
                     forms[0].innerHTML = "";
-                    showMemberList();
+                    showAnimalList();
                 })
                 .catch(error => console.log(error));
         }

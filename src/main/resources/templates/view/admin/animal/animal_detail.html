@@ -30,7 +30,7 @@
 
         window.onload = function getAnimalDetail() {
             // fetch("http://petmily.cf/api/animals/" + animalId)
-            fetch("http://localhost:8080/api/animals/" + animalId)
+            fetch("http://petmily.cf/api/animals/" + animalId)
                 .then(response => response.json())
                 .then(animal => {
                     console.log(animal);
@@ -80,7 +80,7 @@
 
             console.log(jsonData);
 
-            fetch("http://localhost:8080/api/animals/" + animalId, {
+            fetch("http://petmily.cf/api/animals/" + animalId, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"

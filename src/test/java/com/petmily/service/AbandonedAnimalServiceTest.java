@@ -9,8 +9,8 @@ import com.petmily.domain.core.Member;
 import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.application.Donation;
+import com.petmily.domain.dto.abandoned_animal.ModifyAnimalForm;
 import com.petmily.domain.enum_type.AnimalSpecies;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -137,23 +137,23 @@ class AbandonedAnimalServiceTest {
 
         em.persist(animal);
 
-        ChangeAnimalForm changeAnimalForm = new ChangeAnimalForm();
-        changeAnimalForm.setName("animalB");
-        changeAnimalForm.setSpecies(AnimalSpecies.CAT);
-        changeAnimalForm.setKind("잡종");
-        changeAnimalForm.setAge(3);
-        changeAnimalForm.setWeight(1.3F);
+        ModifyAnimalForm modifyAnimalForm = new ModifyAnimalForm();
+        modifyAnimalForm.setName("animalB");
+        modifyAnimalForm.setSpecies(AnimalSpecies.CAT);
+        modifyAnimalForm.setKind("잡종");
+        modifyAnimalForm.setAge(3);
+        modifyAnimalForm.setWeight(1.3F);
 
         //when
-        animalService.changeAnimalInfo(animal.getId(), changeAnimalForm);
+        animalService.modify(animal.getId(), modifyAnimalForm);
         AbandonedAnimal findAnimal = em.find(AbandonedAnimal.class, animal.getId());
 
         //then
-        assertThat(findAnimal.getName()).isEqualTo(changeAnimalForm.getName());
-        assertThat(findAnimal.getSpecies()).isEqualTo(changeAnimalForm.getSpecies());
-        assertThat(findAnimal.getKind()).isEqualTo(changeAnimalForm.getKind());
-        assertThat(findAnimal.getAge()).isEqualTo(changeAnimalForm.getAge());
-        assertThat(findAnimal.getWeight()).isEqualTo(changeAnimalForm.getWeight());
+        assertThat(findAnimal.getName()).isEqualTo(modifyAnimalForm.getName());
+        assertThat(findAnimal.getSpecies()).isEqualTo(modifyAnimalForm.getSpecies());
+        assertThat(findAnimal.getKind()).isEqualTo(modifyAnimalForm.getKind());
+        assertThat(findAnimal.getAge()).isEqualTo(modifyAnimalForm.getAge());
+        assertThat(findAnimal.getWeight()).isEqualTo(modifyAnimalForm.getWeight());
     }
 
     @Test

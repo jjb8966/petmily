@@ -4,7 +4,7 @@ import com.petmily.domain.core.AbandonedAnimal;
 import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.dto.abandoned_animal.AnimalDetailForm;
 import com.petmily.domain.dto.abandoned_animal.AnimalListForm;
-import com.petmily.domain.dto.abandoned_animal.ChangeAnimalForm;
+import com.petmily.domain.dto.abandoned_animal.ModifyAnimalForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +24,8 @@ public class AnimalDtoConverter implements EntityDtoConverter {
             dto = (T) convertToAnimalDetailForm(animal);
         }
 
-        if (ChangeAnimalForm.class.isAssignableFrom(dtoType)) {
-            log.info("ChangeAnimalForm 변환");
+        if (ModifyAnimalForm.class.isAssignableFrom(dtoType)) {
+            log.info("ModifyAnimalForm 변환");
             dto = (T) convertToChangeAnimalForm(animal);
         }
 
@@ -36,23 +36,23 @@ public class AnimalDtoConverter implements EntityDtoConverter {
         return Optional.ofNullable(dto);
     }
 
-    private ChangeAnimalForm convertToChangeAnimalForm(AbandonedAnimal animal) {
-        ChangeAnimalForm changeAnimalForm = new ChangeAnimalForm();
+    private ModifyAnimalForm convertToChangeAnimalForm(AbandonedAnimal animal) {
+        ModifyAnimalForm modifyAnimalForm = new ModifyAnimalForm();
 
-        changeAnimalForm.setSpecies(animal.getSpecies());
-        changeAnimalForm.setName(animal.getName());
-        changeAnimalForm.setKind(animal.getKind());
-        changeAnimalForm.setAge(animal.getAge());
-        changeAnimalForm.setWeight(animal.getWeight());
+        modifyAnimalForm.setSpecies(animal.getSpecies());
+        modifyAnimalForm.setName(animal.getName());
+        modifyAnimalForm.setKind(animal.getKind());
+        modifyAnimalForm.setAge(animal.getAge());
+        modifyAnimalForm.setWeight(animal.getWeight());
 
-        return changeAnimalForm;
+        return modifyAnimalForm;
     }
 
     private AnimalDetailForm convertToAnimalDetailForm(AbandonedAnimal animal) {
         AnimalDetailForm animalDetailForm = new AnimalDetailForm();
 
         animalDetailForm.setId(animal.getId());
-        animalDetailForm.setPicture(animal.getPicture());
+        animalDetailForm.setPictureStoreName(animal.getPicture().getFileStoreName());
         animalDetailForm.setSpecies(animal.getSpecies());
         animalDetailForm.setStatus(animal.getStatus());
         animalDetailForm.setName(animal.getName());

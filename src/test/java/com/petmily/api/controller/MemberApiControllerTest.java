@@ -1,4 +1,4 @@
-package com.petmily.api;
+package com.petmily.api.controller;
 
 import com.petmily.domain.builder.MemberBuilder;
 import com.petmily.domain.core.Member;

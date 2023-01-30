@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">유기동물 상세보기</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="form"></div>
+        </div>
+        </div>
+    </section>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let animalId = [[${animalId}]];
+        let form = document.getElementsByClassName("form");
+
+        window.onload = function getAnimalDetail() {
+            // fetch("http://petmily.cf/api/animals/" + animalId)
+            fetch("http://localhost:8080/api/animals/" + animalId)
+                .then(response => response.json())
+                .then(animal => {
+                    console.log(animal);
+                    console.log(animal.pictureStoreName);
+
+                    form[0].innerHTML = `
+                <form id="form">
+                <img class="bd-placeholder-img" style="float: right" height="300" width="auto" src="/abandoned_animal/image/${animal.pictureStoreName}">
+                  <div class="label" style="font-size: 1.2rem">종</div>
+                  <input id="species" style="font-size: 1.3rem" value="${animal.species}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">상태</div>
+                  <input id="status" style="font-size: 1.3rem" value="${animal.status}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">이름</div>
+                  <input id="name" style="font-size: 1.3rem" value="${animal.name}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">종류</div>
+                  <input id="kind" style="font-size: 1.3rem" value="${animal.kind}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">나이</div>
+                  <input id="age" style="font-size: 1.3rem" value="${animal.age}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">몸무게</div>
+                  <input id="weight" style="font-size: 1.3rem" value="${animal.weight}"><br/><br/>
+                </form>
+
+                <div class="btn btn-primary" onclick="modifyAnimal()">수정</div>
+                <a class="btn btn-danger" href="/auth/admin/animals">취소</a>
+                `
+                });
+        }
+
+        function modifyAnimal() {
+            let form = document.getElementById("form");
+
+            let modifyForm = new Object();
+
+            modifyForm.species = form.species.value;
+            modifyForm.status = form.status.value;
+            modifyForm.name = form.name.value;
+            modifyForm.kind = form.kind.value;
+            modifyForm.age = form.age.value;
+            modifyForm.weight = form.weight.value;
+
+            let jsonData = JSON.stringify(modifyForm);
+
+            console.log(jsonData);
+
+            fetch("http://localhost:8080/api/animals/" + animalId, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => console.log(error));
+        }
+        /*]]>*/
+    </script>
+</th:block>
+</html>

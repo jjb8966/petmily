@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">게시판 상세보기</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="form"></div>
+        </div>
+        </div>
+    </section>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let boardId = [[${boardId}]];
+        let form = document.getElementsByClassName("form");
+        window.onload = getBoardDetail();
+
+        function getBoardDetail() {
+            fetch("http://petmily.cf/api/boards/" + boardId)
+                .then(response => response.json())
+                .then(board => {
+                    console.log(board);
+                    console.log(board.replies);
+
+                    form[0].innerHTML = `
+                <form id="form" class="row">
+                  <div class="col-lg-6">
+                    <div class="label" style="font-size: 1.2rem">작성자</div>
+                    <input id="writerName" style="font-size: 1.3rem" value="${board.writerName}" readonly><br/><br/>
+
+                    <div class="label" style="font-size: 1.2rem">게시판 종류</div>
+                    <input id="boardType" style="font-size: 1.3rem" value="${board.boardType}"><br/><br/>
+
+                    <div class="label" style="font-size: 1.2rem">제목</div>
+                    <input id="title" style="font-size: 1.3rem" value="${board.title}"><br/><br/>
+
+                    <div class="label" style="font-size: 1.2rem">내용</div>
+                    <input id="content" style="font-size: 1.3rem" value="${board.content}"><br/><br/>
+
+                    <div class="label" style="font-size: 1.2rem">공개 여부</div>
+                    <input id="shownAll" style="font-size: 1.3rem" value="${board.shownAll}"><br/><br/>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="label" style="font-size: 1.2rem">댓글</div>
+                    <div class="replies"></div><br/><br/>
+                  </div>
+                </form>
+
+                <div class="btn btn-primary" onclick="modifyBoard()">수정</div>
+                <a class="btn btn-danger" href="/auth/admin/boards">취소</a>
+                `
+                    let replies = form[0].getElementsByClassName("replies");
+                    board.replies.forEach(reply => {
+                        replies[0].innerHTML += `
+                        <div class="row">
+                            <input class="col-lg-2" id="name" style="font-size: 1.3rem" value="${reply.writerName}" readonly>
+                            <input class="col-lg-5" id="name" style="font-size: 1.3rem" value="${reply.content}" readonly><br/><br/>
+                            <a type="button" style="float: right" class="btn btn-danger text-white align-self-center" onclick="deleteReply(${reply.id})">삭제</a>
+                        </div>`;
+                    });
+                });
+        }
+
+        function deleteReply(replyId) {
+            fetch("http://petmily.cf/api/boards/replies/" + replyId, {
+                method: "DELETE"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message)
+                    form[0].innerHTML = "";
+                    getBoardDetail();
+                })
+                .catch(error => console.log(error));
+        }
+
+        function modifyBoard() {
+            let form = document.getElementById("form");
+
+            let modifyForm = new Object();
+
+            modifyForm.boardType = form.boardType.value;
+            modifyForm.title = form.title.value;
+            modifyForm.content = form.content.value;
+            modifyForm.shownAll = form.shownAll.value;
+
+            let jsonData = JSON.stringify(modifyForm);
+
+            console.log(jsonData);
+
+            fetch("http://petmily.cf/api/boards/" + boardId, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => console.log(error));
+        }
+
+        /*]]>*/
+    </script>
+</th:block>
+</html>

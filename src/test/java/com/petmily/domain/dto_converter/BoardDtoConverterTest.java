@@ -73,9 +73,9 @@ class BoardDtoConverterTest {
         FindWatchBoardDetailForm findWatchBoardDetailForm = boardDtoConverter.entityToDto(findWatchBoard, FindWatchBoardDetailForm.class).orElseThrow();
 
         assertThat(findWatchBoardDetailForm.getId()).isEqualTo(findWatchBoard.getId());
-        assertThat(findWatchBoardDetailForm.getMember().getId()).isEqualTo(member.getId());
+        assertThat(findWatchBoardDetailForm.getMemberId()).isEqualTo(member.getId());
 
-        assertThat(findWatchBoardDetailForm.getMember().getName()).isEqualTo(member.getName());
+        assertThat(findWatchBoardDetailForm.getWriterName()).isEqualTo(member.getName());
         assertThat(findWatchBoardDetailForm.getTitle()).isEqualTo(findWatchBoard.getTitle());
         assertThat(findWatchBoardDetailForm.getLostOrWatchTime()).isEqualTo(findWatchBoard.getLostOrWatchTime());
         assertThat(findWatchBoardDetailForm.getSpecies()).isEqualTo(findWatchBoard.getSpecies());

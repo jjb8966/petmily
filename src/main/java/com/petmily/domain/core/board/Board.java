@@ -5,6 +5,7 @@ import com.petmily.domain.core.BaseEntity;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.Picture;
 import com.petmily.domain.core.Reply;
+import com.petmily.domain.dto.board.ModifyBoardApiForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.enum_type.BoardType;
 import lombok.AccessLevel;
@@ -60,4 +61,10 @@ public class Board extends BaseEntity {
         this.shownAll = from.getShownAll();
     }
 
+    public void changeInfo(ModifyBoardApiForm apiForm) {
+        this.boardType = BoardType.valueOf(apiForm.getBoardType());
+        this.title = apiForm.getTitle();
+        this.content = apiForm.getContent();
+        this.shownAll = apiForm.getShownAll();
+    }
 }

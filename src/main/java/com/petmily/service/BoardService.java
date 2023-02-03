@@ -6,6 +6,7 @@ import com.petmily.domain.builder.board.MatchInfoBuilder;
 import com.petmily.domain.core.Member;
 import com.petmily.domain.core.board.Board;
 import com.petmily.domain.core.board.FindWatchBoard;
+import com.petmily.domain.dto.board.ModifyBoardApiForm;
 import com.petmily.domain.dto.board.ModifyBoardForm;
 import com.petmily.domain.dto.board.WriteBoardForm;
 import com.petmily.domain.dto.board.find_watch.SearchCondition;
@@ -173,6 +174,16 @@ public class BoardService {
         } else {
             board.changeInfo(form);
         }
+
+        return board.getId();
+    }
+
+    @Transactional
+    public Long modifyBoardInfo(Long id, ModifyBoardApiForm apiForm) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.member.null")));
+
+        board.changeInfo(apiForm);
 
         return board.getId();
     }

@@ -49,7 +49,8 @@
                         <div class="media-body ml-3">
                             <b><span style="font-size: 2em; margin: 20px" th:text="${board.title}">게시글 제목</span></b>
 
-                            <h3 style="display: inline" th:if="${boardType.equals('find') || boardType.equals('watch')}">
+                            <h3 style="display: inline"
+                                th:if="${boardType.equals('find') || boardType.equals('watch')}">
                                 <span class="badge text-white rounded-pill" th:text="${board.boardStatus.description}"
                                       th:classappend="|${board.boardStatus.name().equals('LOST') ? 'bg-danger' : 'bg-info'}|">
                                         매칭 유무
@@ -57,22 +58,28 @@
                             </h3>
                             <h6 class="mt-1"></h6>
 
-                            <small><span class="far fa-comment ml-2" th:text="|작성 시간 - ${{board.createdDate}}|">작성 날짜</span></small>
-                            <small><span class="far fa-comment ml-2" th:text="|작성자 - ${{board.member.name}}|">작성자 이름</span></small>
+                            <small><span class="far fa-comment ml-2"
+                                         th:text="|작성 시간 - ${{board.createdDate}}|">작성 날짜</span></small>
+                            <small><span class="far fa-comment ml-2"
+                                         th:text="|작성자 - ${{board.writerName}}|">작성자 이름</span></small>
                             <span th:remove="${boardType.equals('find') || boardType.equals('watch')} ? all">
-                                <small><span class="far fa-comment ml-2" th:if="${board.shownAll == true}">공개</span></small>
-                                <small><span class="far fa-comment ml-2" th:if="${board.shownAll == false}">비공개</span></small>
+                                <small><span class="far fa-comment ml-2"
+                                             th:if="${board.shownAll == true}">공개</span></small>
+                                <small><span class="far fa-comment ml-2"
+                                             th:if="${board.shownAll == false}">비공개</span></small>
                             </span>
                             <div class="modal-footer"></div>
 
                             <div class="row">
-                                <div class="col-lg-4" th:if="${boardType.equals('find') || boardType.equals('watch')}" th:remove="${board.lostOrWatchTime == null} ? all">
+                                <div class="col-lg-4" th:if="${boardType.equals('find') || boardType.equals('watch')}"
+                                     th:remove="${board.lostOrWatchTime == null} ? all">
                                     <span class="badge bg-primary text-white" th:if="${boardType.equals('find')}">잃어버린 시간</span>
                                     <span class="badge bg-primary text-white" th:if="${boardType.equals('watch')}">발견한 시간</span>
                                     <span th:text="${{board.lostOrWatchTime}}"></span>
                                 </div>
 
-                                <div class="col-lg-3" th:if="${boardType.equals('find') || boardType.equals('watch')}" th:remove="${board.species == null} ? all">
+                                <div class="col-lg-3" th:if="${boardType.equals('find') || boardType.equals('watch')}"
+                                     th:remove="${board.species == null} ? all">
                                     <span class="badge bg-primary text-white">종</span>
                                     <span th:text="${board.species.description}"></span>
                                 </div>
@@ -112,16 +119,21 @@
                             <div class="modal-header"></div>
 
                             <!--댓글 내용-->
-                            <div class="list-group-item d-flex gap-3 py-3" aria-current="true" th:each="reply : ${board.replies}">
+                            <div class="list-group-item d-flex gap-3 py-3" aria-current="true"
+                                 th:each="reply : ${board.replies}">
                                 <div class="d-flex gap-2 w-100 justify-content-between">
                                     <div>
-                                        <span class="mb-0"><strong th:text="${reply.writerName}">작성자</strong></span> <span class="mb-0"><small th:text="|- [${{reply.lastModifiedDate}}]|"> - 작성 시간</small></span>
+                                        <span class="mb-0"><strong th:text="${reply.writerName}">작성자</strong></span>
+                                        <span class="mb-0"><small
+                                                th:text="|- [${{reply.lastModifiedDate}}]|"> - 작성 시간</small></span>
                                         <h5 class="mb-0 opacity-75" th:text="${reply.content}">댓글 내용</h5>
                                     </div>
                                 </div>
                                 <span th:if="${session.loginMember != null && (session.loginMember.id == reply.memberId || session.loginMember.grade.name() == 'ADMIN')}">
-                                    <form th:action="|/board/${boardType}/${board.id}/auth/reply/delete/${reply.id}|" method="post">
-                                        <button type="submit" class="btn-sm btn-danger text-white text-center" style="float: right; width: 50px; height: 30px;">삭제</button>
+                                    <form th:action="|/board/${boardType}/${board.id}/auth/reply/delete/${reply.id}|"
+                                          method="post">
+                                        <button type="submit" class="btn-sm btn-danger text-white text-center"
+                                                style="float: right; width: 50px; height: 30px;">삭제</button>
                                     </form>
                                 </span>
                             </div>
@@ -133,11 +145,16 @@
                                     <div class="col-md-8 col-lg-12">
                                         <div class="comment-wrapper">
                                             <div class="panel panel-info">
-                                                <form class="panel-body" th:action="|/board/${boardType}/${board.id}/auth/reply/write|" method="post">
+                                                <form class="panel-body"
+                                                      th:action="|/board/${boardType}/${board.id}/auth/reply/write|"
+                                                      method="post">
                                                     <div class="form-group">
-                                                        <textarea cols="30" rows="3" class="form-control" th:field="${writeReplyForm.content}" th:errorclass="field-error"
+                                                        <textarea cols="30" rows="3" class="form-control"
+                                                                  th:field="${writeReplyForm.content}"
+                                                                  th:errorclass="field-error"
                                                                   placeholder="댓글을 작성해주세요."></textarea>
-                                                        <span class="field-error" th:errors="${writeReplyForm.content}"></span>
+                                                        <span class="field-error"
+                                                              th:errors="${writeReplyForm.content}"></span>
                                                     </div>
 
                                                     <div class="modal-footer">
@@ -153,12 +170,15 @@
                             </div>
 
                             <!--수정, 삭제, 목록 버튼 -->
-                            <span th:if="${session.loginMember != null && (session.loginMember.id == board.member.id || session.loginMember.grade.name() == 'ADMIN')}">
-                                <a type="button" class="btn btn-light" th:href="|/board/${boardType}/auth/modify/${board.id}|">수정</a>
-                                <a type="button" class="btn btn-danger" th:href="|/board/${boardType}/auth/delete/${board.id}|">삭제</a>
+                            <span th:if="${session.loginMember != null && (session.loginMember.id == board.memberId || session.loginMember.grade.name() == 'ADMIN')}">
+                                <a type="button" class="btn btn-light"
+                                   th:href="|/board/${boardType}/auth/modify/${board.id}|">수정</a>
+                                <a type="button" class="btn btn-danger"
+                                   th:href="|/board/${boardType}/auth/delete/${board.id}|">삭제</a>
                             </span>
 
-                            <a type="button" class="btn btn-primary" style="float:right;" th:href="|/board/${boardType}/list|">목록으로</a>
+                            <a type="button" class="btn btn-primary" style="float:right;"
+                               th:href="|/board/${boardType}/list|">목록으로</a>
                         </div>
                     </div>
                 </div>

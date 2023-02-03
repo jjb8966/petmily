@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">게시글 리스트</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="forms"></div>
+        </div>
+        </div>
+    </section>
+
+    <script>
+        window.onload = showBoardList();
+        let forms = document.getElementsByClassName("forms");
+
+        function showBoardList() {
+            fetch("http://petmily.cf/api/boards")
+                .then(response => response.json())
+                .then(result => {
+                    result.data.forEach(board => {
+                        forms[0].innerHTML += `
+                        <div class="card mb-2">
+                                <div class="card-body p-2 p-sm-3">
+                                    <div class="media forum-item">
+                                        <div class="media-body">
+                                            <div class="text-muted">
+                                                <small>
+                                                    <span>게시글 번호 : ${board.id}</span>
+                                                </small>
+                                            </div>
+
+                                            <h4 class="text-secondary">
+                                                <span>${board.title}</span>
+                                            </h4>
+
+                                            <small>작성자 : <span>${board.writerName}</span></small><br>
+                                            <small>작성 시간 : <span>${board.createdDate}</span></small>
+                                        </div>
+
+                                        <div class="text-muted small text-center align-self-center">
+                                            <div>
+                                                <span><i class="far fa-comment ml-2"></i></span>
+                                                <span class="text-body" style="font-size: 1.3em;">${board.boardType}</span>
+                                            </div>
+                                        </div>
+                                        &nbsp&nbsp
+                                        <a type="button" class="btn btn-danger text-white align-self-center" onclick="deleteBoard(${board.id})">삭제</a>
+                                        <a type="button" class="btn btn-primary text-white align-self-center" href="/auth/admin/boards/${board.id}">수정</a>
+                                    </div>
+                                </div>
+                            </div>
+                    `;
+                    });
+                })
+        }
+
+        function deleteBoard(boardId) {
+            fetch("http://petmily.cf/api/boards/" + boardId, {
+                method: "DELETE"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message)
+                    forms[0].innerHTML = "";
+                    showBoardList();
+                })
+                .catch(error => console.log(error));
+        }
+
+    </script>
+</th:block>
+</html>

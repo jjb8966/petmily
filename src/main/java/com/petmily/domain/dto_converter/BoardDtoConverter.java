@@ -128,7 +128,9 @@ public class BoardDtoConverter implements EntityDtoConverter {
         boardForm.setId(board.getId());
         boardForm.setCreatedDate(board.getCreatedDate());
         boardForm.setLastModifiedDate(board.getLastModifiedDate());
-        boardForm.setMember(board.getMember());
+        boardForm.setMemberId(board.getMember().getId());
+        boardForm.setWriterName(board.getMember().getName());
+        boardForm.setBoardType(board.getBoardType());
         boardForm.setTitle(board.getTitle());
         boardForm.setContent(board.getContent());
         boardForm.setShownAll(board.getShownAll());

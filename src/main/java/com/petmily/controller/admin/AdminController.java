@@ -48,6 +48,13 @@ public class AdminController {
         return "view/admin/board/board_list";
     }
 
+    @GetMapping("/boards/{boardId}")
+    public String boardDetailPage(@PathVariable Long boardId, Model model) {
+        model.addAttribute("boardId", boardId);
+
+        return "view/admin/board/board_detail";
+    }
+
     @GetMapping("/adopt_temps")
     public String adoptTempList() {
         return "view/admin/adopt_temp/adopt_temp_list";

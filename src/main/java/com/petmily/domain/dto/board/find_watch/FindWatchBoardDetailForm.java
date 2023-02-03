@@ -41,10 +41,16 @@ public class FindWatchBoardDetailForm extends BoardDetailForm {
         return "FindWatchBoardDetailForm{" +
                 "lostOrWatchTime=" + lostOrWatchTime +
                 ", species=" + species +
+                ", boardStatus=" + boardStatus +
+                ", animalName='" + animalName + '\'' +
+                ", animalKind='" + animalKind + '\'' +
+                ", animalAge=" + animalAge +
+                ", animalWeight=" + animalWeight +
                 ", id=" + id +
+                ", memberId=" + memberId +
                 ", createdDate=" + createdDate +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", member=" + member +
+                ", writerName='" + writerName + '\'' +
                 ", replies=" + replies +
                 ", pictures=" + pictures +
                 ", title='" + title + '\'' +

@@ -235,7 +235,7 @@ public class InitDB {
                                 .setAccountNumber(new AccountNumber("1234-1234-1234"))
                                 .setBankType(BankType.KB)
                                 .setAmount(10000)
-                                .setDonator(member.getName())
+                                .setBacker(member.getName())
                                 .build();
                     }
 

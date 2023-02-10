@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">후원 리스트</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="forms"></div>
+        </div>
+    </section>
+
+    <script>
+        window.onload = showDonationList();
+        let forms = document.getElementsByClassName("forms");
+
+        function showDonationList() {
+            // fetch("http://petmily.cf/api/donations")
+            fetch("http://localhost:8080/api/donations")
+                .then(response => response.json())
+                .then(result => {
+                    result.data.forEach(donation => {
+                        forms[0].innerHTML += `
+                        <div class="card mb-2">
+                                <div class="card-body p-2 p-sm-3">
+                                    <div class="media forum-item">
+                                        <div class="media-body">
+                                            <div class="text-muted">
+                                                <small>
+                                                    <span>후원 번호 : ${donation.id}</span>
+                                                </small>
+                                            </div>
+
+                                            <h4 class="text-secondary">
+                                                <span>${donation.animalName}</span>
+                                            </h4>
+
+                                            <small>후원자 : <span>${donation.backer}</span></small>
+                                        </div>
+
+                                        <div class="text-muted small text-center align-self-center">
+                                            <div>
+                                                <span><i class="far fa-comment ml-2"></i></span>
+                                                <span class="text-body" style="font-size: 1.3em;">${donation.status}</span>
+                                            </div>
+                                        </div>
+                                        &nbsp&nbsp
+                                        <a type="button" class="btn btn-danger text-white align-self-center" onclick="deleteDonation(${donation.id})">삭제</a>
+                                        <a type="button" class="btn btn-primary text-white align-self-center" href="/auth/admin/donations/${donation.id}">수정</a>
+                                    </div>
+                                </div>
+                            </div>
+                    `;
+                    });
+                })
+        }
+
+        function deleteDonation(donationId) {
+            fetch("http://localhost:8080/api/donations/" + donationId, {
+                method: "DELETE"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message)
+                    forms[0].innerHTML = "";
+                    showDonationList();
+                })
+                .catch(error => console.log(error));
+        }
+
+    </script>
+</th:block>
+</html>

@@ -9,4 +9,6 @@ import java.util.List;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
     List<Application> findAllByMemberOrderByApplicationType(Member member);
+
+    List<Application> findAllByApplicationType(String applicationType);
 }

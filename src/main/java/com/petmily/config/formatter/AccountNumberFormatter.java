@@ -5,18 +5,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.format.Formatter;
+import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
 import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class AccountNumberFormatter implements Formatter<AccountNumber> {
 
     private final MessageSource ms;
 
     @Override
-    public AccountNumber parse(String text, Locale locale) throws ParseException {
+    public AccountNumber parse(String text, Locale locale) {
         AccountNumber accountNumber = null;
 
         try {

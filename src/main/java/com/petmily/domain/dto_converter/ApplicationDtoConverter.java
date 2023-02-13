@@ -25,22 +25,18 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         T dto = null;
 
         if (ApplicationListForm.class.isAssignableFrom(dtoType)) {
-            log.info("Application -> ApplicationListForm");
             dto = (T) convertApplicationListForm(application);
         }
 
         if (DonationDetailForm.class.isAssignableFrom(dtoType)) {
-            log.info("Application -> DonationDetailForm");
             dto = (T) convertToDonationDetailForm(application);
         }
 
         if (TempProtectionDetailForm.class.isAssignableFrom(dtoType)) {
-            log.info("Application -> TempProtectionDetailForm");
             dto = (T) convertToTempProtectionDetailForm(application);
         }
 
         if (AdoptDetailForm.class.isAssignableFrom(dtoType)) {
-            log.info("Application -> AdoptDetailForm");
             dto = (T) convertToAdoptDetailForm(application);
         }
 
@@ -54,6 +50,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         form.setAnimalName(application.getAbandonedAnimal().getName());
         form.setType(application.getApplicationType());
         form.setStatus(application.getApplicationStatus());
+        form.setBacker(application.getMember().getName());
 
         return form;
     }
@@ -63,6 +60,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         DonationDetailForm form = new DonationDetailForm();
         AbandonedAnimal animal = donation.getAbandonedAnimal();
 
+        form.setAnimalId(animal.getId());
         form.setFileStoreName(animal.getPicture().getFileStoreName());
         form.setStatus(animal.getStatus());
         form.setSpecies(animal.getSpecies());
@@ -73,7 +71,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
 
         form.setApplicationId(donation.getId());
         form.setBankType(donation.getBankType());
-        form.setDonator(donation.getDonator());
+        form.setBacker(donation.getBacker());
         form.setAccountNumber(donation.getAccountNumber());
         form.setAmount(donation.getAmount());
 

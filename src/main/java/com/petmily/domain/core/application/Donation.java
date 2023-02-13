@@ -1,14 +1,17 @@
 package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.DonationBuilder;
+import com.petmily.domain.dto.application.ModifyDonationForm;
 import com.petmily.domain.embeded_type.AccountNumber;
 import com.petmily.domain.enum_type.BankType;
-import com.petmily.domain.dto.application.ModifyDonationForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 @Getter
@@ -21,7 +24,7 @@ public class Donation extends Application {
     @Embedded
     private AccountNumber accountNumber;
 
-    private String donator;
+    private String backer;
     private Integer amount;
 
     public Donation(DonationBuilder builder) {
@@ -29,23 +32,30 @@ public class Donation extends Application {
         this.abandonedAnimal = builder.getAbandonedAnimal();
         this.applicationStatus = builder.getApplicationStatus();
         this.bankType = builder.getBankType();
-        this.donator = builder.getDonator();
+        this.backer = builder.getBacker();
         this.accountNumber = builder.getAccountNumber();
         this.amount = builder.getAmount();
     }
 
     public void changeInfo(ModifyDonationForm form) {
         this.bankType = form.getBankType();
-        this.donator = form.getDonator();
+        this.backer = form.getBacker();
         this.accountNumber = form.getAccountNumber();
         this.amount = form.getAmount();
+    }
+
+    public void changeInfoByApi(ModifyDonationForm form) {
+        this.bankType = form.getBankType();
+        this.accountNumber = form.getAccountNumber();
+        this.amount = form.getAmount();
+        this.abandonedAnimal = form.getAbandonedAnimal();
     }
 
     @Override
     public String toString() {
         return "Donation{" +
                 "bankType=" + bankType +
-                ", donator='" + donator + '\'' +
+                ", backer='" + backer + '\'' +
                 ", accountNumber='" + accountNumber + '\'' +
                 ", amount=" + amount +
                 ", member=" + member.getName() +

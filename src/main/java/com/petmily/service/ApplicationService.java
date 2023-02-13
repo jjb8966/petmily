@@ -1,5 +1,6 @@
 package com.petmily.service;
 
+import com.petmily.config.formatter.AccountNumberFormatter;
 import com.petmily.domain.builder.application.AdoptBuilder;
 import com.petmily.domain.builder.application.DonationBuilder;
 import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
@@ -10,6 +11,7 @@ import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.application.Donation;
 import com.petmily.domain.core.application.TemporaryProtection;
 import com.petmily.domain.dto.application.*;
+import com.petmily.domain.enum_type.BankType;
 import com.petmily.repository.AbandonedAnimalRepository;
 import com.petmily.repository.ApplicationRepository;
 import com.petmily.repository.MemberRepository;
@@ -31,6 +33,7 @@ public class ApplicationService {
     private final MemberRepository memberRepository;
     private final AbandonedAnimalRepository animalRepository;
     private final MessageSource ms;
+    private final AccountNumberFormatter accountNumberFormatter;
 
     // 입양하기
     @Transactional
@@ -83,7 +86,7 @@ public class ApplicationService {
         // 지원서 생성
         Donation donation = new DonationBuilder(member, animal)
                 .setBankType(donationDto.getBankType())
-                .setDonator(donationDto.getDonator())
+                .setBacker(donationDto.getDonator())
                 .setAccountNumber(donationDto.getAccountNumber())
                 .setAmount(donationDto.getAmount())
                 .build();
@@ -120,6 +123,11 @@ public class ApplicationService {
         return applicationRepository.findAllByMemberOrderByApplicationType(member);
     }
 
+    // 전체 후원 지원서 조회
+    public List<Application> findAllDonation() {
+        return applicationRepository.findAllByApplicationType("Donation");
+    }
+
     // 입양 정보 수정
     @Transactional
     public Long modifyAdopt(Long id, ModifyAdoptForm adoptDto) {
@@ -144,13 +152,33 @@ public class ApplicationService {
 
     // 후원 정보 수정
     @Transactional
-    public Long modifyDonation(Long id, ModifyDonationForm donationDto) {
-        Donation donation = findOne(id, Donation.class)
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
+    public Long modifyDonation(Long donationId, ModifyDonationForm donationDto) {
+        Donation donation = getDonation(donationId);
 
         donation.changeInfo(donationDto);
 
         return donation.getId();
+    }
+
+    @Transactional
+    public Long modifyDonation(Long donationId, ModifyDonationApiForm apiForm) {
+        Donation donation = getDonation(donationId);
+        AbandonedAnimal animal = getAnimal(apiForm.getAnimalId());
+
+        ModifyDonationForm form = new ModifyDonationForm();
+        form.setBankType(BankType.valueOf(apiForm.getBankType()));
+        form.setAccountNumber(accountNumberFormatter.parse(apiForm.getAccountNumber(), Locale.KOREA));
+        form.setAmount(apiForm.getAmount());
+        form.setAbandonedAnimal(animal);
+
+        donation.changeInfoByApi(form);
+
+        return donation.getId();
+    }
+
+    private Donation getDonation(Long id) {
+        return findOne(id, Donation.class)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
     }
 
     // 지원서 삭제

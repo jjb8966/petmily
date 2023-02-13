@@ -5,23 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 @Getter
 @Setter
 @ToString
 public class ApplicationListForm {
 
-    @NotNull
     private Long id;
-
-    @NotBlank
     private String animalName;
-
-    @NotBlank
     private String type;
-
-    @NotNull
     private ApplicationStatus status;
+    private String backer;
 }

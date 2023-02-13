@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 public class DonationDetailForm {
 
     // 유기동물 정보
+    private Long animalId;
     private String fileStoreName;
     private AnimalStatus status;
     private AnimalSpecies species;
@@ -31,7 +32,7 @@ public class DonationDetailForm {
     private BankType bankType;
 
     @NotBlank
-    private String donator;
+    private String backer;
 
     @NotNull
     private AccountNumber accountNumber;

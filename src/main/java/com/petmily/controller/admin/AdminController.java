@@ -55,14 +55,21 @@ public class AdminController {
         return "view/admin/board/board_detail";
     }
 
+    @GetMapping("/donations")
+    public String donationList() {
+        return "view/admin/donation/donation_list";
+    }
+
+    @GetMapping("/donations/{donationId}")
+    public String donationDetailPage(@PathVariable Long donationId, Model model) {
+        model.addAttribute("donationId", donationId);
+
+        return "view/admin/donation/donation_detail";
+    }
+
     @GetMapping("/adopt_temps")
     public String adoptTempList() {
         return "view/admin/adopt_temp/adopt_temp_list";
-    }
-
-    @GetMapping("/donations")
-    public String donationList() {
-        return "view/admin/donation_list";
     }
 
 }

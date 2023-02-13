@@ -15,7 +15,7 @@ public class DonationBuilder {
     private AbandonedAnimal abandonedAnimal;
     private ApplicationStatus applicationStatus = ApplicationStatus.WAIT;
     private BankType bankType;
-    private String donator;
+    private String backer;
     private AccountNumber accountNumber;
     private Integer amount;
 
@@ -44,8 +44,8 @@ public class DonationBuilder {
         return this;
     }
 
-    public DonationBuilder setDonator(String donator) {
-        this.donator = donator;
+    public DonationBuilder setBacker(String backer) {
+        this.backer = backer;
         return this;
     }
 

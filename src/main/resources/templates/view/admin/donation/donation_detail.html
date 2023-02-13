@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">후원 상세보기</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="form"></div>
+        </div>
+        </div>
+    </section>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let donationId = [[${donationId}]];
+        let form = document.getElementsByClassName("form");
+
+        window.addEventListener("load", getDonationDetail);
+
+        function getDonationDetail() {
+            // fetch("http://petmily.cf/api/donations/" + donationId)
+            fetch("http://localhost:8080/api/donations/" + donationId)
+                .then(response => response.json())
+                .then(donation => {
+                    console.log(donation);
+
+                    form[0].innerHTML = `
+                <form id="form">
+                  <div class="label" style="font-size: 1.2rem">후원자</div>
+                  <input id="backer" style="font-size: 1.3rem" value="${donation.backer}" readonly><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">은행명</div>
+                  <input id="bankType" style="font-size: 1.3rem" value="${donation.bankType}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">계좌번호</div>
+                  <input id="accountNumber" style="font-size: 1.3rem" value="${donation.accountNumber.accountNumberWithHyphen}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">후원금</div>
+                  <input id="amount" style="font-size: 1.3rem" value="${donation.amount}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">후원 동물</div>
+                  <select id="animalId" style="font-size: 1.2rem">
+                    ${getAllAnimals(donation.animalId)}
+                  </select>
+                </form>
+
+                <div class="btn btn-primary" onclick="modifyDonation()">수정</div>
+                <a class="btn btn-danger" href="/auth/admin/donations">취소</a>
+                `
+                });
+        }
+
+        function getAllAnimals(selectedId) {
+            // fetch("http://petmily.cf/api/donations/" + donationId)
+            fetch("http://localhost:8080/api/animals")
+                .then(response => response.json())
+                .then(animals => {
+                    console.log(animals);
+                    let animalId = document.getElementById("animalId");
+
+                    animals.data.forEach(animal => {
+                        console.log(animal);
+
+                        if (animal.id == selectedId) {
+                            animalId.innerHTML += `
+                            <option value="${animal.id}" selected>
+                                ${animal.id}. ${animal.name}(${animal.species})
+                            </option>
+                            `;
+                        } else {
+                            animalId.innerHTML += `
+                            <option value="${animal.id}">
+                                ${animal.id}. ${animal.name}(${animal.species})
+                            </option>
+                            `;
+                        }
+                    });
+                });
+        }
+
+        function modifyDonation() {
+            let form = document.getElementById("form");
+
+            let modifyForm = new Object();
+
+            modifyForm.bankType = form.bankType.value;
+            modifyForm.accountNumber = form.accountNumber.value;
+            modifyForm.amount = form.amount.value;
+            modifyForm.animalId = form.animalId .value;
+
+            let jsonData = JSON.stringify(modifyForm);
+
+            console.log(jsonData);
+
+            fetch("http://localhost:8080/api/donations/" + donationId, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => console.log(error));
+        }
+
+        /*]]>*/
+    </script>
+</th:block>
+</html>

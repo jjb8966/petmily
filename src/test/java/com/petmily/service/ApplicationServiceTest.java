@@ -11,10 +11,10 @@ import com.petmily.domain.core.application.Adopt;
 import com.petmily.domain.core.application.Application;
 import com.petmily.domain.core.application.Donation;
 import com.petmily.domain.core.application.TemporaryProtection;
+import com.petmily.domain.dto.application.*;
 import com.petmily.domain.embeded_type.AccountNumber;
 import com.petmily.domain.enum_type.BankType;
 import com.petmily.domain.enum_type.LocationType;
-import com.petmily.domain.dto.application.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,7 @@ class ApplicationServiceTest {
         assertThat(findDonation.getMember()).isEqualTo(member);
         assertThat(findDonation.getAbandonedAnimal()).isEqualTo(animal);
         assertThat(findDonation.getBankType()).isEqualTo(applyDonationForm.getBankType());
-        assertThat(findDonation.getDonator()).isEqualTo(applyDonationForm.getDonator());
+        assertThat(findDonation.getBacker()).isEqualTo(applyDonationForm.getDonator());
         assertThat(findDonation.getAccountNumber()).isEqualTo(applyDonationForm.getAccountNumber());
         assertThat(findDonation.getAmount()).isEqualTo(applyDonationForm.getAmount());
     }
@@ -215,7 +215,7 @@ class ApplicationServiceTest {
 
         ModifyDonationForm modifyDonationForm = new ModifyDonationForm();
         modifyDonationForm.setBankType(BankType.NH);
-        modifyDonationForm.setDonator("memberB");
+        modifyDonationForm.setBacker("memberB");
         modifyDonationForm.setAccountNumber(new AccountNumber("123-4567-89"));
         modifyDonationForm.setAmount(5000);
 
@@ -225,7 +225,7 @@ class ApplicationServiceTest {
 
         //then
         assertThat(findDonation.getBankType()).isEqualTo(modifyDonationForm.getBankType());
-        assertThat(findDonation.getDonator()).isEqualTo(modifyDonationForm.getDonator());
+        assertThat(findDonation.getBacker()).isEqualTo(modifyDonationForm.getBacker());
         assertThat(findDonation.getAccountNumber()).isEqualTo(modifyDonationForm.getAccountNumber());
         assertThat(findDonation.getAmount()).isEqualTo(modifyDonationForm.getAmount());
     }

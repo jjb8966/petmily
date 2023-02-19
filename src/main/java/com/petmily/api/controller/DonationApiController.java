@@ -76,7 +76,7 @@ public class DonationApiController {
 
         applicationService.modifyDonation(donationId, form);
 
-        return Map.of("message", "유기동물의 정보가 변경되었습니다.");
+        return Map.of("message", "후원 정보가 변경되었습니다.");
     }
 
     private String getMessage(String code) {

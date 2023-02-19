@@ -27,8 +27,7 @@
         let forms = document.getElementsByClassName("forms");
 
         function showDonationList() {
-            // fetch("http://petmily.cf/api/donations")
-            fetch("http://localhost:8080/api/donations")
+            fetch("http://petmily.cf/api/donations")
                 .then(response => response.json())
                 .then(result => {
                     result.data.forEach(donation => {
@@ -68,7 +67,7 @@
         }
 
         function deleteDonation(donationId) {
-            fetch("http://localhost:8080/api/donations/" + donationId, {
+            fetch("http://petmily.cf/api/donations/" + donationId, {
                 method: "DELETE"
             })
                 .then(response => response.json())

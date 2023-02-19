@@ -31,8 +31,7 @@
         window.addEventListener("load", getDonationDetail);
 
         function getDonationDetail() {
-            // fetch("http://petmily.cf/api/donations/" + donationId)
-            fetch("http://localhost:8080/api/donations/" + donationId)
+            fetch("http://petmily.cf/api/donations/" + donationId)
                 .then(response => response.json())
                 .then(donation => {
                     console.log(donation);
@@ -64,8 +63,7 @@
         }
 
         function getAllAnimals(selectedId) {
-            // fetch("http://petmily.cf/api/donations/" + donationId)
-            fetch("http://localhost:8080/api/animals")
+            fetch("http://petmily.cf/api/animals")
                 .then(response => response.json())
                 .then(animals => {
                     console.log(animals);
@@ -105,7 +103,7 @@
 
             console.log(jsonData);
 
-            fetch("http://localhost:8080/api/donations/" + donationId, {
+            fetch("http://petmily.cf/api/donations/" + donationId, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"

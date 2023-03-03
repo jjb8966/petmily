@@ -72,4 +72,14 @@ public class AdminController {
         return "view/admin/adopt_temp/adopt_temp_list";
     }
 
+    @GetMapping("/adopt_temps/{adoptTempId}/{applicationType}")
+    public String adoptTempDetailPage(@PathVariable Long adoptTempId,
+                                      @PathVariable String applicationType,
+                                      Model model) {
+
+        model.addAttribute("adoptTempId", adoptTempId);
+        model.addAttribute("applicationType", applicationType);
+
+        return "view/admin/adopt_temp/adopt_temp_detail";
+    }
 }

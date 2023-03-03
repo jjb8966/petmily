@@ -50,7 +50,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         form.setAnimalName(application.getAbandonedAnimal().getName());
         form.setType(application.getApplicationType());
         form.setStatus(application.getApplicationStatus());
-        form.setBacker(application.getMember().getName());
+        form.setApplicantName(application.getMember().getName());
 
         return form;
     }
@@ -83,6 +83,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         TempProtectionDetailForm form = new TempProtectionDetailForm();
         AbandonedAnimal animal = temporaryProtection.getAbandonedAnimal();
 
+        form.setAnimalId(animal.getId());
         form.setFileStoreName(animal.getPicture().getFileStoreName());
         form.setStatus(animal.getStatus());
         form.setSpecies(animal.getSpecies());
@@ -91,6 +92,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         form.setAge(animal.getAge());
         form.setWeight(animal.getWeight());
 
+        form.setApplicantName(temporaryProtection.getMember().getName());
         form.setApplicationId(temporaryProtection.getId());
         form.setLocation(temporaryProtection.getLocation());
         form.setJob(temporaryProtection.getJob());
@@ -105,6 +107,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         AdoptDetailForm form = new AdoptDetailForm();
         AbandonedAnimal animal = adopt.getAbandonedAnimal();
 
+        form.setAnimalId(animal.getId());
         form.setFileStoreName(animal.getPicture().getFileStoreName());
         form.setStatus(animal.getStatus());
         form.setSpecies(animal.getSpecies());
@@ -113,6 +116,7 @@ public class ApplicationDtoConverter implements EntityDtoConverter {
         form.setAge(animal.getAge());
         form.setWeight(animal.getWeight());
 
+        form.setApplicantName(adopt.getMember().getName());
         form.setApplicationId(adopt.getId());
         form.setLocation(adopt.getLocation());
         form.setJob(adopt.getJob());

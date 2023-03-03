@@ -44,4 +44,12 @@ public abstract class Application extends BaseEntity {
                 ", applicationStatus=" + applicationStatus +
                 '}';
     }
+
+    public void approve() {
+        this.applicationStatus = ApplicationStatus.APPROVE;
+    }
+
+    public void refuse() {
+        this.applicationStatus = ApplicationStatus.REFUSE;
+    }
 }

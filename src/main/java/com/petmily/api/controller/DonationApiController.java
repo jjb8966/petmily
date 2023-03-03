@@ -58,7 +58,7 @@ public class DonationApiController {
     }
 
     private Donation getDonation(Long donationId) {
-        return applicationService.findOne(donationId, Donation.class).orElseThrow(() -> new IllegalArgumentException(getMessage("exception.donation.null")));
+        return applicationService.findOne(donationId, Donation.class).orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
     }
 
     @DeleteMapping("/donations/{donationId}")

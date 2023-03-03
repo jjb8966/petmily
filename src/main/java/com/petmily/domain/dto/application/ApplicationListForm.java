@@ -14,5 +14,5 @@ public class ApplicationListForm {
     private String animalName;
     private String type;
     private ApplicationStatus status;
-    private String backer;
+    private String applicantName;
 }

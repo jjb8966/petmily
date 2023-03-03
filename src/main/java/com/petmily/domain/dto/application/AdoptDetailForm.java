@@ -13,9 +13,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
-public class AdoptDetailForm {
+public class AdoptDetailForm implements AdoptTempDetailForm {
 
     // 유기동물 정보
+    private Long animalId;
     private String fileStoreName;
     private AnimalStatus status;
     private AnimalSpecies species;
@@ -25,6 +26,9 @@ public class AdoptDetailForm {
     private Float weight;
 
     private Long applicationId;
+
+    @NotBlank
+    private String applicantName;
 
     @NotNull
     private LocationType location;

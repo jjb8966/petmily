@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2"
+             style="background-image: url('/petsitting-master/images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 class="mb-0 bread">입양/임보 리스트</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="forms"></div>
+        </div>
+    </section>
+
+    <script>
+        window.onload = showAdoptTempList();
+        let forms = document.getElementsByClassName("forms");
+
+        function showAdoptTempList() {
+            fetch("http://localhost:8080/api/adopt_temps")
+                .then(response => response.json())
+                .then(result => {
+                    result.data.forEach(adoptTemp => {
+                        forms[0].innerHTML += `
+                        <div class="card mb-2">
+                            <div class="card-body p-2 p-sm-3">
+                                 <div class="media forum-item">
+                                      <div class="media-body">
+                                            <div class="text-muted">
+                                                <small>
+                                                    <span>신청서 번호 : ${adoptTemp.id}</span>
+                                                    <span>[${adoptTemp.type}]</span>
+                                                </small>
+                                            </div>
+
+                                            <h4 class="text-secondary">
+                                                <span>${adoptTemp.animalName}</span>
+                                            </h4>
+
+                                            <small>신청자 이름 : <span>${adoptTemp.applicantName}</span></small>
+                                      </div>
+
+                                      <div class="text-muted small text-center align-self-center">
+                                            <div>
+                                                <span><i class="far fa-comment ml-2"></i></span>
+                                                <span class="text-body" style="font-size: 1.3em;">${adoptTemp.status}</span>
+                                            </div>
+                                      </div>
+                                      &nbsp&nbsp
+                                      <a type="button" class="btn btn-danger text-white align-self-center" onclick="deleteAdoptTemp(${adoptTemp.id}, '${adoptTemp.type}')">삭제</a>
+                                      <a type="button" class="btn btn-primary text-white align-self-center" href="/auth/admin/adopt_temps/${adoptTemp.id}/${adoptTemp.type}">수정</a>
+                                      <a type="button" class="btn btn-info text-white align-self-center" onclick="approve(${adoptTemp.id})">승인</a>
+                                      <a type="button" class="btn btn-danger text-white align-self-center" onclick="reject(${adoptTemp.id})">거절</a>
+                                 </div>
+                            </div>
+                        </div>
+                    `;
+                    });
+                })
+        }
+
+        function deleteAdoptTemp(adoptTempId, applicationType) {
+            console.log(applicationType);
+
+            fetch("http://localhost:8080/api/adopt_temps/" + adoptTempId + "/" + applicationType, {
+                method: "DELETE"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message)
+                    forms[0].innerHTML = "";
+                    showAdoptTempList();
+                })
+                .catch(error => console.log(error));
+        }
+
+        function approve(adoptTempId) {
+            fetch("http://localhost:8080/api/adopt_temps/approve/" + adoptTempId, {
+                method: "POST"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message)
+                    forms[0].innerHTML = "";
+                    showAdoptTempList();
+                })
+                .catch(error => console.log(error));
+        }
+
+        function reject(adoptTempId) {
+            fetch("http://localhost:8080/api/adopt_temps/refuse/" + adoptTempId, {
+                method: "POST"
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message)
+                    forms[0].innerHTML = "";
+                    showAdoptTempList();
+                })
+                .catch(error => console.log(error));
+        }
+
+    </script>
+</th:block>
+</html>

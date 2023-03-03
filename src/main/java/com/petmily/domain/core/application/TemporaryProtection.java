@@ -1,8 +1,10 @@
 package com.petmily.domain.core.application;
 
 import com.petmily.domain.builder.application.TemporaryProtectionBuilder;
-import com.petmily.domain.enum_type.LocationType;
+import com.petmily.domain.core.AbandonedAnimal;
+import com.petmily.domain.dto.application.ModifyAdoptTempApiForm;
 import com.petmily.domain.dto.application.ModifyTempProtectionForm;
+import com.petmily.domain.enum_type.LocationType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,5 +49,13 @@ public class TemporaryProtection extends Application {
         this.job = form.getJob();
         this.married = form.getMarried();
         this.period = form.getPeriod();
+    }
+
+    public void changeInfoByApi(ModifyAdoptTempApiForm apiForm, AbandonedAnimal animal) {
+        this.location = LocationType.valueOf(apiForm.getLocation());
+        this.job = apiForm.getJob();
+        this.married = apiForm.getMarried();
+        this.period = apiForm.getPeriod();
+        this.abandonedAnimal = animal;
     }
 }

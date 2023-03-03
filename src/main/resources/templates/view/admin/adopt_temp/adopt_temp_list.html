@@ -27,7 +27,7 @@
         let forms = document.getElementsByClassName("forms");
 
         function showAdoptTempList() {
-            fetch("http://localhost:8080/api/adopt_temps")
+            fetch("http://petmily.cf/api/adopt_temps")
                 .then(response => response.json())
                 .then(result => {
                     result.data.forEach(adoptTemp => {
@@ -72,7 +72,7 @@
         function deleteAdoptTemp(adoptTempId, applicationType) {
             console.log(applicationType);
 
-            fetch("http://localhost:8080/api/adopt_temps/" + adoptTempId + "/" + applicationType, {
+            fetch("http://petmily.cf/api/adopt_temps/" + adoptTempId + "/" + applicationType, {
                 method: "DELETE"
             })
                 .then(response => response.json())
@@ -85,7 +85,7 @@
         }
 
         function approve(adoptTempId) {
-            fetch("http://localhost:8080/api/adopt_temps/approve/" + adoptTempId, {
+            fetch("http://petmily.cf/api/adopt_temps/approve/" + adoptTempId, {
                 method: "POST"
             })
                 .then(response => response.json())
@@ -98,7 +98,7 @@
         }
 
         function reject(adoptTempId) {
-            fetch("http://localhost:8080/api/adopt_temps/refuse/" + adoptTempId, {
+            fetch("http://petmily.cf/api/adopt_temps/refuse/" + adoptTempId, {
                 method: "POST"
             })
                 .then(response => response.json())

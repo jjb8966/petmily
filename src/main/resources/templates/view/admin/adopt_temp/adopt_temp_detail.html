@@ -33,7 +33,7 @@
         window.addEventListener("load", getAdoptTempDetail);
 
         function getAdoptTempDetail() {
-            fetch("http://localhost:8080/api/adopt_temps/" + adoptTempId + "/" + applicationType)
+            fetch("http://petmily.cf/api/adopt_temps/" + adoptTempId + "/" + applicationType)
                 .then(response => response.json())
                 .then(adoptTemp => {
                     console.log(adoptTemp);
@@ -74,7 +74,7 @@
         }
 
         function getAllAnimals(selectedId) {
-            fetch("http://localhost:8080/api/animals")
+            fetch("http://petmily.cf/api/animals")
                 .then(response => response.json())
                 .then(animals => {
                     console.log(animals);
@@ -121,7 +121,7 @@
 
             console.log(jsonData);
 
-            fetch("http://localhost:8080/api/adopt_temps/" + adoptTempId + "/" + applicationType, {
+            fetch("http://petmily.cf/api/adopt_temps/" + adoptTempId + "/" + applicationType, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"

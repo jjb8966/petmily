@@ -20,6 +20,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -125,7 +126,12 @@ public class ApplicationService {
 
     // 전체 후원 지원서 조회
     public List<Application> findAllDonation() {
-        return applicationRepository.findAllByApplicationType("Donation");
+        return applicationRepository.findAllByApplicationTypeIn(Arrays.asList("Donation"));
+    }
+
+    // 전체 입양,임보 지원서 조회
+    public List<Application> findAllAdoptTemp() {
+        return applicationRepository.findAllByApplicationTypeIn(Arrays.asList("Adopt", "TemporaryProtection"));
     }
 
     // 입양 정보 수정
@@ -137,6 +143,33 @@ public class ApplicationService {
         adopt.changeInfo(adoptDto);
 
         return adopt.getId();
+    }
+
+    @Transactional
+    public Long modifyAdoptTemp(Long id, ModifyAdoptTempApiForm apiForm) {
+        String type = apiForm.getType();
+        AbandonedAnimal animal = getAnimal(apiForm.getAnimalId());
+        Application application = null;
+
+        if (type.equals("Adopt")) {
+            application = findOne(id, Adopt.class)
+                    .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
+
+            Adopt adopt = (Adopt) application;
+
+            adopt.changeInfoByApi(apiForm, animal);
+        }
+
+        if (type.equals("TemporaryProtection")) {
+            application = findOne(id, TemporaryProtection.class)
+                    .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
+
+            TemporaryProtection temporaryProtection = (TemporaryProtection) application;
+
+            temporaryProtection.changeInfoByApi(apiForm, animal);
+        }
+
+        return application.getId();
     }
 
     // 임시보호 정보 수정
@@ -189,5 +222,23 @@ public class ApplicationService {
 
     private String getMessage(String code) {
         return ms.getMessage(code, null, Locale.KOREA);
+    }
+
+    // 신청서 승인
+    @Transactional
+    public void approveApplication(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
+
+        application.approve();
+    }
+
+    // 신청서 거절
+    @Transactional
+    public void refuseApplication(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("exception.application.null")));
+
+        application.refuse();
     }
 }

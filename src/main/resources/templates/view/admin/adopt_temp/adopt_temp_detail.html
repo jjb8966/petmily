@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block layout:fragment="content">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('/petsitting-master/images/bg_2.jpg');"
+             data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <h1 th:if="${applicationType.equals('Adopt')}" class="mb-0 bread">입양 상세보기</h1>
+                    <h1 th:if="${applicationType.equals('TemporaryProtection')}" class="mb-0 bread">임시보호 상세보기</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="form"></div>
+        </div>
+        </div>
+    </section>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let adoptTempId = [[${adoptTempId}]];
+        let applicationType = [[${applicationType}]];
+        let form = document.getElementsByClassName("form");
+
+        window.addEventListener("load", getAdoptTempDetail);
+
+        function getAdoptTempDetail() {
+            fetch("http://localhost:8080/api/adopt_temps/" + adoptTempId + "/" + applicationType)
+                .then(response => response.json())
+                .then(adoptTemp => {
+                    console.log(adoptTemp);
+
+                    form[0].innerHTML += `
+                <form id="form">
+                  <div class="label" style="font-size: 1.2rem">신청자</div>
+                  <input id="applicantName" style="font-size: 1.3rem" value="${adoptTemp.applicantName}" readonly><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">거주지</div>
+                  <input id="location" style="font-size: 1.3rem" value="${adoptTemp.location}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">직업</div>
+                  <input id="job" style="font-size: 1.3rem" value="${adoptTemp.job}"><br/><br/>
+
+                  <div class="label" style="font-size: 1.2rem">결혼 유무</div>
+                  <input id="married" style="font-size: 1.3rem" value="${adoptTemp.married}"><br/><br/>
+                `
+
+                    if (applicationType === "TemporaryProtection") {
+                        form[0].innerHTML += `
+                  <div class="label" style="font-size: 1.2rem">임시보호 기간</div>
+                  <input id="period" style="font-size: 1.3rem" value="${adoptTemp.period}"><br/><br/>
+                `;
+                    }
+
+                    form[0].innerHTML += `
+                  <div class="label" style="font-size: 1.2rem">동물</div>
+                  <select id="animalId" style="font-size: 1.2rem">
+                    ${getAllAnimals(adoptTemp.animalId)}
+                  </select>
+                </form><br><br>
+
+                <div class="btn btn-primary" onclick="modifyAdoptTemp()">수정</div>
+                <a class="btn btn-danger" href="/auth/admin/adopt_temps">취소</a>
+                `
+                });
+        }
+
+        function getAllAnimals(selectedId) {
+            fetch("http://localhost:8080/api/animals")
+                .then(response => response.json())
+                .then(animals => {
+                    console.log(animals);
+                    let animalId = document.getElementById("animalId");
+
+                    animals.data.forEach(animal => {
+                        console.log(animal);
+
+                        if (animal.id == selectedId) {
+                            animalId.innerHTML += `
+                            <option value="${animal.id}" selected>
+                                ${animal.id}. ${animal.name}(${animal.species})
+                            </option>
+                            `;
+                        } else {
+                            animalId.innerHTML += `
+                            <option value="${animal.id}">
+                                ${animal.id}. ${animal.name}(${animal.species})
+                            </option>
+                            `;
+                        }
+                    });
+                });
+        }
+
+        function modifyAdoptTemp() {
+            let form = document.getElementById("form");
+            let animalId = document.getElementById("animalId");
+            let period = document.getElementById("period");
+
+            let modifyForm = new Object();
+
+            modifyForm.type = applicationType;
+            modifyForm.location = form.location.value;
+            modifyForm.job = form.job.value;
+            modifyForm.married = form.married.value;
+            modifyForm.animalId = animalId.value;
+
+            if (applicationType === "TemporaryProtection") {
+                modifyForm.period = period.value;
+            }
+
+            let jsonData = JSON.stringify(modifyForm);
+
+            console.log(jsonData);
+
+            fetch("http://localhost:8080/api/adopt_temps/" + adoptTempId + "/" + applicationType, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => console.log(error));
+        }
+
+        /*]]>*/
+    </script>
+</th:block>
+</html>

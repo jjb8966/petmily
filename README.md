@@ -25,8 +25,7 @@
 
 ### DB
 
-<img src="https://img.shields.io/badge/MySQL(5.7) 서버용-blue?style=for-the-badge&logo=MySQL&logoColor=white"/>
-<img src="https://img.shields.io/badge/Oracle(19c) 개발용-red?style=for-the-badge&logo=Oracle&logoColor=white"/>
+<img src="https://img.shields.io/badge/MySQL(5.7) 서버용-blue?style=for-the-badge&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/Oracle(19c) 개발용-red?style=for-the-badge&logo=Oracle&logoColor=white"/>
 
 ### IDE
 

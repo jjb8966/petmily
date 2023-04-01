@@ -49,10 +49,28 @@
 # 5. 주요 기능
 ## 5.1 로그인 & 회원가입
 
+<div>
+  <img width="794" alt="스크린샷 2023-04-01 오후 5 38 42" src="https://user-images.githubusercontent.com/87421893/229275607-2150567f-b009-4726-8a8c-8d2620499b49.png" style="width:50%; margin-right: 10px;">
+  
+  <img width="792" alt="스크린샷 2023-04-01 오후 5 41 20" src="https://user-images.githubusercontent.com/87421893/229275710-6c6e7490-3a1b-4e33-9fd2-62f4ece38675.png" style="width:50%;">
+</div>
+
 ## 5.2 유기동물 조회
+<div>
+<img width="1178" alt="스크린샷 2023-04-01 오후 6 09 04" src="https://user-images.githubusercontent.com/87421893/229277022-a5fcfc2a-d8dc-4d94-a3f3-7996b64b408d.png" style="width:45%; height: 350px">
+<img width="1129" alt="스크린샷 2023-04-01 오후 6 11 14" src="https://user-images.githubusercontent.com/87421893/229277144-e498eac1-0e4b-4068-8fee-cc9ee2d37631.png" style="width:45%; height: 350px">
+</div>
+
+### 유기동물 후원, 임시보호, 입양 신청은 로그인한 회원만 가능합니다.
+
 ### 5.2.1 후원하기
+<img width="1005" alt="스크린샷 2023-04-01 오후 6 14 26" src="https://user-images.githubusercontent.com/87421893/229277317-46a43d82-85d8-4b2a-b8f0-2ab1ccbffb95.png" style="width:70%">
+
 ### 5.2.2 임시보호하기
+<img width="1000" alt="스크린샷 2023-04-01 오후 6 16 55" src="https://user-images.githubusercontent.com/87421893/229277446-ca16b267-5a6a-4f84-a628-bf46879d8b9a.png" style="width:70%">
+
 ### 5.2.3 입양하기
+<img width="990" alt="스크린샷 2023-04-01 오후 6 20 17" src="https://user-images.githubusercontent.com/87421893/229277606-a15d003e-665b-4b70-848b-db3596f3d00d.png" style="width:70%">
 
 ## 5.3 반려동물 찾아요 & 유기동물 봤어요
 ### 5.3.1 검색 기능

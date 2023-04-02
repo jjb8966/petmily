@@ -154,5 +154,42 @@
 <img width="1171" alt="스크린샷 2023-04-02 오후 4 48 07" src="https://user-images.githubusercontent.com/87421893/229339760-e185a05b-58c5-4f3a-85c8-569ec266e2b6.png" style="width:70%">
 
 ## 5.5 관리자 페이지
-### 5.5.1 CRUD
+- 관리자 권한이 있는 아이디로 로그인 시 관리자 페이지로 접근할 수 있습니다.
+- 관리자 페이지의 모든 기능은 REST API로 구현되었습니다.
+<img width="937" alt="스크린샷 2023-04-02 오후 5 31 23" src="https://user-images.githubusercontent.com/87421893/229341637-9df481e1-3880-48b1-8587-7e6d2186bcb0.png">
+
+### 5.5.1 도메인 관리
+- 모든 도메인에 대해 조회, 수정, 삭제가 가능합니다.
+
+### (1) 회원 관리
+<div>
+<img width="1178" alt="스크린샷 2023-04-01 오후 6 09 04" src="https://user-images.githubusercontent.com/87421893/229341779-dcee7181-ce5c-4a7d-bfb3-3cf65171a909.png" style="width:45%; height: 350px">
+<img width="1129" alt="스크린샷 2023-04-01 오후 6 11 14" src="https://user-images.githubusercontent.com/87421893/229341785-b9c5e4b4-e89c-473b-a69f-8c1f0dd4fc81.png" style="width:45%; height: 350px">
+</div>
+
+### (2) 유기동물 관리
+<div>
+<img width="1178" alt="스크린샷 2023-04-01 오후 6 09 04" src="https://user-images.githubusercontent.com/87421893/229341816-6f050e84-a1a9-4f5d-b7b0-2ac945dd19a1.png" style="width:45%; height: 350px">
+<img width="1129" alt="스크린샷 2023-04-01 오후 6 11 14" src="https://user-images.githubusercontent.com/87421893/229341819-197b4c18-283f-42ec-bd15-1c2768bce28b.png" style="width:45%; height: 350px">
+</div>
+
+### (3) 게시글 관리
+<div>
+<img width="1178" alt="스크린샷 2023-04-01 오후 6 09 04" src="https://user-images.githubusercontent.com/87421893/229341849-8416d1f0-3a84-49d8-99bb-b1d56a7f6175.png" style="width:45%; height: 350px">
+<img width="1129" alt="스크린샷 2023-04-01 오후 6 11 14" src="https://user-images.githubusercontent.com/87421893/229341858-fa349f76-3e3b-4ea9-bc87-31765ce5e1ad.png" style="width:45%; height: 350px">
+</div>
+
+### (4) 입양/임보 관리
+<div>
+<img width="1178" alt="스크린샷 2023-04-01 오후 6 09 04" src="https://user-images.githubusercontent.com/87421893/229341882-378f2dc0-6eef-4e86-bc03-7bcaacd7c26a.png" style="width:45%; height: 350px">
+<img width="1129" alt="스크린샷 2023-04-01 오후 6 11 14" src="https://user-images.githubusercontent.com/87421893/229341885-fa43144f-5967-404a-bd31-6fef3208b572.png" style="width:45%; height: 350px">
+</div>
+
+### (5) 후원 관리
+<div>
+<img width="1178" alt="스크린샷 2023-04-01 오후 6 09 04" src="https://user-images.githubusercontent.com/87421893/229341925-f9da18f5-d23e-4041-b94d-4308ee93d42e.png" style="width:45%; height: 350px">
+<img width="1129" alt="스크린샷 2023-04-01 오후 6 11 14" src="https://user-images.githubusercontent.com/87421893/229341937-5c520336-56f4-4f51-8ce5-ea19a781fdf7.png" style="width:50%; height: 350px">
+</div>
+
 ### 5.5.2 입양/임보 승인,거절 기능
+### 회원이 입양 및 임시보호를 신청한 경우 관리자가 승인, 거절할 수 있습니다.

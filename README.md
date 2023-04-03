@@ -192,4 +192,11 @@
 </div>
 
 ### 5.5.2 입양/임보 승인,거절 기능
-### 회원이 입양 및 임시보호를 신청한 경우 관리자가 승인, 거절할 수 있습니다.
+- 회원이 입양 및 임시보호를 신청한 경우 관리자가 승인, 거절할 수 있습니다.
+
+<div>
+<img width="1178" alt="스크린샷 2023-04-01 오후 6 09 04" src="https://user-images.githubusercontent.com/87421893/229546707-fde6a851-7866-4891-b7cd-3ab4729119ab.png" style="width:45%; height: 350px">
+<img width="1129" alt="스크린샷 2023-04-01 오후 6 11 14" src="https://user-images.githubusercontent.com/87421893/229546782-e05230a9-38f3-401a-a17d-7e49d3894050.png" style="width:50%; height: 350px">
+</div>
+
+<img width="1178" alt="스크린샷 2023-04-02 오후 4 44 54" src="https://user-images.githubusercontent.com/87421893/229546842-c56ae8a5-1ffc-4f21-8513-6001c7e554ec.png" style="width:70%">
